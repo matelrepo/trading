@@ -44,6 +44,7 @@ public class PublicRestApiController {
 
     @PostMapping("register")
     public ResponseEntity register(@RequestBody LoginViewModel model) {
+        System.out.println(model.getUsername());
         if (this.userRepository.findByUsername(model.getUsername()) == null) {
             User user = new User(model.getUsername(), passwordEncoder.encode(model.getPassword()),"USER","READ");
             this.userRepository.save(user);
