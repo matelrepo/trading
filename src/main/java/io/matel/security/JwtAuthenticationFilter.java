@@ -33,7 +33,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-        // Grab credentials and map them to login viewmodel
         LoginViewModel credentials = null;
         try {
             credentials = new ObjectMapper().readValue(request.getInputStream(), LoginViewModel.class);

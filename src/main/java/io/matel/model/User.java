@@ -19,7 +19,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private int active;
+    private boolean enabled = true;
 
     private String roles = "";
 
@@ -30,7 +30,6 @@ public class User {
         this.password = password;
         this.roles = roles;
         this.permissions = permissions;
-        this.active = 1;
     }
 
     protected User(){}
@@ -47,8 +46,8 @@ public class User {
         return password;
     }
 
-    public int getActive() {
-        return active;
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public String getRoles() {
