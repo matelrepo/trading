@@ -55,9 +55,13 @@ public class TaskController {
         if(request.equals("")){
             List<Task> list =  this.taskRepository.findAll();
             list.sort((Task e1, Task e2) -> e1.getExpiration().compareTo(e2.getExpiration()));
+            System.out.println("list");
+            list.forEach(System.out::println);
             return list;
         }else{
             List<Task> results = this.searchService.search(request, "taskName", Task.class);
+            System.out.println("result");
+            results.forEach(System.out::println);
             return results;
         }
         }
