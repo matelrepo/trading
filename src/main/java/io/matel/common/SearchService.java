@@ -53,7 +53,7 @@ public class SearchService {
     }
 
     @Transactional
-    public List<?> search(String request, String field, Class myClass) {
+    public List search(String request, String field, Class myClass) {
            return searchConfig(request, field, myClass);
     }
 
