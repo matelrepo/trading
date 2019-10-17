@@ -1,19 +1,27 @@
 package io.matel.assistant.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.hibernate.search.annotations.Field;
-import org.springframework.stereotype.Indexed;
+
+import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
+import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Parameter;
+
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+
 import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
-import java.util.Date;
 
 @Entity
 @Indexed
+@AnalyzerDef(name = "customanalyzer",
+        tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+        filters = {
+                @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+                @TokenFilterDef(factory = SnowballPorterFilterFactory.class,
+                        params = { @Parameter(name = "language", value = "English")
+                })
+        })
 @Table(name = "task")
 public class Task {
 
@@ -22,6 +30,7 @@ public class Task {
     private long id;
 
     @Field
+    @Analyzer(definition = "customanalyzer")
     @Column(nullable = false)
     private String taskName;
 

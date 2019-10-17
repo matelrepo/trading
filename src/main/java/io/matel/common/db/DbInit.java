@@ -40,7 +40,7 @@ public class DbInit implements CommandLineRunner {
 
         this.taskRepository.deleteAll();
 
-        Task task1 = new Task("Go shoppi",  OffsetDateTime.now(), 1);
+        Task task1 = new Task("Refactoring: Improving the Design of Existing Code",  OffsetDateTime.now(), 1);
         Task task2 = new Task("Study thai",  OffsetDateTime.now(), 1);
         Task task3 = new Task("Maths papers",  OffsetDateTime.now(), 1);
         List<Task> tasks = Arrays.asList(task1, task2, task3);

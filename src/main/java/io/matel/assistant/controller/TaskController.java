@@ -3,8 +3,11 @@ package io.matel.assistant.controller;
 
 import io.matel.assistant.model.Task;
 import io.matel.assistant.repository.TaskRepository;
+import io.matel.common.service.SearchService;
+
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -12,9 +15,12 @@ import java.util.List;
 @CrossOrigin
 public class TaskController {
     private TaskRepository taskRepository;
+    private SearchService searchService;
 
-    public TaskController(TaskRepository taskRepository) {
+
+    public TaskController(TaskRepository taskRepository, SearchService searchService) {
         this.taskRepository = taskRepository;
+        this.searchService = searchService;
     }
 
     @GetMapping("tasks")
@@ -48,9 +54,15 @@ public class TaskController {
     }
 
     @GetMapping("tasks/search")
-    public void searchTasks(@RequestParam String keywords ){
-
-    }
-
+    public List<Task> searchTasks(@RequestParam String request) {
+        if(request.equals("")){
+            List<Task> list =  this.taskRepository.findAll();
+            list.sort((Task e1, Task e2) -> e1.getExpiration().compareTo(e2.getExpiration()));
+            return list;
+        }else{
+            List<Task> results = this.searchService.search(request, "taskName", Task.class);
+            return results;
+        }
+        }
 
 }
