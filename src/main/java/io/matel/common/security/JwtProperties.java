@@ -1,4 +1,4 @@
-package io.matel.security;
+package io.matel.common.security;
 
 public class JwtProperties {
     public static final String SECRET = "SomeSecretForJWTGeneration";

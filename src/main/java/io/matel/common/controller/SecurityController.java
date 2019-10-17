@@ -1,9 +1,9 @@
-package io.matel.controller;
+package io.matel.common.controller;
 
 
-import io.matel.repository.UserRepository;
-import io.matel.model.UserView;
-import io.matel.model.User;
+import io.matel.common.repository.UserRepository;
+import io.matel.common.model.UserView;
+import io.matel.common.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;

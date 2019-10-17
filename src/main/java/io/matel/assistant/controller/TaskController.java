@@ -1,8 +1,8 @@
-package io.matel.controller;
+package io.matel.assistant.controller;
 
 
-import io.matel.model.Task;
-import io.matel.repository.TaskRepository;
+import io.matel.assistant.model.Task;
+import io.matel.assistant.repository.TaskRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,6 +45,11 @@ public class TaskController {
     @PutMapping("tasks/edit")
     public void editTask(@RequestBody Task task){
         this.taskRepository.save(task);
+    }
+
+    @GetMapping("tasks/search")
+    public void searchTasks(@RequestParam String keywords ){
+
     }
 
 

@@ -1,9 +1,8 @@
-package io.matel.controller;
+package io.matel.student.controller;
 
 
-import io.matel.model.Task;
-import io.matel.model.Vocab;
-import io.matel.repository.VocabRepository;
+import io.matel.student.model.Vocab;
+import io.matel.student.repository.VocabRepository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

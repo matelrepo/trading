@@ -1,4 +1,4 @@
-package io.matel.model;
+package io.matel.common.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;

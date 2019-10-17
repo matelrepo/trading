@@ -1,4 +1,4 @@
-package io.matel.model;
+package io.matel.student.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

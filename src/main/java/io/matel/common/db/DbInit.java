@@ -1,21 +1,17 @@
-package io.matel.db;
+package io.matel.common.db;
 
-import io.matel.model.Task;
-import io.matel.model.Vocab;
-import io.matel.repository.TaskRepository;
-import io.matel.repository.UserRepository;
-import io.matel.repository.VocabRepository;
+import io.matel.assistant.model.Task;
+import io.matel.student.model.Vocab;
+import io.matel.assistant.repository.TaskRepository;
+import io.matel.common.repository.UserRepository;
+import io.matel.student.repository.VocabRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import io.matel.model.User;
+import io.matel.common.model.User;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Service

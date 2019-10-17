@@ -1,4 +1,4 @@
-package io.matel.model;
+package io.matel.common.model;
 
 public class UserView {
     private String username;

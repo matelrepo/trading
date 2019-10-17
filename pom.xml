@@ -51,6 +51,11 @@
             <artifactId>java-jwt</artifactId>
             <version>3.8.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search-orm</artifactId>
+            <version>5.11.3.Final</version>
+        </dependency>
     </dependencies>
 
     <build>

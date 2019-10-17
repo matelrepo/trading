@@ -1,8 +1,10 @@
-package io.matel.model;
+package io.matel.assistant.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.hibernate.search.annotations.Field;
+import org.springframework.stereotype.Indexed;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,6 +13,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Entity
+@Indexed
 @Table(name = "task")
 public class Task {
 
@@ -18,6 +21,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Field
     @Column(nullable = false)
     private String taskName;
 

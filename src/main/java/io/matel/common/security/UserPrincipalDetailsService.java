@@ -1,11 +1,11 @@
-package io.matel.security;
+package io.matel.common.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import io.matel.repository.UserRepository;
-import io.matel.model.User;
+import io.matel.common.repository.UserRepository;
+import io.matel.common.model.User;
 
 @Service
 public class UserPrincipalDetailsService implements UserDetailsService {

@@ -1,4 +1,4 @@
-package io.matel.security;
+package io.matel.common.security;
 
 import java.util.Arrays;
 
@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import io.matel.repository.UserRepository;
+import io.matel.common.repository.UserRepository;
 
 @Configuration
 @EnableWebSecurity

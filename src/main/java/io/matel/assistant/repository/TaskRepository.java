@@ -1,7 +1,6 @@
-package io.matel.repository;
+package io.matel.assistant.repository;
 
-import io.matel.model.Task;
-import io.matel.model.User;
+import io.matel.assistant.model.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
