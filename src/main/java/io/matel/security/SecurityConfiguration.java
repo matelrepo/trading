@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import io.matel.db.UserRepository;
+import io.matel.repository.UserRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -46,10 +46,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // configure access rules
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/public/register").permitAll()
-                .antMatchers("/api/public/test").permitAll()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/api/public/management/*").hasRole("MANAGER")
-                .antMatchers("/api/public/admin/*").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/api/**").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/api/**").permitAll()
+
+
+//                .antMatchers("/api/public/test").permitAll()
+//                .antMatchers("/api/public/management/*").hasRole("MANAGER")
+//                .antMatchers("/api/public/admin/*").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .headers().frameOptions().disable();

@@ -1,8 +1,8 @@
 package io.matel.controller;
 
 
-import io.matel.db.UserRepository;
-import io.matel.model.LoginViewModel;
+import io.matel.repository.UserRepository;
+import io.matel.model.UserView;
 import io.matel.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +14,12 @@ import java.util.List;
 @RestController
 @RequestMapping("api/public")
 @CrossOrigin
-public class PublicRestApiController {
+public class SecurityController {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
 
 
-    public PublicRestApiController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public SecurityController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -43,7 +43,7 @@ public class PublicRestApiController {
     }
 
     @PostMapping("register")
-    public ResponseEntity register(@RequestBody LoginViewModel model) {
+    public ResponseEntity register(@RequestBody UserView model) {
         System.out.println(model.getUsername());
         if (this.userRepository.findByUsername(model.getUsername()) == null) {
             User user = new User(model.getUsername(), passwordEncoder.encode(model.getPassword()),"USER","READ");

@@ -1,4 +1,4 @@
-package io.matel.db;
+package io.matel.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import io.matel.model.User;

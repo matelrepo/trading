@@ -1,6 +1,6 @@
 package io.matel.model;
 
-public class LoginViewModel {
+public class UserView {
     private String username;
     private String password;
 
