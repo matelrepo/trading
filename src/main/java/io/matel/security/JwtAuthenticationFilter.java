@@ -1,4 +1,4 @@
-package io.matel.common.security;
+package io.matel.security;
 
 import com.auth0.jwt.JWT;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
@@ -9,7 +9,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import io.matel.common.model.UserView;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

@@ -1,13 +1,16 @@
-package io.matel.student.model;
+package io.matel.student;
 
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
 import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Parameter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Indexed
@@ -31,7 +34,7 @@ public class Vocab {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String definition;
 
     @Column(nullable = false)
@@ -39,6 +42,17 @@ public class Vocab {
 
     @Column(nullable = false)
     private String level;
+
+    @Column(nullable = false)
+    private String chapter;
+
+    @CreationTimestamp
+    @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
+    private OffsetDateTime creation;
+
+    @UpdateTimestamp
+    @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
+    private OffsetDateTime update;
 
     public Vocab(){}
 
@@ -72,6 +86,11 @@ public class Vocab {
     public String getLevel() {
         return level;
     }
+
+    public String getChapter() {
+        return chapter;
+    }
+
 
     @Override
     public String toString() {

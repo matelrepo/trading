@@ -1,4 +1,4 @@
-package io.matel.common.security;
+package io.matel.security;
 
 import com.auth0.jwt.JWT;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -6,8 +6,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import io.matel.common.repository.UserRepository;
-import io.matel.common.model.User;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

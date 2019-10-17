@@ -1,13 +1,10 @@
-package io.matel.assistant.controller;
+package io.matel.assistant;
 
 
-import io.matel.assistant.model.Task;
-import io.matel.assistant.repository.TaskRepository;
-import io.matel.common.service.SearchService;
+import io.matel.common.SearchService;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

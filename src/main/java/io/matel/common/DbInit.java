@@ -1,14 +1,13 @@
-package io.matel.common.db;
+package io.matel.common;
 
-import io.matel.assistant.model.Task;
-import io.matel.student.model.Vocab;
-import io.matel.assistant.repository.TaskRepository;
-import io.matel.common.repository.UserRepository;
-import io.matel.student.repository.VocabRepository;
+import io.matel.assistant.Task;
+import io.matel.assistant.TaskRepository;
+import io.matel.security.UserRepository;
+import io.matel.student.VocabRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import io.matel.common.model.User;
+import io.matel.security.User;
 
 import java.time.OffsetDateTime;
 import java.util.Arrays;
@@ -46,11 +45,11 @@ public class DbInit implements CommandLineRunner {
         List<Task> tasks = Arrays.asList(task1, task2, task3);
         this.taskRepository.saveAll(tasks);
 
-        this.vocabRepository.deleteAll();
-        Vocab vocab1 = new Vocab("def1", "This is a definition 1", "Business", "IGCSE");
-        Vocab vocab2 = new Vocab("def2", "This is a definition 2", "Business", "IB");
-        Vocab vocab3 = new Vocab("def3", "This is a definition 3", "Business", "IGCSE");
-        List<Vocab> vocabs = Arrays.asList(vocab1, vocab2, vocab3);
-        this.vocabRepository.saveAll(vocabs);
+//        this.vocabRepository.deleteAll();
+//        Vocab vocab1 = new Vocab("def1", "This is a definition 1", "Business", "IGCSE");
+//        Vocab vocab2 = new Vocab("def2", "This is a definition 2", "Business", "IB");
+//        Vocab vocab3 = new Vocab("def3", "This is a definition 3", "Business", "IGCSE");
+//        List<Vocab> vocabs = Arrays.asList(vocab1, vocab2, vocab3);
+//        this.vocabRepository.saveAll(vocabs);
     }
 }

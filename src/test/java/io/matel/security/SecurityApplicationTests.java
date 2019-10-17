@@ -1,4 +1,4 @@
-package io.matel.common.security;
+package io.matel.security;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

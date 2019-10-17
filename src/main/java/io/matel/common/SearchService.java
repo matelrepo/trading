@@ -1,7 +1,5 @@
-package io.matel.common.service;
+package io.matel.common;
 
-import io.matel.assistant.model.Task;
-import io.matel.student.model.Vocab;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,7 @@ public class SearchService {
     }
 
 
-    public List searchConfig(String request, String field, Class myClass){
+    public List<?> searchConfig(String request, String field, Class myClass){
         FullTextEntityManager fullTextEntityManager =
                 org.hibernate.search.jpa.Search.getFullTextEntityManager(em);
         try {
@@ -55,7 +53,7 @@ public class SearchService {
     }
 
     @Transactional
-    public List search(String request, String field, Class myClass) {
+    public List<?> search(String request, String field, Class myClass) {
            return searchConfig(request, field, myClass);
     }
 

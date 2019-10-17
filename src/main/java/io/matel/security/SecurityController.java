@@ -1,15 +1,10 @@
-package io.matel.common.controller;
+package io.matel.security;
 
 
-import io.matel.common.repository.UserRepository;
-import io.matel.common.model.UserView;
-import io.matel.common.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @CrossOrigin

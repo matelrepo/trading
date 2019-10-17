@@ -1,10 +1,7 @@
-package io.matel.student.controller;
+package io.matel.student;
 
 
-import io.matel.assistant.model.Task;
-import io.matel.common.service.SearchService;
-import io.matel.student.model.Vocab;
-import io.matel.student.repository.VocabRepository;
+import io.matel.common.SearchService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

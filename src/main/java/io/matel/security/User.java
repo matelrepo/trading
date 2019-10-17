@@ -1,6 +1,10 @@
-package io.matel.common.model;
+package io.matel.security;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +28,14 @@ public class User {
     private String roles = "";
 
     private String permissions = "";
+
+    @CreationTimestamp
+    @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
+    private OffsetDateTime creation;
+
+    @UpdateTimestamp
+    @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
+    private OffsetDateTime update;
 
     public User(String username, String password, String roles, String permissions){
         this.username = username;

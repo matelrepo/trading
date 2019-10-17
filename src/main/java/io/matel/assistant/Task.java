@@ -1,9 +1,11 @@
-package io.matel.assistant.model;
+package io.matel.assistant;
 
 
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
 import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Parameter;
 
@@ -39,6 +41,14 @@ public class Task {
 
     @Column(nullable = false)
     private int idowner;
+
+    @CreationTimestamp
+    @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
+    private OffsetDateTime creation;
+
+    @UpdateTimestamp
+    @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
+    private OffsetDateTime update;
 
     public Task(){}
 

@@ -1,6 +1,6 @@
-package io.matel.student.repository;
+package io.matel.student;
 
-import io.matel.student.model.Vocab;
+import io.matel.student.Vocab;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

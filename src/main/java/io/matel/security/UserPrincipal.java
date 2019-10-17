@@ -1,4 +1,4 @@
-package io.matel.common.security;
+package io.matel.security;
 
 
 import java.util.ArrayList;
@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import io.matel.common.model.User;
 
 public class UserPrincipal implements UserDetails {
     /**
