@@ -44,14 +44,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //				// preflight csrf
 //				.antMatchers(HttpMethod.OPTIONS, "/**").authenticated()
                 // configure access rules
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/public/register").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/**").permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/**").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/api/**").permitAll()
-
-
+                .antMatchers( "/login").permitAll()
+                .antMatchers("/register").permitAll()
+                .antMatchers("/api/*").hasRole("USER")
 //                .antMatchers("/api/public/test").permitAll()
 //                .antMatchers("/api/public/management/*").hasRole("MANAGER")
 //                .antMatchers("/api/public/admin/*").hasRole("ADMIN")
