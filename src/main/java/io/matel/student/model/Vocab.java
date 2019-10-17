@@ -1,9 +1,24 @@
 package io.matel.student.model;
 
+import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
+import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Parameter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Indexed
+@AnalyzerDef(name = "customanalyzer2",
+        tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+        filters = {
+                @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+                @TokenFilterDef(factory = SnowballPorterFilterFactory.class,
+                        params = { @Parameter(name = "language", value = "English")
+                        })
+        })
 @Table(name = "vocab")
 public class Vocab {
 
@@ -11,6 +26,8 @@ public class Vocab {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Field
+    @Analyzer(definition = "customanalyzer2")
     @Column(nullable = false)
     private String name;
 
@@ -39,6 +56,10 @@ public class Vocab {
     public String getName() {
         return name;
     }
+    public void setVocabName(String name){
+        this.name = name;
+    }
+
 
     public String getDefinition() {
         return definition;
@@ -50,5 +71,16 @@ public class Vocab {
 
     public String getLevel() {
         return level;
+    }
+
+    @Override
+    public String toString() {
+        return "Vocab{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", definition='" + definition + '\'' +
+                ", subject='" + subject + '\'' +
+                ", level='" + level + '\'' +
+                '}';
     }
 }

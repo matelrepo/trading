@@ -14,7 +14,7 @@ import java.time.OffsetDateTime;
 
 @Entity
 @Indexed
-@AnalyzerDef(name = "customanalyzer",
+@AnalyzerDef(name = "customanalyzer1",
         tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
         filters = {
                 @TokenFilterDef(factory = LowerCaseFilterFactory.class),
@@ -30,7 +30,7 @@ public class Task {
     private long id;
 
     @Field
-    @Analyzer(definition = "customanalyzer")
+    @Analyzer(definition = "customanalyzer1")
     @Column(nullable = false)
     private String taskName;
 
