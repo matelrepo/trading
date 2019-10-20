@@ -1,4 +1,4 @@
-package io.matel.security;
+package io.matel.security.controller;
 
 import java.util.List;
 import java.util.Map;

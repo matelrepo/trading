@@ -3,7 +3,7 @@ package io.matel.trader;
 
 import com.ib.client.TickAttrib;
 import io.matel.common.Global;
-import io.matel.security.WebControllerOut;
+import io.matel.security.controller.WebControllerOut;
 import io.matel.trader.domain.Candle;
 import io.matel.trader.domain.ContractBasic;
 import io.matel.trader.domain.Tick;

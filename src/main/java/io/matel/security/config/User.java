@@ -1,4 +1,4 @@
-package io.matel.security;
+package io.matel.security.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;

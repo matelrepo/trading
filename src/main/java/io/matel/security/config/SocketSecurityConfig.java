@@ -1,4 +1,4 @@
-package io.matel.security;
+package io.matel.security.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
@@ -21,7 +21,7 @@ public class SocketSecurityConfig
     @Override
     protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
         messages
-                .simpSubscribeDestMatchers("/api-feed/**").hasRole("USER")
+//                .simpSubscribeDestMatchers("/api-feed/**").hasRole("USER")
                 .anyMessage().authenticated();
     }
 

@@ -1,4 +1,4 @@
-package io.matel.security;
+package io.matel.security.config;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,4 +1,4 @@
-package io.matel.security;
+package io.matel.security.config;
 
 import com.auth0.jwt.JWT;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;

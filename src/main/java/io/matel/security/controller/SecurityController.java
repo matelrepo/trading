@@ -1,6 +1,10 @@
-package io.matel.security;
+package io.matel.security.controller;
 
 
+import io.matel.security.config.CustomHttpResponse;
+import io.matel.security.config.User;
+import io.matel.security.config.UserRepository;
+import io.matel.security.config.UserView;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;

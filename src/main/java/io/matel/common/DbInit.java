@@ -2,14 +2,14 @@ package io.matel.common;
 
 import io.matel.assistant.Task;
 import io.matel.assistant.TaskRepository;
-import io.matel.security.UserRepository;
+import io.matel.security.config.UserRepository;
 import io.matel.student.VocabRepository;
 import io.matel.trader.domain.ContractBasic;
 import io.matel.trader.repository.ContractRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import io.matel.security.User;
+import io.matel.security.config.User;
 
 import java.time.OffsetDateTime;
 import java.util.Arrays;
@@ -42,7 +42,8 @@ public class DbInit implements CommandLineRunner {
         User trader = new User("trader",passwordEncoder.encode("trader123"),"TRADER","");
         User student = new User("student",passwordEncoder.encode("student123"),"STUDENT","");
         User assistant = new User("assistant",passwordEncoder.encode("assistant123"),"ASSISTANT","");
-        List<User> users = Arrays.asList(trader,student,assistant);
+        User matel = new User("matel",passwordEncoder.encode("mat"),"TRADER, STUDENT, ASSISTANT","");
+        List<User> users = Arrays.asList(trader,student,assistant,matel);
         this.userRepository.saveAll(users);
 
 

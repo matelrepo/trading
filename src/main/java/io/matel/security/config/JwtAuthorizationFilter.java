@@ -1,7 +1,8 @@
-package io.matel.security;
+package io.matel.security.config;
 
 import com.auth0.jwt.JWT;
 import io.matel.common.Global;
+import io.matel.security.controller.WebSocketConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;

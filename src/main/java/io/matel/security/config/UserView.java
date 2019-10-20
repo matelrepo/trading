@@ -1,4 +1,4 @@
-package io.matel.security;
+package io.matel.security.config;
 
 public class UserView {
     private int id;
