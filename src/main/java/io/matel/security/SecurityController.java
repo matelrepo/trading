@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @CrossOrigin
@@ -21,12 +22,12 @@ public class SecurityController {
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody UserView model) {
         System.out.println(model.getUsername());
+        System.out.println(this.userRepository.findByUsername(model.getUsername()));
         if (this.userRepository.findByUsername(model.getUsername()) == null) {
-            User user = new User(model.getUsername(), passwordEncoder.encode(model.getPassword()),"USER","READ");
+            User user = new User(model.getUsername(), passwordEncoder.encode(model.getPassword()),"STUDENT","");
             this.userRepository.save(user);
-            return ResponseEntity.status(HttpStatus.OK).body("Registration successful");
+            return new ResponseEntity(new CustomHttpResponse("Registration Succesfull!", HttpStatus.OK.value()), HttpStatus.OK);
         } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Username already exists!");
-        }
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User already exists");        }
     }
 }

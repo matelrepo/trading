@@ -1,5 +1,6 @@
 package io.matel.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -25,8 +26,13 @@ public class User {
 
     private boolean enabled = true;
 
+    private String authorities = "ROLE_STUDENT";
+
+    @JsonIgnore
+    @Column(nullable = false)
     private String roles = "";
 
+    @JsonIgnore
     private String permissions = "";
 
     @CreationTimestamp
@@ -42,6 +48,7 @@ public class User {
         this.password = password;
         this.roles = roles;
         this.permissions = permissions;
+        this.authorities = this.roles + "," + this.permissions;
     }
 
     protected User(){}
@@ -83,4 +90,5 @@ public class User {
         }
         return new ArrayList<>();
     }
+
 }

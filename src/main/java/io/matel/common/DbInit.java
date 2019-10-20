@@ -39,10 +39,10 @@ public class DbInit implements CommandLineRunner {
                  "2019",  "2019",  true, "TRADES", 0);
         this.contractRepository.save(contract);
 
-        User dan = new User("dan",passwordEncoder.encode("dan123"),"USER","READ");
-        User admin = new User("admin",passwordEncoder.encode("admin123"),"ADMIN","READ, WRITE, ACCESS_TEST1,ACCESS_TEST2");
-        User manager = new User("manager",passwordEncoder.encode("manager123"),"MANAGER","READ, WRITE, ACCESS_TEST1");
-        List<User> users = Arrays.asList(dan,admin,manager);
+        User trader = new User("trader",passwordEncoder.encode("trader123"),"TRADER","");
+        User student = new User("student",passwordEncoder.encode("student123"),"STUDENT","");
+        User assistant = new User("assistant",passwordEncoder.encode("assistant123"),"ASSISTANT","");
+        List<User> users = Arrays.asList(trader,student,assistant);
         this.userRepository.saveAll(users);
 
 
