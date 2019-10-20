@@ -2,6 +2,8 @@ package io.matel.security;
 
 import com.auth0.jwt.JWT;
 import io.matel.common.Global;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +21,9 @@ import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private UserRepository userRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(WebSocketConfig.class);
+
+
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
         super(authenticationManager);
         this.userRepository = userRepository;
@@ -29,6 +34,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         // Read the Authorization header, where the JWT token should be
         String header = request.getHeader(Global.HEADER_STRING);
 
+
         // If header does not contain BEARER or is null delegate to Spring impl and exit
         if (header == null || !header.startsWith(Global.TOKEN_PREFIX)) {
             chain.doFilter(request, response);
@@ -36,16 +42,26 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         // If header is present, try grab user principal from database and perform authorization
-        Authentication authentication = getUsernamePasswordAuthentication(request);
+        Authentication authentication = getUsernamePasswordAuthenticationByServlet(request);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Continue filter execution
         chain.doFilter(request, response);
     }
 
-    private Authentication getUsernamePasswordAuthentication(HttpServletRequest request){
+    public Authentication getUsernamePasswordAuthenticationByToken(String token){
+        return getUsernamePasswordAuthentication(token);
+    }
+
+    private Authentication getUsernamePasswordAuthenticationByServlet(HttpServletRequest request){
         String token = request.getHeader(Global.HEADER_STRING)
                 .replace(Global.TOKEN_PREFIX,"");
+        return getUsernamePasswordAuthentication(token);
+    }
+
+    private Authentication getUsernamePasswordAuthentication(String token){
+//        String token = request.getHeader(Global.HEADER_STRING)
+//                .replace(Global.TOKEN_PREFIX,"");
 
         if (token!=null) {
             // parse the token and validate it

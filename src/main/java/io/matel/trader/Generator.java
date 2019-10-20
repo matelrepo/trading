@@ -3,6 +3,7 @@ package io.matel.trader;
 
 import com.ib.client.TickAttrib;
 import io.matel.common.Global;
+import io.matel.security.WebControllerOut;
 import io.matel.trader.domain.Candle;
 import io.matel.trader.domain.ContractBasic;
 import io.matel.trader.domain.Tick;
@@ -23,6 +24,9 @@ public class Generator implements Listener, IBClient {
     @Autowired
     TickRepository tickRepository;
 
+    @Autowired
+    WebControllerOut webControllerOut;
+
     List<Tick> ticksBuffer = new ArrayList<>();
     private List<Tick> flowLive = new ArrayList<>();
     private List<Tick> flowDelayed = new ArrayList<>();
@@ -36,7 +40,7 @@ public class Generator implements Listener, IBClient {
 
     public Generator(ContractBasic contract, boolean randomGen) {
         this.contract = contract;
-        speed = 100;
+        speed = 1000;
     }
 
 
@@ -80,7 +84,7 @@ public class Generator implements Listener, IBClient {
 //    }
 
     private void run(long tickerId, int field, double price, TickAttrib attrib) {
-        System.out.println(price);
+//        System.out.println(price);
         double newPrice = -1;
         if (price > 0) {
             if (contract.getFlowType() == FlowType.TRADES && (field == 4 || field == 68)) {
@@ -127,6 +131,8 @@ public class Generator implements Listener, IBClient {
                 Tick candle = new Tick(contract.getIdcontract(), date.getTime(), newPrice);
                 candle.setId(global.getIdTick(true));
                 flowLive.add(0, candle);
+                webControllerOut.sendLiveFlow(candle);
+
 
                 if (flowLive.size() > Global.MAX_TICKS_SIZE) {
                     flowLive.remove(Global.MAX_TICKS_SIZE);

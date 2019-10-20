@@ -34,23 +34,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and()
+        http.cors().
+                and()
+
                 .csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+//                .csrf()
+//                .ignoringAntMatchers("/api-feed/**").and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.userRepository))
                 .authorizeRequests()
 //				// preflight csrf
 //				.antMatchers(HttpMethod.OPTIONS, "/**").authenticated()
                 // configure access rules
+
                 .antMatchers( "/login").permitAll()
                 .antMatchers("/register").permitAll()
+                .antMatchers("/api-feed").permitAll()
                 .antMatchers("/api/*").hasRole("USER")
 //                .antMatchers("/api/public/test").permitAll()
 //                .antMatchers("/api/public/management/*").hasRole("MANAGER")
 //                .antMatchers("/api/public/admin/*").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .headers().frameOptions().disable();
+                .headers().frameOptions().sameOrigin();
     }
 
     @Bean
@@ -58,7 +64,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         daoAuthenticationProvider.setUserDetailsService(this.userPrincipalDetailsService);
-
         return daoAuthenticationProvider;
     }
 
