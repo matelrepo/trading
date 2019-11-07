@@ -91,4 +91,18 @@ public class User {
         return new ArrayList<>();
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", enabled=" + enabled +
+                ", authorities='" + authorities + '\'' +
+                ", roles='" + roles + '\'' +
+                ", permissions='" + permissions + '\'' +
+                ", creation=" + creation +
+                ", update=" + update +
+                '}';
+    }
 }

@@ -17,7 +17,8 @@ public class UserPrincipal implements UserDetails {
     private User user;
 
     public UserPrincipal(User user) {
-        this.user = user;
+System.out.println(user.toString());
+this.user = user;
     }
 
     @Override
