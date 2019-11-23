@@ -2,12 +2,15 @@ package io.matel.app;
 
 
 import com.ib.client.TickAttrib;
+import io.matel.app.config.Global;
 import io.matel.app.controller.SaverController;
 import io.matel.app.controller.WsController;
-import io.matel.app.domain.CandleRepository;
+import io.matel.app.repo.CandleRepository;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.Tick;
-import io.matel.app.domain.TickRepository;
+import io.matel.app.repo.GeneratorStateRepo;
+import io.matel.app.repo.TickRepository;
+import io.matel.app.state.GeneratorState;
 import io.matel.app.tools.IBClient;
 import io.matel.app.tools.Utils;
 import org.apache.logging.log4j.LogManager;
@@ -53,73 +56,69 @@ public class Generator implements IBClient {
     private List<Tick> flowDelayed = new ArrayList<>();
     private Map<Integer, Processor> processors = new ConcurrentHashMap<>();
     private GeneratorState generatorState;
-    private boolean lock = false;
-    private boolean random = false;
 
 
     public Generator(ContractBasic contract, boolean random) {
         this.contract = contract;
-        generatorState = new GeneratorState(contract.getIdcontract(), random,1000);
-//        generatorState = generatorStateRepo.findByIdcontract(contract.getIdcontract());
-        this.random = random;
+        generatorState = new GeneratorState(contract.getIdcontract(), random, 1000);
     }
 
     public void connectMarketData() throws ExecutionException, InterruptedException {
-            Random rand = new Random();
-                if (this.generatorState.isConnected())
-                    disconnectMarketData(true);
+        Random rand = new Random();
+        if (this.generatorState.isConnected())
+            disconnectMarketData(true);
 
-                if (Global.RANDOM) {
-                    generatorState.setRandomGenerator(true);
-                    Tick tick = tickRepository.findTopByIdcontractOrderByTimestampDesc(contract.getIdcontract());
-                    if (tick != null) {
-                        generatorState.setLastPrice(tick.getClose());
-                    } else {
-                        generatorState.setLastPrice(Global.STARTING_PRICE);
-                    }
-                }
-
-                this.generatorState.setConnected(true);
-
-                Thread t = new Thread(() -> {
-                    if (Global.RANDOM) {
-                        while (generatorState.isRandomGenerator()) {
-                            double price = 0;
-                            if (Math.random() > 0.50) {
-                                price = generatorState.getLastPrice() + contract.getTickSize();
-                            } else {
-                                price = generatorState.getLastPrice() - contract.getTickSize();
-                            }
-                            runPrice(contract.getIdcontract(), 4, price, null);
-                            int volume = rand.nextInt(1000);
-                            runSize(contract.getIdcontract(), 5, volume);
-                            int volumeTotal = generatorState.getTotalVolume() + volume;
-                            runSize(contract.getIdcontract(), 8, volumeTotal);
-
-                            try {
-                                Thread.sleep(generatorState.getSpeed());
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    } else {
-                        //reqMarketData
-                    }
-                });
-
-                t.setName(contract.getSymbol() + "." + contract.getCurrency() + "." + contract.getIdcontract());
-                t.start();
-
-                if (lastTick().get() != null) {
-                    if (generatorState.getLastPrice() < 0) {
-                        Double price = lastTick().get().getClose();
-                        if (price != null) {
-                            generatorState.setLastPrice(price);
-                        }
-                    }
-                }
-//            }
+        if (Global.RANDOM) {
+            generatorState.setRandomGenerator(true);
+            Tick tick = tickRepository.findTopByIdcontractOrderByTimestampDesc(contract.getIdcontract());
+            if (tick != null) {
+                generatorState.setLastPrice(tick.getClose());
+            } else {
+                generatorState.setLastPrice(Global.STARTING_PRICE);
+            }
         }
+
+        this.generatorState.setConnected(true);
+
+        Thread t = new Thread(() -> {
+            if (Global.RANDOM) {
+                while (generatorState.isRandomGenerator()) {
+                    double price = 0;
+                    if (Math.random() > 0.50) {
+                        price = generatorState.getLastPrice() + contract.getTickSize();
+                    } else {
+                        price = generatorState.getLastPrice() - contract.getTickSize();
+                    }
+                    runPrice(contract.getIdcontract(), 4, price, null);
+                    int volume = rand.nextInt(1000);
+                    runSize(contract.getIdcontract(), 5, volume);
+                    int volumeTotal = generatorState.getTotalVolume() + volume;
+                    runSize(contract.getIdcontract(), 8, volumeTotal);
+
+                    try {
+                        Thread.sleep(generatorState.getSpeed());
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                //reqMarketData
+            }
+        });
+
+        t.setName(contract.getSymbol() + "." + contract.getCurrency() + "." + contract.getIdcontract());
+        t.start();
+
+        Tick tick = tickRepository.findTopByIdcontractOrderByTimestampDesc(contract.getIdcontract());
+        if (tick != null) {
+            if (generatorState.getLastPrice() < 0) {
+                Double price = tick.getClose();
+                if (price != null) {
+                    generatorState.setLastPrice(price);
+                }
+            }
+        }
+    }
 
 
     @Override
@@ -135,10 +134,10 @@ public class Generator implements IBClient {
 
     @Override
     public void tickSize(int tickerId, int field, int size) {
-       runSize(tickerId, field, size);
+        runSize(tickerId, field, size);
     }
 
-    private void runSize(long tickerId, int field, int size){
+    private void runSize(long tickerId, int field, int size) {
 //        if (field == 8) {
 //            generatorState.setTotalVolume(size);
 //        } else if (field == 5) {
@@ -148,38 +147,35 @@ public class Generator implements IBClient {
     }
 
     private void runPrice(long tickerId, int field, double price, TickAttrib attrib) {
-        if(!lock) {
-            generatorState.setTimestamp(ZonedDateTime.now());
+//        if(!lock) {
+        generatorState.setTimestamp(ZonedDateTime.now());
 
-            if (price > 0 && (field == 4 || field == 68)) {
-                double newPrice = reformatPrice(price);
-                if (newPrice > 0 && newPrice != generatorState.getLastPrice()) {
-//                generatorData.setUpdate(newPrice > generatorData.getLastPrice() ? 1 : -1);
-                    Tick tick = new Tick(contract.getIdcontract(), generatorState.getTimestamp(), newPrice);
-                    tick.setSpeed(generatorState.getSpeed());
-                    tick.setId(global.getIdTick(true));
-                    generatorState.setIdtick(tick.getId());
+        if (price > 0 && (field == 4 || field == 68)) {
+            double newPrice = reformatPrice(price);
+            if (newPrice > 0 && newPrice != generatorState.getLastPrice()) {
+                generatorState.setColor(newPrice > generatorState.getLastPrice() ? 1 : -1);
+                Tick tick = new Tick(contract.getIdcontract(), generatorState.getTimestamp(), newPrice);
+                tick.setSpeed(generatorState.getSpeed());
+                tick.setId(global.getIdTick(true));
+                generatorState.setIdtick(tick.getId());
 
-                    processPrice(tick, true);
-                    savingTick();
-                }
+                processPrice(tick, true);
+                savingTick();
             }
         }
+//        }
     }
 
     public void processPrice(Tick tick, boolean triggerProcessing) {
         flowLive.add(0, tick);
         if (flowLive.size() > Global.MAX_LENGTH_TICKS)
             flowLive.remove(Global.MAX_LENGTH_TICKS);
-
         if (triggerProcessing)
             consecutiveUpDownCounter(tick);
-
-            processors.forEach((freq, processor) -> {
-                processor.process(tick);
-            });
+        processors.forEach((freq, processor) -> {
+            processor.process(tick);
+        });
         generatorState.setLastPrice(tick.getClose());
-
     }
 
     private double reformatPrice(double price) {
@@ -208,18 +204,16 @@ public class Generator implements IBClient {
     }
 
     private void consecutiveUpDownCounter(Tick tick) {
-
-            if (flowLive.get(0).getClose() > generatorState.getLastPrice()){
-                generatorState.setTriggerUp( generatorState.getTriggerUp() +1);
-                generatorState.setTriggerDown(0);
-            }else if (flowLive.get(0).getClose() < generatorState.getLastPrice()) {
-                generatorState.setTriggerUp(0);
-                generatorState.setTriggerDown(generatorState.getTriggerUp() + 1);
-            }
-
-            tick.setTriggerUp(generatorState.getTriggerUp());
-            tick.setTriggerDown(generatorState.getTriggerDown());
-            flowLive.set(0, tick);
+        if (flowLive.get(0).getClose() > generatorState.getLastPrice()) {
+            generatorState.setTriggerUp(generatorState.getTriggerUp() + 1);
+            generatorState.setTriggerDown(0);
+        } else if (flowLive.get(0).getClose() < generatorState.getLastPrice()) {
+            generatorState.setTriggerUp(0);
+            generatorState.setTriggerDown(generatorState.getTriggerUp() + 1);
+        }
+        tick.setTriggerUp(generatorState.getTriggerUp());
+        tick.setTriggerDown(generatorState.getTriggerDown());
+        flowLive.set(0, tick);
     }
 
     private void savingTick() {
@@ -245,22 +239,20 @@ public class Generator implements IBClient {
 
     public void disconnectMarketData(boolean save) {
         LOGGER.info("Disconnecting market data for contract " + contract.getIdcontract());
-        if (!this.generatorState.isConnected()) {
-
-        } else {
+        if (this.generatorState.isConnected()) {
             this.generatorState.setConnected(false);
             if (Global.RANDOM)
                 generatorState.setRandomGenerator(false);
-            if(save) {
+            if (save) {
                 saverController.saveBatchTicks();
                 saverController.saveBatchCandles();
             }
         }
     }
 
-    public Future<Tick> lastTick(){
-        return executor.submit(() -> tickRepository.findTopByIdcontractOrderByTimestampDesc(contract.getIdcontract()));
-    }
+//    public Future<Tick> lastTick() {
+//        return executor.submit(() -> );
+//    }
 
     public GeneratorState getGeneratorState() {
         return generatorState;
@@ -280,7 +272,7 @@ public class Generator implements IBClient {
 
     public void setGeneratorState() {
         GeneratorState generatorState = generatorStateRepo.findByIdcontract(contract.getIdcontract());
-        if(generatorState != null)
+        if (generatorState != null)
             this.generatorState = generatorState;
     }
 }

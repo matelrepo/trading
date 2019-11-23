@@ -1,4 +1,4 @@
-package io.matel.app.domain;
+package io.matel.app.domain.enumtype;
 
 public enum FlowType {
     TRADES, MID

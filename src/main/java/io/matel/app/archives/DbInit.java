@@ -1,6 +1,6 @@
 //package io.matel.app;
 //
-//import io.matel.app.domain.ContractRepository;
+//import io.matel.app.repo.ContractRepository;
 //import io.matel.app.connection.users.security.config.UserRepository;
 //import org.springframework.boot.CommandLineRunner;
 //import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,6 +1,6 @@
 package io.matel.app.controller;
 
-import io.matel.app.GeneratorState;
+import io.matel.app.state.GeneratorState;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;

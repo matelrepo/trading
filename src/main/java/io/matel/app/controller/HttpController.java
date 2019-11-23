@@ -3,10 +3,13 @@ package io.matel.app.controller;
 
 import io.matel.app.AppController;
 import io.matel.app.AppLauncher;
-import io.matel.app.GeneratorState;
+import io.matel.app.state.GeneratorState;
 import io.matel.app.connection.activeuser.ActiveUserEvent;
 import io.matel.app.connection.user.UserRepository;
 import io.matel.app.domain.*;
+import io.matel.app.repo.CandleRepository;
+import io.matel.app.repo.ContractRepository;
+import io.matel.app.repo.TickRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

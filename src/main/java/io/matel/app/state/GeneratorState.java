@@ -1,4 +1,4 @@
-package io.matel.app;
+package io.matel.app.state;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -27,6 +27,7 @@ public class GeneratorState {
     private double lastPrice = -1;
     private int triggerUp =0;
     private int triggerDown = 0;
+    private int color =0;
 
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
@@ -150,6 +151,14 @@ public class GeneratorState {
         this.triggerDown = triggerDown;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
     @Override
     public String toString() {
         return "GeneratorState{" +
@@ -166,6 +175,8 @@ public class GeneratorState {
                 ", lastPrice=" + lastPrice +
                 ", triggerUp=" + triggerUp +
                 ", triggerDown=" + triggerDown +
+                ", color=" + color +
+                ", updatedOn=" + updatedOn +
                 '}';
     }
 

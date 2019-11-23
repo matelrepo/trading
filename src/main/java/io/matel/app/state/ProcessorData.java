@@ -1,8 +1,7 @@
-package io.matel.app;
+package io.matel.app.state;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.matel.app.domain.EventType;
-import io.matel.app.domain.ProcessorDataId;
+import io.matel.app.domain.enumtype.EventType;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;

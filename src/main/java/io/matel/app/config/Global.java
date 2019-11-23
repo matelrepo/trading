@@ -1,4 +1,4 @@
-package io.matel.app;
+package io.matel.app.config;
 
 import org.springframework.context.annotation.Configuration;
 

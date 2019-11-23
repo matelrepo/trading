@@ -1,11 +1,12 @@
 package io.matel.app;
 
+import io.matel.app.config.Global;
 import io.matel.app.connection.user.UserRepository;
 import io.matel.app.controller.WsController;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.Tick;
-import io.matel.app.domain.TickRepository;
+import io.matel.app.repo.TickRepository;
 import io.matel.app.macro.Macro;
 import io.matel.app.macro.config.GetterCountryCsv;
 import org.apache.logging.log4j.LogManager;

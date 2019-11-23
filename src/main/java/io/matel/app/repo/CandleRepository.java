@@ -1,6 +1,7 @@
-package io.matel.app.domain;
+package io.matel.app.repo;
 
 
+import io.matel.app.domain.Candle;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

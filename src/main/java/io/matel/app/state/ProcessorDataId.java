@@ -1,4 +1,4 @@
-package io.matel.app.domain;
+package io.matel.app.state;
 
 import java.io.Serializable;
 import java.util.Objects;

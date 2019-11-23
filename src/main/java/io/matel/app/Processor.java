@@ -2,6 +2,9 @@ package io.matel.app;
 
 
 import io.matel.app.domain.*;
+import io.matel.app.domain.enumtype.EventType;
+import io.matel.app.repo.ProcessorDataRepository;
+import io.matel.app.state.ProcessorData;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.ZonedDateTime;

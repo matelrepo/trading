@@ -1,11 +1,11 @@
 package io.matel.app.controller;
 
 import io.matel.app.AppController;
-import io.matel.app.Global;
+import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
-import io.matel.app.domain.CandleRepository;
+import io.matel.app.repo.CandleRepository;
 import io.matel.app.domain.Tick;
-import io.matel.app.domain.TickRepository;
+import io.matel.app.repo.TickRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +83,7 @@ public class SaverController {
 
     private synchronized void updateCurrentCandle(Long idcontract) {
     if(!Global.READ_ONLY_CANDLES) {
-        LOGGER.info("Saving now ticks (" + ticksBuffer.size()+ ") & candles (" + candlesBuffer.size()+ ") for contract: " + idcontract);
+        LOGGER.info("Updating (now) ticks & candles for contract: " + idcontract);
         if (idcontract == null) {
             appController.getGenerators().forEach((id, gen) -> {
                 gen.getProcessors().forEach((frequency, processor) -> {
