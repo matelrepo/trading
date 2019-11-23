@@ -60,7 +60,7 @@ public class Generator implements IBClient {
     public Generator(ContractBasic contract, boolean random) {
         this.contract = contract;
         generatorState = new GeneratorState(contract.getIdcontract(), random,1000);
-        generatorState = generatorStateRepo.findByIdcontract(contract.getIdcontract());
+//        generatorState = generatorStateRepo.findByIdcontract(contract.getIdcontract());
         this.random = random;
     }
 

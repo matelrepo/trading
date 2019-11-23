@@ -26,8 +26,6 @@ public class AppLauncher implements CommandLineRunner {
 
     private static final Logger LOGGER = LogManager.getLogger(AppLauncher.class);
     private ExecutorService executor = Executors.newFixedThreadPool(Global.EXECUTOR_THREADS);
-    private CountDownLatch latch;
-
     private AppController appController;
     private WsController wsController;
 
@@ -42,9 +40,6 @@ public class AppLauncher implements CommandLineRunner {
 
     @Autowired
     TickRepository tickRepository;
-
-//    @Autowired
-//    GetterMacroCsv getterMacroCsv;
 
     @Autowired
     GetterCountryCsv getterCountryPrefCsv;
@@ -91,8 +86,6 @@ public class AppLauncher implements CommandLineRunner {
     public void start() throws InterruptedException, ExecutionException {
         appController.setContracts(appController.contractRepository.findByActive(true));
 //        appController.setContract(appController.contractRepository.findByIdcontract(6L));
-
-        latch = new CountDownLatch(appController.getContracts().size());
         try {
             global.setIdTick(tickRepository.findTopByOrderByIdDesc().getId());
             global.setIdCandle(appController.candleRepository.findTopByOrderByIdDesc().getId());
@@ -103,11 +96,60 @@ public class AppLauncher implements CommandLineRunner {
             LOGGER.warn(">>> Read only lock! <<<");
 
         List<FutureTask<Void>> tasks = new ArrayList<>();
+        for (ContractBasic contract : appController.getContracts()) {
+            RunChecksTask callable = new RunChecksTask(contract);
+            FutureTask task = new FutureTask(callable);
+            tasks.add(task);
+            executor.execute(task);
+        }
 
-        for(ContractBasic contract:  appController.getContracts()){
+        tasks.forEach(task-> {
+            try {
+                task.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        });
 
-            //Task to catch exception
-            FutureTask<Void> runChecking = new FutureTask<Void>(() -> {
+        if(!errorDetected)
+        LOGGER.warn(">> No computation errors detected");
+        LOGGER.info(">>> Computation completed!");
+
+        tasks.clear();
+        for (ContractBasic contract : appController.getContracts()) {
+            LoadAndConnectTask callable = new LoadAndConnectTask(contract);
+            FutureTask task = new FutureTask(callable);
+            tasks.add(task);
+            executor.execute(task);
+        }
+
+        tasks.forEach(task -> {
+            try {
+                task.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+
+    @Scheduled(fixedRate = 1000)
+    public void clock() {
+        this.wsController.sendPrices(appController.getGeneratorsState());
+    }
+
+    private class RunChecksTask implements Callable{
+        ContractBasic contract;
+        public RunChecksTask(ContractBasic contract){
+            this.contract= contract;
+        }
+
+        @Override
+        public FutureTask<Void> call() {
                 Generator generator = appController.createGenerator(contract);
                 appController.createProcessors(contract);
                 long numTickUsed = appController.candleRepository.countIdTickBreaks(contract.getIdcontract());
@@ -135,63 +177,26 @@ public class AppLauncher implements CommandLineRunner {
                         LOGGER.info(">>> No ticks for contract " + contract.getIdcontract());
                     }
                 }
-                latch.countDown();
                 return null;
-            });
-
-            tasks.add(runChecking);
-            executor.execute(runChecking);
         }
-
-        latch.await();
-
-
-        //check on exceptions
-        tasks.forEach(task -> {
-            try {
-                task.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        });
-
-        if(!errorDetected)
-        LOGGER.warn(">> No computation errors detected");
-        LOGGER.info(">>> Computation completed!");
-
-        tasks.clear();
-
-        for (ContractBasic contract : appController.getContracts()) {
-            FutureTask<Void> loadAndConnect = new FutureTask<Void>(() -> {
-                appController.loadHistoricalCandles(contract.getIdcontract(), false);
-                try {
-                    appController.connectMarketData(contract);
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            });
-            tasks.add(loadAndConnect);
-            executor.submit(loadAndConnect);
-        }
-
-        tasks.forEach(task -> {
-            try {
-                task.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        });
     }
 
+    private class LoadAndConnectTask implements Callable{
+        ContractBasic contract;
+        public LoadAndConnectTask(ContractBasic contract){
+            this.contract= contract;
+        }
 
-    @Scheduled(fixedRate = 1000)
-    public void clock() {
-        this.wsController.sendPrices(appController.getGeneratorsState());
+        @Override
+        public FutureTask<Void> call() {
+            appController.loadHistoricalCandles(contract.getIdcontract(), false);
+            try {
+                appController.connectMarketData(contract);
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
 }
