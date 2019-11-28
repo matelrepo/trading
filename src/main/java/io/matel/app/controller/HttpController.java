@@ -3,13 +3,17 @@ package io.matel.app.controller;
 
 import io.matel.app.AppController;
 import io.matel.app.AppLauncher;
-import io.matel.app.state.GeneratorState;
+import io.matel.app.config.Global;
 import io.matel.app.connection.activeuser.ActiveUserEvent;
 import io.matel.app.connection.user.UserRepository;
-import io.matel.app.domain.*;
+import io.matel.app.domain.Candle;
+import io.matel.app.domain.ContractBasic;
+import io.matel.app.domain.Ticket;
+import io.matel.app.macro.domain.MacroDAO;
 import io.matel.app.repo.CandleRepository;
 import io.matel.app.repo.ContractRepository;
 import io.matel.app.repo.TickRepository;
+import io.matel.app.state.GeneratorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +46,9 @@ public class HttpController {
     @Autowired
     ContractRepository contractRepository;
 
+    @Autowired
+    Global global;
+
 
     public HttpController(UserRepository userRepository,
                           PasswordEncoder passwordEncoder,
@@ -63,13 +70,20 @@ public class HttpController {
         return contracts;
     }
 
+    @GetMapping("/ticker-crawl")
+    public List<MacroDAO> getTickerCrawl(){
+        return global.getTickerCrawl();
+    }
+
     @GetMapping("/histo-candles/{id}/{frequency}")
     public List<Candle> getHistoricalCandles(@PathVariable String id, @PathVariable String frequency){
         long idcontract = Long.valueOf(id);
         int freq = Integer.valueOf(frequency);
-        if (freq == 1)
+//        int save = Integer.valueOf(saveOption);
+        if (freq == 1 )
             saverController.saveNow(idcontract);
         List<Candle> candles = candleRepository.findTop100ByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
+        System.out.println(freq + " " + candles.size());
 //        LOGGER.info("Sending historical prices for contract (" + idcontract + ") - freq: " + freq );
         return candles;
     }

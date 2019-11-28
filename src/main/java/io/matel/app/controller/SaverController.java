@@ -3,9 +3,11 @@ package io.matel.app.controller;
 import io.matel.app.AppController;
 import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
-import io.matel.app.repo.CandleRepository;
 import io.matel.app.domain.Tick;
+import io.matel.app.repo.CandleRepository;
+import io.matel.app.repo.LogProcessorDataRepo;
 import io.matel.app.repo.TickRepository;
+import io.matel.app.state.LogProcessorData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,20 +22,25 @@ public class SaverController {
     private static final Logger LOGGER = LogManager.getLogger(SaverController.class);
     private List<Tick> ticksBuffer = new ArrayList<>();
     private List<Candle> candlesBuffer = new ArrayList<>();
+    List<LogProcessorData> logDataBuffer = new ArrayList<>();
+
 
     @Autowired
     Global global;
 
+    LogProcessorDataRepo logProcessorDataRepository;
     TickRepository tickRepository;
     CandleRepository candleRepository;
     AppController appController;
 
     public SaverController(TickRepository tickRepository,
                            CandleRepository candleRepository,
+                           LogProcessorDataRepo logProcessorDataRepository,
                            AppController appController){
         this.tickRepository = tickRepository;
         this.candleRepository = candleRepository;
         this.appController = appController;
+        this.logProcessorDataRepository = logProcessorDataRepository;
     }
 
     public void saveNow(){
@@ -41,9 +48,10 @@ public class SaverController {
     }
 
     public void saveNow(Long idcontract) {
-            saveBatchTicks();
-            saveBatchCandles();
-            updateCurrentCandle(idcontract);
+        saveBatchCandles();
+        updateCurrentCandle(idcontract);
+        saveBatchTicks();
+//        saveBatchLogProcessor();
     }
 
     public synchronized void saveBatchTicks() {
@@ -61,6 +69,24 @@ public class SaverController {
                 ticksBuffer.clear();
             }
         }
+    }
+
+    public synchronized void saveBatchLogProcessor() {
+        saveBatchLogProcessor(null);
+    }
+
+
+    public synchronized void saveBatchLogProcessor(LogProcessorData data) {
+//        if (!Global.READ_ONLY_TICKS) {
+//            if (data != null)
+//                this.logDataBuffer.add(data);
+//
+//            if (logDataBuffer.size() > Global.MAX_TICKS_SIZE_SAVING || data == null) {
+//                LOGGER.info("Regular log processor saving (" + logDataBuffer.size()+ ")");
+//                logProcessorDataRepository.saveAll(this.logDataBuffer);
+//                logDataBuffer.clear();
+//            }
+//        }
     }
 
     public synchronized void saveBatchCandles() {
@@ -96,7 +122,7 @@ public class SaverController {
         } else {
             long idTick = global.getIdTick(false);
             appController.getGenerators().get(idcontract).getProcessors().forEach((frequency, processor) -> {
-                if (processor.getFlow().get(0) != null && processor.getFreq() > 0) {
+                if (processor.getFlow().size() > 0 && processor.getFlow().get(0) != null && processor.getFreq() > 0) {
                     Candle candle = processor.getFlow().get(0);
                     candle.setIdtick(idTick);
                     candleRepository.save(candle);

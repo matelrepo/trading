@@ -5,9 +5,9 @@ import com.ib.client.TickAttrib;
 import io.matel.app.config.Global;
 import io.matel.app.controller.SaverController;
 import io.matel.app.controller.WsController;
-import io.matel.app.repo.CandleRepository;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.Tick;
+import io.matel.app.repo.CandleRepository;
 import io.matel.app.repo.GeneratorStateRepo;
 import io.matel.app.repo.TickRepository;
 import io.matel.app.state.GeneratorState;
@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 
 
 public class Generator implements IBClient {
-    private ExecutorService executor = Executors.newFixedThreadPool(Global.EXECUTOR_THREADS);
     private static final Logger LOGGER = LogManager.getLogger(Generator.class);
 
     @Autowired
@@ -60,13 +60,13 @@ public class Generator implements IBClient {
 
     public Generator(ContractBasic contract, boolean random) {
         this.contract = contract;
-        generatorState = new GeneratorState(contract.getIdcontract(), random, 1000);
+        generatorState = new GeneratorState(contract.getIdcontract(), random, 3000);
     }
 
     public void connectMarketData() throws ExecutionException, InterruptedException {
         Random rand = new Random();
         if (this.generatorState.isConnected())
-            disconnectMarketData(true);
+            disconnectMarketData(false);
 
         if (Global.RANDOM) {
             generatorState.setRandomGenerator(true);
@@ -89,10 +89,12 @@ public class Generator implements IBClient {
                     } else {
                         price = generatorState.getLastPrice() - contract.getTickSize();
                     }
+                    generatorState.setAsk(price);
+                    generatorState.setBid(price);
                     runPrice(contract.getIdcontract(), 4, price, null);
                     int volume = rand.nextInt(1000);
                     runSize(contract.getIdcontract(), 5, volume);
-                    int volumeTotal = generatorState.getTotalVolume() + volume;
+                    int volumeTotal = generatorState.getDailyVolume() + volume;
                     runSize(contract.getIdcontract(), 8, volumeTotal);
 
                     try {
@@ -138,12 +140,30 @@ public class Generator implements IBClient {
     }
 
     private void runSize(long tickerId, int field, int size) {
-//        if (field == 8) {
-//            generatorState.setTotalVolume(size);
-//        } else if (field == 5) {
-//            generatorState.setVolume(size);
-//            flowLive.get(0).setVolume(size);
-//        }
+        switch(field){
+            case 8:
+                generatorState.setDailyVolume(size);
+                break;
+            case 5:
+                generatorState.setTickQuantity(size);
+                generatorState.setAskQuantity(size);
+                generatorState.setBidQuantity(size);
+                flowLive.get(0).setVolume(size);
+                break;
+            case 0: //bid price
+                generatorState.setBid(size);
+                break;
+            case 1: //bid size
+                generatorState.setBidQuantity(size);
+                break;
+            case 2: //bid price
+                generatorState.setAsk(size);
+                break;
+            case 3: //bid size
+                generatorState.setAskQuantity(size);
+                break;
+
+        }
     }
 
     private void runPrice(long tickerId, int field, double price, TickAttrib attrib) {
@@ -158,6 +178,12 @@ public class Generator implements IBClient {
                 tick.setSpeed(generatorState.getSpeed());
                 tick.setId(global.getIdTick(true));
                 generatorState.setIdtick(tick.getId());
+
+                if(price > generatorState.getHigh())
+                    generatorState.setHigh(Utils.round(price,contract.getRounding()));
+
+                if(price < generatorState.getLow())
+                    generatorState.setLow(Utils.round(price,contract.getRounding()));
 
                 processPrice(tick, true);
                 savingTick();
@@ -176,6 +202,9 @@ public class Generator implements IBClient {
             processor.process(tick);
         });
         generatorState.setLastPrice(tick.getClose());
+        generatorState.setChangeValue(Utils.round(generatorState.getLastPrice() - generatorState.getDailyMark(), contract.getRounding()));
+        generatorState.setChangePerc(generatorState.getLastPrice() / generatorState.getDailyMark()-1);
+
     }
 
     private double reformatPrice(double price) {
@@ -272,8 +301,11 @@ public class Generator implements IBClient {
 
     public void setGeneratorState() {
         GeneratorState generatorState = generatorStateRepo.findByIdcontract(contract.getIdcontract());
-        if (generatorState != null)
-            this.generatorState = generatorState;
+        if(generatorState!=null) {
+            generatorState.setConnected(false);
+            generatorState.setConnected(false);
+                this.generatorState = generatorState;
+        }
     }
 }
 

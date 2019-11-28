@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CountryPrefRepo extends JpaRepository<CountryPref, Long> {
-    List<CountryPref> findAllByIdUser(String idUser);
+    List<CountryPref> findAllByType(String type);
 
 }

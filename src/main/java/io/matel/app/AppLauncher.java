@@ -1,14 +1,15 @@
 package io.matel.app;
 
+import io.matel.app.config.DatabaseJDBC;
 import io.matel.app.config.Global;
 import io.matel.app.connection.user.UserRepository;
 import io.matel.app.controller.WsController;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.Tick;
-import io.matel.app.repo.TickRepository;
-import io.matel.app.macro.Macro;
+import io.matel.app.macro.MacroWriter;
 import io.matel.app.macro.config.GetterCountryCsv;
+import io.matel.app.repo.TickRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,10 @@ public class AppLauncher implements CommandLineRunner {
     Global global;
 
     @Autowired
-    Macro macro;
+    MacroWriter macroWriter;
+
+    @Autowired
+    DatabaseJDBC dbb;
 
     public AppLauncher(AppController appController, WsController wsController) {
         this.appController = appController;
@@ -69,17 +73,22 @@ public class AppLauncher implements CommandLineRunner {
 //        getterMacroCsv.readCsvLineByLine();
 //        getterCountryPrefCsv.readCsvLineByLine();
 
-        if(Global.UPDATE_MACRO) {
-            new Thread(() -> {
-                try {
-                    macro.start();
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+        new Thread(() -> {
+            try {
+                if (Global.UPDATE_MACRO) {
+                    macroWriter.start();
+                } else {
+                    LOGGER.info(">>> MACRO_UPDATE is switched off");
                 }
-            }).start();
-        }else{
-            LOGGER.info(">>> MACRO_UPDATE is switched off");
-        }
+//                macroReader.start();
+                dbb.init("matel", "5432");
+                dbb.getMacroItemsByCountry("United States");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+
 
         start();
     }
@@ -117,6 +126,7 @@ public class AppLauncher implements CommandLineRunner {
         if(!errorDetected)
         LOGGER.warn(">> No computation errors detected");
         LOGGER.info(">>> Computation completed!");
+        LOGGER.info(">>> Loading historical...!");
 
         tasks.clear();
         for (ContractBasic contract : appController.getContracts()) {
@@ -135,12 +145,10 @@ public class AppLauncher implements CommandLineRunner {
                 e.printStackTrace();
             }
         });
-    }
 
+        global.setHasCompletedLoading(true);
+        LOGGER.info(">>> Loading completed!");
 
-    @Scheduled(fixedRate = 1000)
-    public void clock() {
-        this.wsController.sendPrices(appController.getGeneratorsState());
     }
 
     private class RunChecksTask implements Callable{
@@ -192,12 +200,19 @@ public class AppLauncher implements CommandLineRunner {
         public FutureTask<Void> call() {
             appController.loadHistoricalCandles(contract.getIdcontract(), false);
             try {
+                LOGGER.info("Connecting market data contract " + contract.getIdcontract());
                 appController.connectMarketData(contract);
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
             return null;
         }
+    }
+
+
+    @Scheduled(fixedRate = 5000)
+    public void clock() {
+        this.wsController.sendPrices(appController.getGeneratorsState());
     }
 
 }

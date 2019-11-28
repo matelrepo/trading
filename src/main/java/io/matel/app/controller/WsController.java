@@ -23,6 +23,10 @@ public class WsController {
         }
     }
 
+    public void sendLiveGeneratorState(GeneratorState genState){
+
+    }
+
     public void sendPrices(Map<Long, GeneratorState> states) {
         if (states != null) {
             String path = ("/get/prices");

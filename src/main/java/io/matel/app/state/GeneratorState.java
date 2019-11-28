@@ -1,5 +1,6 @@
 package io.matel.app.state;
 
+import io.matel.app.tools.Utils;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
@@ -17,17 +18,30 @@ public class GeneratorState {
 
     @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
     private ZonedDateTime timestamp;
-    private boolean isConnected;
+    private boolean isConnected = false;
+
     private int speed;
     private boolean isRandomGenerator = true;
-    private double ask = -1;
-    private double bid = -1;
-    private int volume = 0;
-    private int totalVolume =0;
-    private double lastPrice = -1;
+
     private int triggerUp =0;
     private int triggerDown = 0;
     private int color =0;
+
+    private double lastPrice = -1; //ok
+    private double dailyMark = 10000; //ok
+    private double weeklyMark = 10000; //ok
+    private double monthlyMark = 10000; //ok
+    private double yearlyMark = 10000; //ok
+    private double changeValue; //ok
+    private double changePerc; //ok
+    private double ask = -1; //ok
+    private double bid = -1; //ok
+    private double askQuantity; //ok
+    private double bidQuantity; //ok
+    private int tickQuantity = 0; //ok
+    private int dailyVolume =0; //ok
+    private double high=Double.MIN_VALUE; //ok
+    private double low=Double.MAX_VALUE; //ok
 
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
@@ -111,20 +125,20 @@ public class GeneratorState {
         this.bid = bid;
     }
 
-    public int getVolume() {
-        return volume;
+    public int getTickQuantity() {
+        return tickQuantity;
     }
 
-    public void setVolume(int volume) {
-        this.volume = volume;
+    public void setTickQuantity(int tickQuantity) {
+        this.tickQuantity = tickQuantity;
     }
 
-    public int getTotalVolume() {
-        return totalVolume;
+    public int getDailyVolume() {
+        return dailyVolume;
     }
 
-    public void setTotalVolume(int totalVolume) {
-        this.totalVolume = totalVolume;
+    public void setDailyVolume(int dailyVolume) {
+        this.dailyVolume = dailyVolume;
     }
 
     public double getLastPrice() {
@@ -159,6 +173,78 @@ public class GeneratorState {
         this.color = color;
     }
 
+    public double getDailyMark() {
+        return dailyMark;
+    }
+
+    public void setDailyMark(double dailyMark) {
+        this.dailyMark = dailyMark;
+    }
+
+    public double getWeeklyMark() {
+        return weeklyMark;
+    }
+
+    public void setWeeklyMark(double weeklyMark) {
+        this.weeklyMark = weeklyMark;
+    }
+
+    public double getMonthlyMark() {
+        return monthlyMark;
+    }
+
+    public void setMonthlyMark(double monthlyMark) {
+        this.monthlyMark = monthlyMark;
+    }
+
+    public double getChangeValue() {
+        return changeValue;
+    }
+
+    public void setChangeValue(double changeValue) {
+        this.changeValue = changeValue;
+    }
+
+    public double getChangePerc() {
+        return changePerc;
+    }
+
+    public void setChangePerc(double changePerc) {
+        this.changePerc = Utils.round(changePerc,5);
+    }
+
+    public double getAskQuantity() {
+        return askQuantity;
+    }
+
+    public void setAskQuantity(double askQuantity) {
+        this.askQuantity = askQuantity;
+    }
+
+    public double getBidQuantity() {
+        return bidQuantity;
+    }
+
+    public void setBidQuantity(double bidQuantity) {
+        this.bidQuantity = bidQuantity;
+    }
+
+    public double getHigh() {
+        return high;
+    }
+
+    public void setHigh(double high) {
+        this.high = high;
+    }
+
+    public double getLow() {
+        return low;
+    }
+
+    public void setLow(double low) {
+        this.low = low;
+    }
+
     @Override
     public String toString() {
         return "GeneratorState{" +
@@ -170,8 +256,8 @@ public class GeneratorState {
                 ", isRandomGenerator=" + isRandomGenerator +
                 ", ask=" + ask +
                 ", bid=" + bid +
-                ", volume=" + volume +
-                ", totalVolume=" + totalVolume +
+                ", volume=" + tickQuantity +
+                ", totalVolume=" + dailyVolume +
                 ", lastPrice=" + lastPrice +
                 ", triggerUp=" + triggerUp +
                 ", triggerDown=" + triggerDown +
@@ -180,4 +266,11 @@ public class GeneratorState {
                 '}';
     }
 
+    public double getYearlyMark() {
+        return yearlyMark;
+    }
+
+    public void setYearlyMark(double yearlyMark) {
+        this.yearlyMark = yearlyMark;
+    }
 }

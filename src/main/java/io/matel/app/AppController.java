@@ -4,9 +4,11 @@ import io.matel.app.config.BeanFactory;
 import io.matel.app.config.Global;
 import io.matel.app.connection.activeuser.ActiveUserEvent;
 import io.matel.app.controller.SaverController;
-import io.matel.app.domain.*;
+import io.matel.app.domain.Candle;
+import io.matel.app.domain.ContractBasic;
 import io.matel.app.repo.*;
 import io.matel.app.state.GeneratorState;
+import io.matel.app.state.ProcessorData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -41,6 +44,9 @@ public class AppController {
 
     @Autowired
     GeneratorStateRepo generatorStateRepo;
+
+    @Autowired
+    Global global;
 
     private static final Logger LOGGER = LogManager.getLogger(AppLauncher.class);
     private ExecutorService executor = Executors.newFixedThreadPool(Global.EXECUTOR_THREADS);
@@ -81,14 +87,14 @@ public class AppController {
     }
 
     public void createProcessors(ContractBasic contract){
-//        Map<Integer, ProcessorData> procData = new HashMap<>();
-//        processorDataRepository.findByIdcontract(contract.getIdcontract()).forEach( data ->{
-//            procData.put(data.getFreq(), data);
-//        });
-//
+        Map<Integer, ProcessorData> procData = new HashMap<>();
+        processorDataRepository.findByIdcontract(contract.getIdcontract()).forEach( data ->{
+            procData.put(data.getFreq(), data);
+        });
+
         for (int frequency : Global.FREQUENCIES) {
             Processor processor = beanFactory.createBeanProcessor(contract, frequency);
-//            processor.setProcessorData(procData.get(frequency));
+            processor.setProcessorData(procData.get(frequency));
             generators.get(contract.getIdcontract()).getProcessors().put(frequency, processor);
         }
     }
@@ -124,12 +130,14 @@ public class AppController {
 
     @Scheduled(fixedRate = 67000)
     public void clock() {
-        LOGGER.info("Auto-saving");
-        generators.forEach((id, gen) -> {
-            generatorStateRepo.save(gen.getGeneratorState());
-        });
-        saverController.saveNow();
-
+        if(global.isHasCompletedLoading()) {
+            LOGGER.info("Auto-saving");
+            generators.forEach((id, gen) -> {
+                if (gen.getGeneratorState().getLastPrice() > 0)
+                    generatorStateRepo.save(gen.getGeneratorState());
+            });
+            saverController.saveNow();
+        }
     }
 
 }

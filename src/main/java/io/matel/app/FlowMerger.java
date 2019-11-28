@@ -24,6 +24,9 @@ public class FlowMerger {
     SaverController saverController;
 
     @Autowired
+    AppController appController;
+
+    @Autowired
     private Global global;
 
     protected List<Candle> flow = new ArrayList<>();
@@ -92,26 +95,41 @@ public class FlowMerger {
             else
                 switch (freq) {
                     case 100000:
-                        if (tick.getTimestamp().getDayOfYear() < previousDate.getDayOfYear())
+                        if (tick.getTimestamp().getDayOfYear() < previousDate.getDayOfYear()){
+                            if (flow.size() > 0)
+                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setYearlyMark(flow.get(0).getClose());
                             newCandle(tick.getTimestamp(), tick);
+                        }
                         else
                             updateCandle(tick);
                         break;
                     case 35000:
-                        if (tick.getTimestamp().getDayOfMonth() < previousDate.getDayOfMonth())
+                        if (tick.getTimestamp().getDayOfMonth() < previousDate.getDayOfMonth()){
+                            if (flow.size() > 0)
+                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setMonthlyMark(flow.get(0).getClose());
                             newCandle(tick.getTimestamp(), tick);
+                        }
                         else
                             updateCandle(tick);
                         break;
                     case 6900:
-                        if (tick.getTimestamp().getDayOfWeek().getValue() < previousDate.getDayOfWeek().getValue())
+                        if (tick.getTimestamp().getDayOfWeek().getValue() < previousDate.getDayOfWeek().getValue()){
+                            if (flow.size() > 0) {
+                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setWeeklyMark(flow.get(0).getClose());
+                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setHigh(tick.getClose());
+                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setLow(tick.getClose());
+                            }
                             newCandle(tick.getTimestamp(), tick);
+                        }
                         else
                             updateCandle(tick);
                         break;
                     case 1380:
-                        if (tick.getTimestamp().getDayOfMonth() != previousDate.getDayOfMonth())
+                        if (tick.getTimestamp().getDayOfMonth() != previousDate.getDayOfMonth()) {
+                            if (flow.size() > 0)
+                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setDailyMark(flow.get(0).getClose());
                             newCandle(tick.getTimestamp(), tick);
+                        }
                         else
                             updateCandle(tick);
                         break;
