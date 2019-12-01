@@ -45,4 +45,5 @@ public interface CandleRepository extends JpaRepository<Candle, Long> {
     @Modifying
     @Query(value = "DELETE FROM Candle c WHERE c.idcontract = :idcontract and c.idTick > :idTick", nativeQuery = true)
     int deleteIncorrectCandles(@Param("idcontract") long idcontract, @Param("idTick") long idTick);
+
 }

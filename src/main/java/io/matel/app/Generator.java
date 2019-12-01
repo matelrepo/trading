@@ -5,13 +5,14 @@ import com.ib.client.TickAttrib;
 import io.matel.app.config.Global;
 import io.matel.app.controller.SaverController;
 import io.matel.app.controller.WsController;
+import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.Tick;
 import io.matel.app.repo.CandleRepository;
 import io.matel.app.repo.GeneratorStateRepo;
 import io.matel.app.repo.TickRepository;
 import io.matel.app.state.GeneratorState;
-import io.matel.app.tools.IBClient;
+import io.matel.app.tools.IbClient;
 import io.matel.app.tools.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,14 +27,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
 
-public class Generator implements IBClient {
+public class Generator implements IbClient {
     private static final Logger LOGGER = LogManager.getLogger(Generator.class);
 
     @Autowired
     Global global;
 
     @Autowired
-    WsController WsController;
+    WsController wsController;
 
     @Autowired
     AppController appController;
@@ -72,6 +73,7 @@ public class Generator implements IBClient {
             generatorState.setRandomGenerator(true);
             Tick tick = tickRepository.findTopByIdcontractOrderByTimestampDesc(contract.getIdcontract());
             if (tick != null) {
+            LOGGER.info("Connecting market data contract " + contract.getIdcontract() + " -> " + tick.getClose());
                 generatorState.setLastPrice(tick.getClose());
             } else {
                 generatorState.setLastPrice(Global.STARTING_PRICE);
@@ -89,8 +91,8 @@ public class Generator implements IBClient {
                     } else {
                         price = generatorState.getLastPrice() - contract.getTickSize();
                     }
-                    generatorState.setAsk(price);
-                    generatorState.setBid(price);
+                    generatorState.setAsk(Utils.round(price,contract.getRounding()));
+                    generatorState.setBid(Utils.round(price,contract.getRounding()));
                     runPrice(contract.getIdcontract(), 4, price, null);
                     int volume = rand.nextInt(1000);
                     runSize(contract.getIdcontract(), 5, volume);
@@ -167,7 +169,6 @@ public class Generator implements IBClient {
     }
 
     private void runPrice(long tickerId, int field, double price, TickAttrib attrib) {
-//        if(!lock) {
         generatorState.setTimestamp(ZonedDateTime.now());
 
         if (price > 0 && (field == 4 || field == 68)) {
@@ -187,9 +188,17 @@ public class Generator implements IBClient {
 
                 processPrice(tick, true);
                 savingTick();
+                wsController.sendLiveGeneratorState(generatorState);
             }
         }
-//        }
+    }
+
+    public void process(Candle candle) throws InterruptedException {
+        processors.forEach((freq, processor)->{
+            processor.process(candle.getTimestamp(), candle.getId(), candle.getOpen(),
+                    candle.getHigh(), candle.getLow(), candle.getClose(), true);
+        });
+//        Thread.sleep(1000);
     }
 
     public void processPrice(Tick tick, boolean triggerProcessing) {
@@ -199,13 +208,13 @@ public class Generator implements IBClient {
         if (triggerProcessing)
             consecutiveUpDownCounter(tick);
         processors.forEach((freq, processor) -> {
-            processor.process(tick);
+            processor.process(tick.getTimestamp(), tick.getId(), null, null, null, tick.getClose(), false);
         });
         generatorState.setLastPrice(tick.getClose());
         generatorState.setChangeValue(Utils.round(generatorState.getLastPrice() - generatorState.getDailyMark(), contract.getRounding()));
         generatorState.setChangePerc(generatorState.getLastPrice() / generatorState.getDailyMark()-1);
-
     }
+
 
     private double reformatPrice(double price) {
         double newPrice = -1;
@@ -238,7 +247,7 @@ public class Generator implements IBClient {
             generatorState.setTriggerDown(0);
         } else if (flowLive.get(0).getClose() < generatorState.getLastPrice()) {
             generatorState.setTriggerUp(0);
-            generatorState.setTriggerDown(generatorState.getTriggerUp() + 1);
+            generatorState.setTriggerDown(generatorState.getTriggerDown() + 1);
         }
         tick.setTriggerUp(generatorState.getTriggerUp());
         tick.setTriggerDown(generatorState.getTriggerDown());

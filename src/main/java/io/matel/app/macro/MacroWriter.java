@@ -1,10 +1,12 @@
 package io.matel.app.macro;
 
 import com.opencsv.CSVReader;
+import io.matel.app.config.DatabaseJdbc;
 import io.matel.app.macro.domain.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -43,6 +45,9 @@ public class MacroWriter {
     @Autowired
     MacroIgnoredCodeRepo macroIgnoredCodeRepo;
 
+    @Autowired
+    DatabaseJdbc dbb;
+
 
     private LocalDateTime lastDateTime;
     private final HttpClient httpClient = HttpClient.newBuilder().build();
@@ -57,7 +62,6 @@ public class MacroWriter {
     public void start() throws Exception {
         List<CountryPref> countriesPref = countryPrefRepo.findAllByType("Primary");
         List<MacroIgnoredCode> ignoredMacroIgnoredCode = macroIgnoredCodeRepo.findAll();
-        System.out.println(ignoredMacroIgnoredCode.size());
 
         List<String> countries = countriesPref.stream().map(c -> c.getCountry()).collect(Collectors.toList());
         List<String> ignoredItems = ignoredMacroIgnoredCode.stream().map(c -> c.getCode()).collect(Collectors.toList());
@@ -66,7 +70,6 @@ public class MacroWriter {
         MacroUpdate lastUpdate = macroUpdateRepo.findTopByOrderByRefreshedDesc();
         if (lastUpdate != null) {
             lastDateTime = lastUpdate.getRefreshed();
-            System.out.println(lastDateTime);
         } else {
             lastDateTime = null;
         }
@@ -169,6 +172,11 @@ public class MacroWriter {
                     }
                     return res;
                 });
+    }
+
+    @Scheduled(cron = "0 0 10 * * ?")
+    public void clock() {
+        dbb.getMacroItemsByCountry("USA");
     }
 
 

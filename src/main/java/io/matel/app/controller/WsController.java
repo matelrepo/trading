@@ -1,8 +1,8 @@
 package io.matel.app.controller;
 
-import io.matel.app.state.GeneratorState;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.Ticket;
+import io.matel.app.state.GeneratorState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -24,7 +24,8 @@ public class WsController {
     }
 
     public void sendLiveGeneratorState(GeneratorState genState){
-
+        String path = ("/get/quote/" + genState.getIdcontract());
+        template.convertAndSend(path, genState);
     }
 
     public void sendPrices(Map<Long, GeneratorState> states) {

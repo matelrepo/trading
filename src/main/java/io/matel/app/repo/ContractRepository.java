@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ContractRepository extends JpaRepository<ContractBasic, Long> {
-    List<ContractBasic> findByActive(boolean active);
+    List<ContractBasic> findTop100ByActiveAndType(boolean active, String type);
     ContractBasic findByIdcontract(long idcontract);
 }

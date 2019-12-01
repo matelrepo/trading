@@ -1,18 +1,20 @@
 package io.matel.app;
 
 
+import io.matel.app.config.Global;
 import io.matel.app.controller.SaverController;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.domain.Tick;
 import io.matel.app.domain.enumtype.EventType;
-import io.matel.app.repo.ProcessorDataRepository;
-import io.matel.app.state.LogProcessorData;
-import io.matel.app.state.ProcessorData;
+import io.matel.app.repo.ProcessorStateRepository;
+import io.matel.app.state.LogProcessorState;
+import io.matel.app.state.ProcessorState;
+import io.matel.app.tools.DoubleStatistics;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.stream.Collector;
 
 public class Processor extends FlowMerger {
 
@@ -20,36 +22,51 @@ public class Processor extends FlowMerger {
     SaverController saverController;
 
     @Autowired
-    ProcessorDataRepository processorDataRepository;
+    ProcessorStateRepository processorStateRepository;
+    Double closingAverage;
+    DoubleStatistics statsOnHeight;
 
 
-    private ProcessorData processorData;
-    private int offset; // Used for offset candle if frequency >0
-    LogProcessorData logData;
+    private ProcessorState processorState;
+    private int offset = 0; // Used for offset candle if frequency >0
+    LogProcessorState logData;
 
     public Processor(ContractBasic contract, int freq) {
         super(contract, freq);
-        processorData = new ProcessorData(contract.getIdcontract(), freq);
-        offset = freq > 0 ? 0 : 1;
+        processorState = new ProcessorState(contract.getIdcontract(), freq);
+//        offset = freq > 0 ? 0 : 1;
     }
 
-    public List<Candle> getFlow(){
+    public List<Candle> getFlow() {
         return flow;
     }
 
 
-    public void process(Tick tick) {
-        merge(tick);
-        logData = new LogProcessorData(contract.getIdcontract(), freq, offset);
-        logData.idTick = tick.getId();
+    public void process(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, boolean isCandleComputed) {
+        merge(timestamp, idTick, open, high, low, close, isCandleComputed);
+        logData = new LogProcessorState(contract.getIdcontract(), freq, offset);
+        logData.idTick = idTick;
         logData.flowSizeGreaterThan4 = flow.size() > 4;
+
+        if(contract.getIdcontract()==8 && freq==5 && flow.size()>1) {
+            System.out.println("");
+            System.out.println(flow.get(1).toString());
+            System.out.println(flow.get(0).toString());
+        }
+
         if (flow.size() > 4)
-            algorythm();
+            algorythm(isCandleComputed);
     }
 
-    public void algorythm() {
+    public void algorythm(boolean isCandleComputed) {
+
+        logData.smallCandleNoiseRemoval = smallCandleNoiseRemoval;
+
+        if (isCandleComputed && freq == 1380 || freq == 0)
+            offset = isCandleComputed ? 1 : 0;
+
         logData.timestamp = ZonedDateTime.now();
-        processorData.setTimestamp(ZonedDateTime.now());
+        processorState.setTimestamp(ZonedDateTime.now());
         logData.isMaxDetect = isMaxDetect();
 
         logData.low0 = flow.get(0).getLow();
@@ -64,85 +81,109 @@ public class Processor extends FlowMerger {
         logData.high4 = flow.get(4 - offset).getHigh();
 
         logData.isMaxDetect = isMaxDetect();
-        logData.max = processorData.getMax();
-        logData.isHigh2LessThanMax = flow.get(2 - offset).getHigh() < processorData.getMax();
-        logData.maxTrend = flow.get(2 - offset).getHigh() < processorData.getMax();
-        processorData.setMaxTrend(flow.get(2 - offset).getHigh() < processorData.getMax());
-        if (isMaxDetect()) {
+        logData.max = processorState.getMax();
+        logData.isHigh2LessThanMax = flow.get(2 - offset).getHigh() < processorState.getMax();
+        logData.maxTrend = flow.get(2 - offset).getHigh() < processorState.getMax();
+        processorState.setMaxTrend(flow.get(2 - offset).getHigh() < processorState.getMax());
+        if (isMaxDetect() && !smallCandleNoiseRemoval) {
             logData.maxValue = flow.get(2 - offset).getHigh();
             logData.maxValid = flow.get(1 - offset).getLow();
             logData.isEventTypeMaxDetect = true;
 
-            processorData.setMaxValue(flow.get(2 - offset).getHigh());
-            processorData.setMaxValid(flow.get(1 - offset).getLow());
+            processorState.setMaxValue(flow.get(2 - offset).getHigh());
+            processorState.setMaxValid(flow.get(1 - offset).getLow());
             recordEvent(EventType.MAX_DETECT);
         }
 
-        logData.low0LessThanMaxValid = flow.get(0).getLow() < processorData.getMaxValid();
-        if (processorData.getActiveEvents().get(EventType.MAX_DETECT) && flow.get(0).getLow() < processorData.getMaxValid()) {
-            logData.colorGreaterThanMinus1 = processorData.getColor() > -1;
-            if (processorData.getColor() > -1) {
-                processorData.setMax(processorData.getMaxValue());
-                logData.max = processorData.getMaxValue();
+        logData.low0LessThanMaxValid = flow.get(0).getLow() < processorState.getMaxValid();
+        if (processorState.getActiveEvents().get(EventType.MAX_DETECT) && flow.get(0).getLow() < processorState.getMaxValid()) {
+            logData.colorGreaterThanMinus1 = processorState.getColor() > -1;
+            if (processorState.getColor() > -1) {
+                processorState.setMax(processorState.getMaxValue());
+                logData.max = processorState.getMaxValue();
             }
-            logData.maxTrend = processorData.isMaxTrend();
-            logData.minTrend = processorData.isMinTrend();
-            logData.getColorMax = this.getColorMax(processorData.isMaxTrend(), processorData.isMinTrend());
-            processorData.setColor(this.getColorMax(processorData.isMaxTrend(), processorData.isMinTrend()));
+            logData.maxTrend = processorState.isMaxTrend();
+            logData.minTrend = processorState.isMinTrend();
+            logData.getColorMax = this.getColorMax(processorState.isMaxTrend(), processorState.isMinTrend());
+            processorState.setColor(this.getColorMax(processorState.isMaxTrend(), processorState.isMinTrend()));
             recordEvent(EventType.MAX_CONFIRM);
             logData.isEventTypeMaxConfirm = true;
         }
 
-        logData.isEventTypeMaxDetect = processorData.getActiveEvents().get(EventType.MAX_DETECT);
-        logData.high0GreaterThanMaxValue = flow.get(0).getHigh() > processorData.getMaxValue();
-        if (processorData.getActiveEvents().get(EventType.MAX_DETECT) && flow.get(0).getHigh() > processorData.getMaxValue()) {
+        logData.isEventTypeMaxDetect = processorState.getActiveEvents().get(EventType.MAX_DETECT);
+        logData.high0GreaterThanMaxValue = flow.get(0).getHigh() > processorState.getMaxValue();
+        if (processorState.getActiveEvents().get(EventType.MAX_DETECT) && flow.get(0).getHigh() > processorState.getMaxValue()) {
             recordEvent(EventType.MAX_DETECT_CANCEL);
             logData.isEventTypeMaxDetectCancel = true;
         }
 
         logData.isMinDetect = isMinDetect();
-        logData.isLow2GreatherThanMin = flow.get(2 - offset).getLow() > processorData.getMin();
-        logData.min = processorData.getMin();
-        logData.minTrend = flow.get(2 - offset).getLow() > processorData.getMin();
-        processorData.setMinTrend(flow.get(2 - offset).getLow() > processorData.getMin());
-        if (isMinDetect()) {
+        logData.isLow2GreatherThanMin = flow.get(2 - offset).getLow() > processorState.getMin();
+        logData.min = processorState.getMin();
+        logData.minTrend = flow.get(2 - offset).getLow() > processorState.getMin();
+        processorState.setMinTrend(flow.get(2 - offset).getLow() > processorState.getMin());
+        if (isMinDetect() && !smallCandleNoiseRemoval) {
             logData.minValue = flow.get(2 - offset).getLow();
             logData.minValid = flow.get(1 - offset).getHigh();
             logData.isEventTypeMinDetect = true;
 
 
-            processorData.setMinValue(flow.get(2 - offset).getLow());
-            processorData.setMinValid(flow.get(1 - offset).getHigh());
+            processorState.setMinValue(flow.get(2 - offset).getLow());
+            processorState.setMinValid(flow.get(1 - offset).getHigh());
             recordEvent(EventType.MIN_DETECT);
         }
 
-        logData.isEventTypeMinDetect = processorData.getActiveEvents().get(EventType.MIN_DETECT);
-        logData.high0GreatherThanMinValid = flow.get(0).getHigh() > processorData.getMinValid();
-        if (processorData.getActiveEvents().get(EventType.MIN_DETECT) && flow.get(0).getHigh() > processorData.getMinValid()) {
-            logData.colorLessThan1 = processorData.getColor() < 1;
-            if (processorData.getColor() < 1) {
-                processorData.setMin(processorData.getMinValue());
-                logData.min=processorData.getMinValue();
+        logData.isEventTypeMinDetect = processorState.getActiveEvents().get(EventType.MIN_DETECT);
+        logData.high0GreatherThanMinValid = flow.get(0).getHigh() > processorState.getMinValid();
+        if (processorState.getActiveEvents().get(EventType.MIN_DETECT) && flow.get(0).getHigh() > processorState.getMinValid()) {
+            logData.colorLessThan1 = processorState.getColor() < 1;
+            if (processorState.getColor() < 1) {
+                processorState.setMin(processorState.getMinValue());
+                logData.min = processorState.getMinValue();
             }
-            logData.getColorMin = this.getColorMin(processorData.isMaxTrend(), processorData.isMinTrend());
-            logData.maxTrend = processorData.isMaxTrend();
-            logData.minTrend = processorData.isMinTrend();
-            processorData.setColor(this.getColorMin(processorData.isMaxTrend(), processorData.isMinTrend()));
+            logData.getColorMin = this.getColorMin(processorState.isMaxTrend(), processorState.isMinTrend());
+            logData.maxTrend = processorState.isMaxTrend();
+            logData.minTrend = processorState.isMinTrend();
+            processorState.setColor(this.getColorMin(processorState.isMaxTrend(), processorState.isMinTrend()));
             recordEvent(EventType.MIN_CONFIRM);
             logData.isEventTypeMinConfirm = true;
         }
 
-        logData.isEventTypeMinDetect = processorData.getActiveEvents().get(EventType.MIN_DETECT);
-        logData.low0LessThanMinValue = flow.get(0).getLow() < processorData.getMinValue();
-        if (processorData.getActiveEvents().get(EventType.MIN_DETECT) && flow.get(0).getLow() < processorData.getMinValue()) {
+        logData.isEventTypeMinDetect = processorState.getActiveEvents().get(EventType.MIN_DETECT);
+        logData.low0LessThanMinValue = flow.get(0).getLow() < processorState.getMinValue();
+        if (processorState.getActiveEvents().get(EventType.MIN_DETECT) && flow.get(0).getLow() < processorState.getMinValue()) {
             recordEvent(EventType.MIN_DETECT_CANCEL);
             logData.isEventTypeMinDetectCancel = true;
         }
-        flow.get(0).setColor(processorData.getColor());
-        logData.color0 = processorData.getColor();
 
-        if (flow.get(0).getClose() == flow.get(0).getHigh() || flow.get(0).getClose() == flow.get(0).getLow())
+
+         flow.get(0).setCloseAverage(flow.stream().mapToDouble(x -> x.getClose()).summaryStatistics().getAverage());
+        logData.closeAverage = flow.get(0).getCloseAverage();
+        flow.get(0).setAbnormalHeightLevel(flow.stream().map(x -> (x.getHigh() - x.getLow()))
+                .collect(Collector.of(
+                        DoubleStatistics::new,
+                        DoubleStatistics::accept,
+                        DoubleStatistics::combine,
+                        d -> d.getAverage() + 2 * d.getStandardDeviation()
+                )));
+
+        logData.high0MinusLow0 = flow.get(0).getHigh() - flow.get(0).getLow();
+        logData.abnormalHeightLevel = flow.get(0).getAbnormalHeightLevel();
+        if((flow.get(0).getHigh() - flow.get(0).getLow())>flow.get(0).getAbnormalHeightLevel()){
+           flow.get(0).setBigCandle(true);
+        }else{
+            flow.get(0).setBigCandle(false);
+        }
+
+        flow.get(0).setColor(processorState.getColor());
+        logData.color0 = processorState.getColor();
+
+        if (isCandleComputed || (flow.get(0).getClose() == flow.get(0).getHigh() || flow.get(0).getClose() == flow.get(0).getLow()))
             saverController.saveBatchLogProcessor(logData);
+
+        if (Global.ONLINE || Global.RANDOM)
+            wsController.sendLiveCandle(flow.get(0));
+
     }
 
     private int getColorMax(boolean maxTrend, boolean minTrend) {
@@ -188,9 +229,9 @@ public class Processor extends FlowMerger {
     }
 
     private void recordEvent(EventType type) {
-        processorData.setType(type);
-//        if(freq>0)
-//        processorDataRepository.save(processorData);
+        processorState.setType(type);
+        if (freq > 0 && Global.READ_ONLY_CANDLES)
+            processorStateRepository.save(processorState);
     }
 
     private boolean isMaxDetect() {
@@ -203,7 +244,6 @@ public class Processor extends FlowMerger {
     }
 
     private boolean isMinDetect() {
-        logData.isNewCandle0 = flow.get(0).isNewCandle();
         logData.isLow1GreaterThanOrEqualLow2 = flow.get(1 - offset).getLow() >= flow.get(2 - offset).getLow();
         logData.isLow3GreaterThanOrEqualLow2 = flow.get(3 - offset).getLow() >= flow.get(2 - offset).getLow();
         logData.isLow4GreaterThanOrEqualLow2 = flow.get(4 - offset).getLow() >= flow.get(2 - offset).getLow();
@@ -211,8 +251,12 @@ public class Processor extends FlowMerger {
                 && flow.get(3 - offset).getLow() >= flow.get(2 - offset).getLow() && flow.get(4 - offset).getLow() >= flow.get(2 - offset).getLow();
     }
 
-    public void setProcessorData(ProcessorData processorData){
-        if(processorData!= null)
-        this.processorData = processorData;
+    public void setProcessorState(ProcessorState processorState) {
+        if (processorState != null)
+            this.processorState = processorState;
+    }
+
+    public ProcessorState getProcessorState(){
+        return processorState;
     }
 }

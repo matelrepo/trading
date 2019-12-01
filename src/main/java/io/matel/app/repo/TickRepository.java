@@ -15,8 +15,8 @@ public interface TickRepository extends JpaRepository<Tick, Long> {
     Tick findTopByIdcontractOrderByTimestampDesc(long idcontract);
     Tick findTopByOrderByIdDesc();
 
-    @Query(value = "SELECT * FROM tick WHERE id > :idTick and idcontract= :idcontract", nativeQuery = true)
-    List<Tick> getTicksGreatherThanTickByIdContract(long idcontract, long idTick);
+    @Query(value = "SELECT * FROM tick WHERE id > :idTick and idcontract= :idcontract ORDER BY timestamp", nativeQuery = true)
+    List<Tick> getTicksGreatherThanTickByIdContractByOrderByTimestamp(long idcontract, long idTick);
 
     @Transactional
     @Modifying

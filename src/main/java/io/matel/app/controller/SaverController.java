@@ -5,70 +5,91 @@ import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.Tick;
 import io.matel.app.repo.CandleRepository;
-import io.matel.app.repo.LogProcessorDataRepo;
+import io.matel.app.repo.LogProcessorStateRepo;
 import io.matel.app.repo.TickRepository;
-import io.matel.app.state.LogProcessorData;
+import io.matel.app.state.LogProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class SaverController {
 
+    @PreDestroy
+    public void beforeClosing() throws InterruptedException {
+        while(global.isSaving()){
+            Thread.sleep(1000);
+        }
+    }
+
     private static final Logger LOGGER = LogManager.getLogger(SaverController.class);
     private List<Tick> ticksBuffer = new ArrayList<>();
     private List<Candle> candlesBuffer = new ArrayList<>();
-    List<LogProcessorData> logDataBuffer = new ArrayList<>();
+    List<LogProcessorState> logDataBuffer = new ArrayList<>();
 
 
     @Autowired
     Global global;
 
-    LogProcessorDataRepo logProcessorDataRepository;
+    LogProcessorStateRepo logProcessorStateRepository;
     TickRepository tickRepository;
     CandleRepository candleRepository;
     AppController appController;
 
     public SaverController(TickRepository tickRepository,
                            CandleRepository candleRepository,
-                           LogProcessorDataRepo logProcessorDataRepository,
+                           LogProcessorStateRepo logProcessorStateRepository,
                            AppController appController){
         this.tickRepository = tickRepository;
         this.candleRepository = candleRepository;
         this.appController = appController;
-        this.logProcessorDataRepository = logProcessorDataRepository;
+        this.logProcessorStateRepository = logProcessorStateRepository;
     }
 
-    public void saveNow(){
-        saveNow(null);
+    public void saveNow(boolean inititalComputation){
+        saveNow(null, inititalComputation);
     }
 
-    public void saveNow(Long idcontract) {
-        saveBatchCandles();
-        updateCurrentCandle(idcontract);
-        saveBatchTicks();
-//        saveBatchLogProcessor();
+    public void saveNow(Long idcontract, boolean initialComputation) {
+        global.setSaving(true);
+        int num =  saveBatchTicks();
+        LOGGER.info("Saving now with " + num + " ticks for contract " + idcontract);
+        if(num>0 || initialComputation) {
+            saveBatchCandles();
+            updateCurrentCandle(idcontract);
+            saveBatchLogProcessor();
+        }else{
+            LOGGER.warn("Cannot save candles because ticks were not saved!");
+        }
+
+        LOGGER.info("Saving completed");
+        global.setSaving(false);
+
+
     }
 
-    public synchronized void saveBatchTicks() {
-        saveBatchTicks(null);
+    public synchronized int saveBatchTicks() {
+        return saveBatchTicks(null);
     }
 
-    public synchronized void saveBatchTicks(Tick tick) {
+    public synchronized int saveBatchTicks(Tick tick) {
+        List<Tick> results = new ArrayList<>();
         if (!Global.READ_ONLY_TICKS) {
             if (tick != null)
                 this.ticksBuffer.add(tick);
 
-                if (ticksBuffer.size() > Global.MAX_TICKS_SIZE_SAVING || tick == null) {
+                if (ticksBuffer.size()>0 && (ticksBuffer.size() > Global.MAX_TICKS_SIZE_SAVING || tick == null)) {
                     LOGGER.info("Regular batch ticks saving (" + ticksBuffer.size()+ ")");
-                    tickRepository.saveAll(this.ticksBuffer);
+                    results = tickRepository.saveAll(this.ticksBuffer);
                 ticksBuffer.clear();
             }
         }
+        return results.size();
     }
 
     public synchronized void saveBatchLogProcessor() {
@@ -76,17 +97,17 @@ public class SaverController {
     }
 
 
-    public synchronized void saveBatchLogProcessor(LogProcessorData data) {
-//        if (!Global.READ_ONLY_TICKS) {
-//            if (data != null)
-//                this.logDataBuffer.add(data);
-//
-//            if (logDataBuffer.size() > Global.MAX_TICKS_SIZE_SAVING || data == null) {
-//                LOGGER.info("Regular log processor saving (" + logDataBuffer.size()+ ")");
-//                logProcessorDataRepository.saveAll(this.logDataBuffer);
-//                logDataBuffer.clear();
-//            }
-//        }
+    public synchronized void saveBatchLogProcessor(LogProcessorState data) {
+        if (!Global.READ_ONLY_CANDLES) {
+            if (data != null)
+                this.logDataBuffer.add(data);
+
+            if (logDataBuffer.size() > Global.MAX_TICKS_SIZE_SAVING*3 || data == null) {
+                LOGGER.info("Regular log processor saving (" + logDataBuffer.size()+ ")");
+                logProcessorStateRepository.saveAll(this.logDataBuffer);
+                logDataBuffer.clear();
+            }
+        }
     }
 
     public synchronized void saveBatchCandles() {

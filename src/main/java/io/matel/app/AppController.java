@@ -8,7 +8,7 @@ import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.repo.*;
 import io.matel.app.state.GeneratorState;
-import io.matel.app.state.ProcessorData;
+import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class AppController {
     ContractRepository contractRepository;
 
     @Autowired
-    ProcessorDataRepository processorDataRepository;
+    ProcessorStateRepository processorStateRepository;
 
     @Autowired
     BeanFactory beanFactory;
@@ -50,32 +50,35 @@ public class AppController {
 
     private static final Logger LOGGER = LogManager.getLogger(AppLauncher.class);
     private ExecutorService executor = Executors.newFixedThreadPool(Global.EXECUTOR_THREADS);
-    private List<ContractBasic> contracts = new ArrayList<>();
+    private List<ContractBasic> contractsLive = new ArrayList<>();
+    private List<ContractBasic> contractsDailyCon = new ArrayList<>();
+    private Map<String, ContractBasic> contractsBySymbol = new HashMap<>();
     private Map<Long, Generator> generators = new ConcurrentHashMap<>();
     private Map<Long, GeneratorState> generatorsState = new ConcurrentHashMap<>();
     private Map<String, ActiveUserEvent> activeUsers = new ConcurrentHashMap<>();  //By SessionId
 
-    public void loadHistoricalCandles(Long idcontract, boolean reset) {
-        getGenerators().forEach((id, gen) -> {
-            if (idcontract == id) {
-                gen.getProcessors().forEach((freq, processor) -> {
-                    try {
-                        if (reset)
-                            processor.resetFlow();
-                        List<Candle> candles = getCandlesFromDatabase(idcontract, freq).get();
-                        processor.setFlow(candles);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
+    public void loadHistoricalCandlesFromDbb(Long idcontract, boolean reset) {
+        generators.get(idcontract).getProcessors().forEach((freq, processor) -> {
+            if (reset)  processor.resetFlow();
+            getCandlesByIdContractByFreq(idcontract, freq);
         });
     }
 
-    public Future<List<Candle>> getCandlesFromDatabase(long idcontract, int freq) {
-        return executor.submit(() -> candleRepository.findTop100ByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq));
+    public List<Candle> getCandlesByIdContractByFreq(long idcontract, int freq){
+            List<Candle> candles;
+            if(generators.get(idcontract).getProcessors().get(freq).getFlow().size()>0){
+                LOGGER.warn("Processor has some flow (" + idcontract +"," + generators.get(idcontract).getProcessors().get(freq).getFlow().size()+")");
+                candles = generators.get(idcontract).getProcessors().get(freq).getFlow();
+            }else {
+                candles = candleRepository.findTop100ByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
+                if (candles.size() > 0) {
+                    LOGGER.warn("Loading from dbb " + candles.size() +" (" + idcontract+ "," + freq + ")");
+                    generators.get(idcontract).getProcessors().get(freq).setFlow(candles);
+                } else {
+                    LOGGER.warn("No historical data for contract " + 8 + " and freq = " + freq);
+                }
+            }
+        return candles;
     }
 
     public Generator createGenerator(ContractBasic contract){
@@ -86,16 +89,18 @@ public class AppController {
         return generator;
     }
 
-    public void createProcessors(ContractBasic contract){
-        Map<Integer, ProcessorData> procData = new HashMap<>();
-        processorDataRepository.findByIdcontract(contract.getIdcontract()).forEach( data ->{
+    public void createProcessors(ContractBasic contract, int minFreq){
+        Map<Integer, ProcessorState> procData = new HashMap<>();
+        processorStateRepository.findByIdcontract(contract.getIdcontract()).forEach(data ->{
             procData.put(data.getFreq(), data);
         });
 
         for (int frequency : Global.FREQUENCIES) {
-            Processor processor = beanFactory.createBeanProcessor(contract, frequency);
-            processor.setProcessorData(procData.get(frequency));
-            generators.get(contract.getIdcontract()).getProcessors().put(frequency, processor);
+            if(frequency >= minFreq) {
+                Processor processor = beanFactory.createBeanProcessor(contract, frequency);
+                processor.setProcessorState(procData.get(frequency));
+                generators.get(contract.getIdcontract()).getProcessors().put(frequency, processor);
+            }
         }
     }
 
@@ -103,16 +108,12 @@ public class AppController {
         generators.get(contract.getIdcontract()).connectMarketData();
     }
 
-    public List<ContractBasic> getContracts() {
-        return contracts;
+    public List<ContractBasic> getContractsLive() {
+        return contractsLive;
     }
 
-    public void setContracts(List<ContractBasic> contracts) {
-        this.contracts = contracts;
-    }
-
-    public void setContract(ContractBasic contract) {
-        this.contracts.add(contract);
+    public void setContractsLive(List<ContractBasic> contracts) {
+        this.contractsLive = contracts;
     }
 
     public Map<Long, Generator> getGenerators() {
@@ -132,12 +133,32 @@ public class AppController {
     public void clock() {
         if(global.isHasCompletedLoading()) {
             LOGGER.info("Auto-saving");
+            if(Global.READ_ONLY_CANDLES)
             generators.forEach((id, gen) -> {
                 if (gen.getGeneratorState().getLastPrice() > 0)
                     generatorStateRepo.save(gen.getGeneratorState());
+
+                gen.getProcessors().forEach((freq, processor)->{
+                    processorStateRepository.save(processor.getProcessorState());
+                });
             });
-            saverController.saveNow();
+            saverController.saveNow(false);
         }
     }
 
+    public List<ContractBasic> getContractsDailyCon() {
+        return contractsDailyCon;
+    }
+
+    public void setContractsDailyCon(List<ContractBasic> contractsDailyCon) {
+        this.contractsDailyCon = contractsDailyCon;
+    }
+
+    public Map<String, ContractBasic> getContractsBySymbol() {
+        return contractsBySymbol;
+    }
+
+    public void setContractsBySymbol(Map<String, ContractBasic> contractsBySymbol) {
+        this.contractsBySymbol = contractsBySymbol;
+    }
 }

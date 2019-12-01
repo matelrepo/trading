@@ -8,7 +8,6 @@ import io.matel.app.connection.activeuser.ActiveUserEvent;
 import io.matel.app.connection.user.UserRepository;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.domain.Ticket;
 import io.matel.app.macro.domain.MacroDAO;
 import io.matel.app.repo.CandleRepository;
 import io.matel.app.repo.ContractRepository;
@@ -63,10 +62,15 @@ public class HttpController {
         this.saverController = saverController;
     }
 
-    @GetMapping("/contracts")
-    public List<ContractBasic> getContracts(){
-        List<ContractBasic> contracts = contractRepository.findByActive(true);
-        LOGGER.info("Sending (" + contracts.size() + ") contracts" );
+    @GetMapping("/contracts/{type}")
+    public List<ContractBasic> getContracts(@PathVariable String type){
+        List<ContractBasic> contracts = null;
+        if(appController.getContractsLive().size()>0){
+            contracts = appController.getContractsLive();
+        }else {
+            contracts = contractRepository.findTop100ByActiveAndType(true, type);
+        }
+        LOGGER.info("Sending (" + contracts.size() + ") contracts " + type );
         return contracts;
     }
 
@@ -79,58 +83,57 @@ public class HttpController {
     public List<Candle> getHistoricalCandles(@PathVariable String id, @PathVariable String frequency){
         long idcontract = Long.valueOf(id);
         int freq = Integer.valueOf(frequency);
-//        int save = Integer.valueOf(saveOption);
-        if (freq == 1 )
-            saverController.saveNow(idcontract);
-        List<Candle> candles = candleRepository.findTop100ByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
-        System.out.println(freq + " " + candles.size());
-//        LOGGER.info("Sending historical prices for contract (" + idcontract + ") - freq: " + freq );
-        return candles;
+////        if (freq == 1 )
+////            saverController.saveNow(idcontract);
+//        List<Candle> candles = new ArrayList<>();
+//        candles = candleRepository.findTop100ByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
+////        System.out.println(freq + " " + candles.size());
+        return appController.getCandlesByIdContractByFreq(idcontract, freq);
     }
 
     @PostMapping("/contract/{id}/{factor}")
     public boolean updateContract(@PathVariable String id, @PathVariable String factor, @RequestBody ContractBasic con) throws InterruptedException {
-        long idcontract = Long.valueOf(id);
-        double adjfactor = Double.valueOf(factor);
-        appController.getGenerators().get(idcontract).disconnectMarketData(true);
-        ContractBasic contract = appController.getGenerators().get(idcontract).getContract();
-        contract.setExpiration(con.getExpiration());
-        contract.setFirstNotice(con.getFirstNotice());
-        System.out.println(contract.toString());
-        contractRepository.save(contract);
-        saverController.saveNow(contract.getIdcontract());
-        Thread t1 = new Thread(()->{
-            String message = "Updating ticks (" + idcontract + ") with factor: " + adjfactor;
-            Ticket ticket = new Ticket(message, "pending");
-            LOGGER.info(message);
-            wsController.sendNotification(ticket);
-            tickRepository.updateHistoricalTicks(adjfactor, idcontract);
-            message = "Ticks updated (" + idcontract + ") with factor: " + adjfactor;
-            ticket = new Ticket(message, "completed");
-            LOGGER.info(message);
-            wsController.sendNotification(ticket);
-        });
-
-        t1.start();
-
-       Thread t2 = new Thread(()->{
-            String message = "Updating candles (" + idcontract + ") with factor: " + adjfactor;
-            Ticket ticket = new Ticket(message, "pending");
-            LOGGER.info(message);
-            wsController.sendNotification(ticket);
-           candleRepository.updateHistoricalCandles(adjfactor, idcontract);
-            message = "Candles updated (" + idcontract + ") with factor: " + adjfactor;
-            ticket = new Ticket(message, "completed");
-            LOGGER.info(message);
-            wsController.sendNotification(ticket);
-        });
-
-        t2.start();
-
-        t1.join();
-        t2.join();
-        appController.loadHistoricalCandles(idcontract,true);
-        LOGGER.info("Task completed");
+//        long idcontract = Long.valueOf(id);
+//        double adjfactor = Double.valueOf(factor);
+//        appController.getGenerators().get(idcontract).disconnectMarketData(true);
+//        ContractBasic contract = appController.getGenerators().get(idcontract).getContract();
+//        contract.setExpiration(con.getExpiration());
+//        contract.setFirstNotice(con.getFirstNotice());
+//        System.out.println(contract.toString());
+//        contractRepository.save(contract);
+//        saverController.saveNow(contract.getIdcontract());
+//        Thread t1 = new Thread(()->{
+//            String message = "Updating ticks (" + idcontract + ") with factor: " + adjfactor;
+//            Ticket ticket = new Ticket(message, "pending");
+//            LOGGER.info(message);
+//            wsController.sendNotification(ticket);
+//            tickRepository.updateHistoricalTicks(adjfactor, idcontract);
+//            message = "Ticks updated (" + idcontract + ") with factor: " + adjfactor;
+//            ticket = new Ticket(message, "completed");
+//            LOGGER.info(message);
+//            wsController.sendNotification(ticket);
+//        });
+//
+//        t1.start();
+//
+//       Thread t2 = new Thread(()->{
+//            String message = "Updating candles (" + idcontract + ") with factor: " + adjfactor;
+//            Ticket ticket = new Ticket(message, "pending");
+//            LOGGER.info(message);
+//            wsController.sendNotification(ticket);
+//           candleRepository.updateHistoricalCandles(adjfactor, idcontract);
+//            message = "Candles updated (" + idcontract + ") with factor: " + adjfactor;
+//            ticket = new Ticket(message, "completed");
+//            LOGGER.info(message);
+//            wsController.sendNotification(ticket);
+//        });
+//
+//        t2.start();
+//
+//        t1.join();
+//        t2.join();
+//        appController.loadHistoricalCandles(idcontract,true);
+//        LOGGER.info("Task completed");
         return true;
     }
 

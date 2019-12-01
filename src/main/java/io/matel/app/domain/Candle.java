@@ -59,6 +59,10 @@ public class Candle {
     private long speed = -1;
     private int progress = 0;
 
+    private double closeAverage;
+    private double abnormalHeightLevel;
+    private boolean bigCandle;
+
     @Column(nullable = false)
     private int volume = 0;
 
@@ -77,33 +81,50 @@ public class Candle {
         this.close = close;
         this.idcontract = idcontract;
     }
-    public Candle(ZonedDateTime timestamp, double lastPrice, double close, ContractBasic contract, int freq, ZonedDateTime childTimestamp) {
-        if (lastPrice > 0) {
-            double tickSize = contract.getTickSize();
-            int rounding = contract.getRounding();
-            boolean isUpTick = close > lastPrice;
-            double adjust = isUpTick ? -tickSize : tickSize;
-            this.open = Utils.round(close + adjust, rounding);
 
-            if (lastPrice >= close) {
-                this.high = this.open;
-                this.low = close;
-            } else {
-                this.high = close;
-                this.low = this.open;
-            }
-
-        } else {
-            this.open = close;
-            this.high = close;
-            this.low = close;
-        }
-        this.close = close;
+    public Candle(ZonedDateTime timestamp, double open, double high, double low, double close, long idcontract, int freq) {
         this.timestamp = timestamp;
-        this.idcontract = contract.getIdcontract();
-//        this.childTimestamp = childTimestamp;
+        this.open = open;
+        this.high = high;
+        this.low = low;
+        this.close = close;
+        this.idcontract = idcontract;
         this.freq = freq;
-        this.newCandle = true;
+    }
+
+    public Candle(ZonedDateTime timestamp, double lastPrice, Double open, Double high, Double low, double close, ContractBasic contract, int freq, boolean isCandleComputed) {
+        if(isCandleComputed){
+            this.open = open;
+            this.high = high;
+            this.low = low;
+        }else {
+            if (lastPrice > 0) {
+                double tickSize = contract.getTickSize();
+                int rounding = contract.getRounding();
+                boolean isUpTick = close > lastPrice;
+                double adjust = isUpTick ? -tickSize : tickSize;
+                this.open = Utils.round(close + adjust, rounding);
+
+                if (lastPrice >= close) {
+                    this.high = this.open;
+                    this.low = close;
+                } else {
+                    this.high = close;
+                    this.low = this.open;
+                }
+
+            } else {
+                this.open = close;
+                this.high = close;
+                this.low = close;
+            }
+        }
+            this.close = close;
+            this.timestamp = timestamp;
+            this.idcontract = contract.getIdcontract();
+            this.freq = freq;
+            this.newCandle = true;
+
     }
 
     public long getId() {
@@ -271,6 +292,30 @@ public class Candle {
                 ", speed=" + speed +
                 ", progress=" + progress +
                 '}';
+    }
+
+    public double getCloseAverage() {
+        return closeAverage;
+    }
+
+    public void setCloseAverage(double closeAverage) {
+        this.closeAverage = closeAverage;
+    }
+
+    public double getAbnormalHeightLevel() {
+        return abnormalHeightLevel;
+    }
+
+    public void setAbnormalHeightLevel(double abnormalHeightLevel) {
+        this.abnormalHeightLevel = abnormalHeightLevel;
+    }
+
+    public boolean isBigCandle() {
+        return bigCandle;
+    }
+
+    public void setBigCandle(boolean bigCandle) {
+        this.bigCandle = bigCandle;
     }
 }
 

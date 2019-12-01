@@ -5,12 +5,11 @@ import io.matel.app.controller.SaverController;
 import io.matel.app.controller.WsController;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.domain.Tick;
 import io.matel.app.tools.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,24 +36,28 @@ public class FlowMerger {
     protected ZonedDateTime previousDate;
     protected double previousPrice = -1;
     private long lastIdcandleDatabase;
+    boolean smallCandleNoiseRemoval = false;
+
+    public static SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+
 
     public FlowMerger(ContractBasic contract, int freq) {
         this.contract = contract;
         this.freq = freq;
-        base = 60L * freq <= 0 ? 1L : 60L * freq; // Special freq = 1380, 6900,35000
+        base = 60000L * freq <= 0 ? 1L : 60000L * freq; // Special freq = 1380, 6900,35000
     }
 
-    public synchronized void newCandle(ZonedDateTime timestamp, Tick tick) {
-        boolean smallCandleNoiseRemoval = false;
+    public synchronized void newCandle(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, boolean isCandleComputed) {
         if (flow.size() > 2) {
             smallCandleNoiseRemoval = flow.get(0).getLow() >= flow.get(1).getLow() && flow.get(0).getHigh() <= flow.get(1).getHigh() && freq > 0;
             if (smallCandleNoiseRemoval)
-                updateCandle(tick);
+                updateCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
         }
         if (!smallCandleNoiseRemoval) {
-            Candle candle = new Candle(timestamp, previousPrice, tick.getClose(), contract, freq, timestamp);
+            Candle candle = new Candle(timestamp, previousPrice, open, high, low, close, contract, freq, isCandleComputed);
             candle.setId(global.getIdCandle(true));
-            candle.setIdtick(tick.getId());
+            candle.setIdtick(idTick);
             candle.setNewCandle(true);
             candle.setFreq(freq);
 
@@ -68,92 +71,115 @@ public class FlowMerger {
                     flow.remove(flow.size() - 1);
                 }
 
+            consecutiveUpDownCounter();
+
 
             previousPrice = candle.getClose();
         }
     }
 
-    public void updateCandle(Tick tick) {
-        flow.get(0).setNewCandle(false);
-        flow.get(0).setIdtick(tick.getId());
+    private void updateCandle(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, boolean isCandleComputed) {
+      if(flow.size()>0) {
+          flow.get(0).setNewCandle(false);
+          flow.get(0).setIdtick(idTick);
 
-        if (tick.getClose() > flow.get(0).getHigh())
-            flow.get(0).setHigh(tick.getClose());
+          if (isCandleComputed) {
+              if (high > flow.get(0).getHigh())
+                  flow.get(0).setHigh(high);
 
-        if (tick.getClose() < flow.get(0).getLow())
-            flow.get(0).setLow(tick.getClose());
-        flow.get(0).setClose(tick.getClose());
-        previousPrice = tick.getClose();
+              if (low < flow.get(0).getLow())
+                  flow.get(0).setLow(low);
+          } else {
+              if (close > flow.get(0).getHigh())
+                  flow.get(0).setHigh(close);
+
+              if (close < flow.get(0).getLow())
+                  flow.get(0).setLow(close);
+          }
+
+          flow.get(0).setClose(close);
+//        consecutiveUpDownCounter();
+          previousPrice = close;
+      }
     }
 
-    protected void merge(Tick tick) {
-//        if(contract.getIdcontract() ==5 && freq == 1 )
-//            System.out.println(tick.toString());
+    private void consecutiveUpDownCounter() {
+        if(flow.size()>1) {
+            if (flow.get(0).getClose() > flow.get(1).getClose()) {
+                flow.get(0).setTriggerUp(flow.get(1).getTriggerUp() + 1);
+                flow.get(0).setTriggerDown(0);
+            } else if (flow.get(0).getClose() < flow.get(1).getClose()) {
+                flow.get(0).setTriggerUp(0);
+                flow.get(0).setTriggerDown(flow.get(1).getTriggerDown() + 1);
+            }
+//            candle.setTriggerUp(generatorState.getTriggerUp());
+//            candle.setTriggerDown(generatorState.getTriggerDown());
+//            flow.set(0, candle);
+        }
+    }
+
+    protected void merge(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, boolean isCandleComputed) {
         if (freq > 420) {
             if (previousDate == null)
-                newCandle(tick.getTimestamp(), tick);
+                newCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
             else
                 switch (freq) {
                     case 100000:
-                        if (tick.getTimestamp().getDayOfYear() < previousDate.getDayOfYear()){
+                        if (timestamp.getDayOfYear() < previousDate.getDayOfYear()){
                             if (flow.size() > 0)
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setYearlyMark(flow.get(0).getClose());
-                            newCandle(tick.getTimestamp(), tick);
+                            newCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                         }
                         else
-                            updateCandle(tick);
+                            updateCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                         break;
                     case 35000:
-                        if (tick.getTimestamp().getDayOfMonth() < previousDate.getDayOfMonth()){
+                        if (timestamp.getDayOfMonth() < previousDate.getDayOfMonth()){
                             if (flow.size() > 0)
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setMonthlyMark(flow.get(0).getClose());
-                            newCandle(tick.getTimestamp(), tick);
+                            newCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                         }
                         else
-                            updateCandle(tick);
+                            updateCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                         break;
                     case 6900:
-                        if (tick.getTimestamp().getDayOfWeek().getValue() < previousDate.getDayOfWeek().getValue()){
+                        if (timestamp.getDayOfWeek().getValue() < previousDate.getDayOfWeek().getValue()){
                             if (flow.size() > 0) {
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setWeeklyMark(flow.get(0).getClose());
-                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setHigh(tick.getClose());
-                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setLow(tick.getClose());
+                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setHigh(close);
+                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setLow(close);
                             }
-                            newCandle(tick.getTimestamp(), tick);
+                            newCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                         }
                         else
-                            updateCandle(tick);
+                            updateCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                         break;
                     case 1380:
-                        if (tick.getTimestamp().getDayOfMonth() != previousDate.getDayOfMonth()) {
+                        if (timestamp.getDayOfMonth() != previousDate.getDayOfMonth()) {
                             if (flow.size() > 0)
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setDailyMark(flow.get(0).getClose());
-                            newCandle(tick.getTimestamp(), tick);
+                            newCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                         }
                         else
-                            updateCandle(tick);
+                            updateCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                         break;
                 }
-            previousDate = tick.getTimestamp();
+            previousDate = timestamp;
         } else {
-            long currentStamp = tick.getTimestamp().toEpochSecond();
+            long currentStamp = timestamp.toEpochSecond()*1000;
             if ((currentStamp - currentStamp % (base)) != stampReference || freq == 0 || flow.size() == 0) {
                 stampReference = currentStamp - currentStamp % (base);
-                ZonedDateTime refDate = ZonedDateTime.ofInstant(Instant.ofEpochSecond(stampReference), ZoneId.of("Asia/Bangkok"));
-                newCandle(refDate, tick);
+                ZonedDateTime refDate = ZonedDateTime.ofInstant(Instant.ofEpochSecond(stampReference/1000), global.getZoneId());
+                newCandle(refDate, idTick, open, high, low, close, isCandleComputed);
             } else {
-                updateCandle(tick);
-                double progress = Utils.round((double) (currentStamp % (base)) / base, 2) * 100;
+                updateCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
+                double progress = Utils.round((double) (currentStamp % (base)) / base, 2) *100;
                 flow.get(0).setProgress((int) progress);
             }
         }
 
-        if (Global.ONLINE || Global.RANDOM) {
-            wsController.sendLiveCandle(flow.get(0));
-        }
 
-//        if(contract.getIdcontract() ==5 && freq == 1 )
-//            System.out.println(flow.get(0).toString());
+
     }
 
     public void resetFlow(){
@@ -161,11 +187,11 @@ public class FlowMerger {
     }
 
     public void setFlow(List<Candle> candles){
-        flow.addAll(0, candles);
+        flow = candles;
         if(flow.size()>0) {
             previousDate = flow.get(0).getTimestamp();
             previousPrice = flow.get(0).getClose();
-            stampReference = flow.get(0).getTimestamp().toEpochSecond();
+            stampReference = flow.get(0).getTimestamp().toEpochSecond()*1000;
         }
     }
 

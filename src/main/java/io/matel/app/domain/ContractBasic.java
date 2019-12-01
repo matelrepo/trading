@@ -48,6 +48,8 @@ public class ContractBasic {
     @Column(nullable = false)
     private int fusion;
 
+    private String type;
+
     public ContractBasic(){}
 
     public ContractBasic(long idcontract, String title, String secType, String exchange, String currency, String symbol, double tickSize, int rounding, String multiplier,
@@ -198,6 +200,14 @@ public class ContractBasic {
                 ", flowType='" + flowType + '\'' +
                 ", fusion=" + fusion +
                 '}';
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
 
