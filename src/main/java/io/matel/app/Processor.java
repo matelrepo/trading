@@ -1,10 +1,10 @@
 package io.matel.app;
 
 
-import io.matel.app.controller.SaverController;
+import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.domain.enumtype.EventType;
+import io.matel.app.domain.EventType;
 import io.matel.app.repo.ProcessorStateRepository;
 import io.matel.app.state.LogProcessorState;
 import io.matel.app.state.ProcessorState;

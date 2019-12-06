@@ -1,7 +1,8 @@
 package io.matel.app;
 
+import io.matel.app.config.BeanFactory;
+import io.matel.app.config.Global;
 import io.matel.app.connection.activeuser.ActiveUserEvent;
-import io.matel.app.controller.SaverController;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.repo.*;

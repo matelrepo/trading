@@ -1,5 +1,8 @@
-package io.matel.app;
+package io.matel.app.config;
 
+import io.matel.app.DatabaseJdbc;
+import io.matel.app.Generator;
+import io.matel.app.Processor;
 import io.matel.app.domain.ContractBasic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

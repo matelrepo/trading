@@ -1,4 +1,4 @@
-package io.matel.app;
+package io.matel.app.config;
 
 import io.matel.app.macro.domain.MacroDAO;
 import org.springframework.context.annotation.Configuration;

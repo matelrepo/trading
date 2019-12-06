@@ -1,5 +1,6 @@
 package io.matel.app;
 
+import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.Tick;
@@ -145,7 +146,7 @@ public class DatabaseJdbc {
 
     public void getTicks2018(long idcontract){
         try {
-            String sql = "SELECT id, close, created_on, idcontract, timestamp, trigger_down, trigger_up, updated_on FROM public.tick WHERE idcontract =" + idcontract + " order by timestamp ";
+            String sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM trading.data18 WHERE contract =" + idcontract + " order by date ";
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 try {

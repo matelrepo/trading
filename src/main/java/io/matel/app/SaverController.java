@@ -1,7 +1,6 @@
-package io.matel.app.controller;
+package io.matel.app;
 
-import io.matel.app.AppController;
-import io.matel.app.Global;
+import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.Tick;
 import io.matel.app.repo.*;

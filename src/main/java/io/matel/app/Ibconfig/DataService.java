@@ -1,7 +1,9 @@
-package io.matel.app;
+package io.matel.app.Ibconfig;
 
 
 import com.ib.client.Contract;
+import io.matel.app.AppController;
+import io.matel.app.config.Global;
 import io.matel.app.domain.ContractBasic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

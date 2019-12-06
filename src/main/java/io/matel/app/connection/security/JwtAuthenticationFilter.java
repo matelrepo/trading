@@ -2,7 +2,7 @@ package io.matel.app.connection.security;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.matel.app.Global;
+import io.matel.app.config.Global;
 import io.matel.app.connection.user.UserPrincipal;
 import io.matel.app.connection.user.UserView;
 import org.springframework.security.authentication.AuthenticationManager;

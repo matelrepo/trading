@@ -1,5 +1,7 @@
 package io.matel.app;
 
+import io.matel.app.Ibconfig.DataService;
+import io.matel.app.config.Global;
 import io.matel.app.connection.user.UserRepository;
 import io.matel.app.controller.WsController;
 import io.matel.app.dailycandle.DailyCandleCsvUploader;
@@ -181,7 +183,7 @@ public class AppLauncher implements CommandLineRunner {
             }
 
             System.out.println("Requesting ticks for contract " + error.idcontract + " " + Thread.currentThread());
-            DatabaseJdbc database  = appController.createDatabase(Global.databaseName, Global.port, Global.username);
+            DatabaseJdbc database  = appController.createDatabase("cleanm", Global.port, "atmuser");
             database.getTicks2018(error.idcontract);
 //            tickRepository.getTicksGreatherThanTickByIdContractByOrderByTimestamp(error.idcontract, error.lastCandleId)
 //                    .forEach(tick -> generator.processPrice(tick, false));

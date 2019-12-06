@@ -1,6 +1,6 @@
 package io.matel.app;
 
-import io.matel.app.controller.SaverController;
+import io.matel.app.config.Global;
 import io.matel.app.controller.WsController;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
