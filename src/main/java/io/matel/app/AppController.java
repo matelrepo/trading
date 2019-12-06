@@ -12,14 +12,16 @@ import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Controller
 public class AppController {
@@ -60,6 +62,7 @@ public class AppController {
     public void loadHistoricalCandlesFromDbb(Long idcontract, boolean reset) {
         generators.get(idcontract).getProcessors().forEach((freq, processor) -> {
             if (reset)  processor.resetFlow();
+            if(freq>0)
             getCandlesByIdContractByFreq(idcontract, freq);
         });
     }
@@ -75,7 +78,7 @@ public class AppController {
                     LOGGER.warn("Loading from dbb " + candles.size() +" (" + idcontract+ "," + freq + ")");
                     generators.get(idcontract).getProcessors().get(freq).setFlow(candles);
                 } else {
-                    LOGGER.warn("No historical data for contract " + 8 + " and freq = " + freq);
+                    LOGGER.warn("No historical data for contract " + idcontract + " and freq = " + freq);
                 }
             }
         return candles;
@@ -129,22 +132,22 @@ public class AppController {
     }
 
 
-    @Scheduled(fixedRate = 67000)
-    public void clock() {
-        if(global.isHasCompletedLoading()) {
-            LOGGER.info("Auto-saving");
-            if(Global.READ_ONLY_CANDLES)
-            generators.forEach((id, gen) -> {
-                if (gen.getGeneratorState().getLastPrice() > 0)
-                    generatorStateRepo.save(gen.getGeneratorState());
-
-                gen.getProcessors().forEach((freq, processor)->{
-                    processorStateRepository.save(processor.getProcessorState());
-                });
-            });
-            saverController.saveNow(false);
-        }
-    }
+//    @Scheduled(fixedRate = 67000)
+//    public void clock() {
+////        if(global.isHasCompletedLoading()) {
+////            LOGGER.info("Auto-saving");
+////            if(Global.READ_ONLY_CANDLES)
+////            generators.forEach((id, gen) -> {
+////                if (gen.getGeneratorState().getLastPrice() > 0)
+////                    generatorStateRepo.save(gen.getGeneratorState());
+////
+////                gen.getProcessors().forEach((freq, processor)->{
+////                    processorStateRepository.save(processor.getProcessorState());
+////                });
+////            });
+////            saverController.saveNow(false);
+////        }
+//    }
 
     public List<ContractBasic> getContractsDailyCon() {
         return contractsDailyCon;

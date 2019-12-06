@@ -112,9 +112,15 @@ public class DatabaseJdbc {
         }
     }
 
-    public void getDailyConHisto() {
+//    public long getMaxIdDailyCandle() throws SQLException {
+//        String sql = "SELECT date, open, high, low, close, symbol, volume FROM public.daily_candle WHERE id > " + idTick + " order by date;";
+//        ResultSet rs = connection.createStatement().executeQuery(sql);
+//    }
+
+    public void getDailyConHisto(long idTick) {
+
         try {
-            String sql = "SELECT date, open, high, low, close, symbol, volume FROM public.daily_con WHERE date>'2019-01-01' order by date;";
+            String sql = "SELECT date, open, high, low, close, symbol, volume FROM public.daily_candle WHERE id > " + idTick + " order by date;";
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 ContractBasic contract = appController.getContractsBySymbol().get(rs.getString(6));

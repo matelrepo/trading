@@ -12,7 +12,6 @@ import io.matel.app.repo.CandleRepository;
 import io.matel.app.repo.GeneratorStateRepo;
 import io.matel.app.repo.TickRepository;
 import io.matel.app.state.GeneratorState;
-import io.matel.app.tools.IbClient;
 import io.matel.app.tools.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,6 +49,9 @@ public class Generator implements IbClient {
 
     @Autowired
     GeneratorStateRepo generatorStateRepo;
+
+    @Autowired
+    DataService dataService;
 
 
     private ContractBasic contract;
@@ -91,8 +93,8 @@ public class Generator implements IbClient {
                     } else {
                         price = generatorState.getLastPrice() - contract.getTickSize();
                     }
-                    generatorState.setAsk(Utils.round(price,contract.getRounding()));
-                    generatorState.setBid(Utils.round(price,contract.getRounding()));
+//                    generatorState.setAsk(Utils.round(price,contract.getRounding()));
+//                    generatorState.setBid(Utils.round(price,contract.getRounding()));
                     runPrice(contract.getIdcontract(), 4, price, null);
                     int volume = rand.nextInt(1000);
                     runSize(contract.getIdcontract(), 5, volume);
@@ -105,8 +107,12 @@ public class Generator implements IbClient {
                         e.printStackTrace();
                     }
                 }
-            } else {
-                //reqMarketData
+            } else if(Global.ONLINE) {
+                try {
+                    dataService.reqMktData(contract, this);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -142,53 +148,62 @@ public class Generator implements IbClient {
     }
 
     private void runSize(long tickerId, int field, int size) {
-        switch(field){
-            case 8:
-                generatorState.setDailyVolume(size);
-                break;
-            case 5:
-                generatorState.setTickQuantity(size);
-                generatorState.setAskQuantity(size);
-                generatorState.setBidQuantity(size);
-                flowLive.get(0).setVolume(size);
-                break;
-            case 0: //bid price
-                generatorState.setBid(size);
-                break;
-            case 1: //bid size
-                generatorState.setBidQuantity(size);
-                break;
-            case 2: //bid price
-                generatorState.setAsk(size);
-                break;
-            case 3: //bid size
-                generatorState.setAskQuantity(size);
-                break;
 
+        if(field == 0 || field == 69){
+            generatorState.setBidQuantity(size);
         }
+
+        if(field ==3 || field == 70){
+            generatorState.setAskQuantity(size);
+        }
+
+            if(field ==5 || field == 71){
+                generatorState.setTickQuantity(size);
+            }
+
+        if(field ==8 || field == 74){
+            generatorState.setDailyVolume((int) size);
+            if(flowLive.size()>0)
+            flowLive.get(0).setVolume(size);
+        }
+
+        if(field != 8 && field != 74 && field != 5 && field != 71 && field != 3 && field != 70 && field != 0 && field != 69)
+            System.out.println("Size: " + field + " " + size);
+
     }
 
     private void runPrice(long tickerId, int field, double price, TickAttrib attrib) {
         generatorState.setTimestamp(ZonedDateTime.now());
 
-        if (price > 0 && (field == 4 || field == 68)) {
-            double newPrice = reformatPrice(price);
+        if ((price > 0 && (field == 4 || field == 68) && contract.getFlowType().equals("TRADES"))
+        || ((field == 1 || field == 2) && contract.getFlowType().equals("MID"))) {
+            double newPrice = reformatPrice(price, field);
             if (newPrice > 0 && newPrice != generatorState.getLastPrice()) {
                 generatorState.setColor(newPrice > generatorState.getLastPrice() ? 1 : -1);
                 Tick tick = new Tick(contract.getIdcontract(), generatorState.getTimestamp(), newPrice);
+//                System.out.println(tick.toString());
                 tick.setSpeed(generatorState.getSpeed());
                 tick.setId(global.getIdTick(true));
                 generatorState.setIdtick(tick.getId());
 
-                if(price > generatorState.getHigh())
-                    generatorState.setHigh(Utils.round(price,contract.getRounding()));
+                if (price > generatorState.getHigh())
+                    generatorState.setHigh(Utils.round(price, contract.getRounding()));
 
-                if(price < generatorState.getLow())
-                    generatorState.setLow(Utils.round(price,contract.getRounding()));
+                if (price < generatorState.getLow())
+                    generatorState.setLow(Utils.round(price, contract.getRounding()));
 
                 processPrice(tick, true);
                 savingTick();
                 wsController.sendLiveGeneratorState(generatorState);
+            }
+        }else if((price > 0 && (field == 1 || field == 2) && contract.getFlowType().equals("TRADES"))){
+            switch (field){
+                case 1:
+                    generatorState.setBid(price);
+                    break;
+                case 2:
+                    generatorState.setAsk(price);
+                    break;
             }
         }
     }
@@ -216,22 +231,26 @@ public class Generator implements IbClient {
     }
 
 
-    private double reformatPrice(double price) {
+    private double reformatPrice(double price, int field) {
         double newPrice = -1;
         if (contract.getFlowType().equals("TRADES")) {
             newPrice = Utils.round(price, contract.getRounding());
         } else if (contract.getFlowType().equals("MID")) {
-            if (contract.getFusion() == 1) {
+
+            if(field == 66 || field == 1){  //bid
+                generatorState.setBid(price);
                 if (generatorState.getAsk() < 0)
                     generatorState.setAsk(price);
-
-                generatorState.setBid(price);
-                newPrice = Utils.round((generatorState.getAsk() + generatorState.getBid()) / 2, contract.getRounding() - 1);
-            } else if (contract.getFusion() == 2) {
+            }else if (field == 67 || field == 2){ //ask
+                generatorState.setAsk(price);
                 if (generatorState.getBid() < 0)
                     generatorState.setBid(price);
+            }
 
-                generatorState.setAsk(price);
+            if (contract.getFusion() == 1) {
+                double bid = field == 4 ? 2 : 0;
+                newPrice = Utils.round((generatorState.getAsk() + generatorState.getBid()) / 2, contract.getRounding() - 1);
+            } else if (contract.getFusion() == 2) {
                 newPrice = Utils.round((generatorState.getAsk() + generatorState.getBid()) * 5 * Math.pow(10, (double) (contract.getRounding() - 2)) / 2, 0);
                 newPrice = Utils.round(newPrice / (5 * Math.pow(10, (double) (contract.getRounding() - 2))), contract.getRounding());
             } else {
@@ -279,18 +298,17 @@ public class Generator implements IbClient {
         LOGGER.info("Disconnecting market data for contract " + contract.getIdcontract());
         if (this.generatorState.isConnected()) {
             this.generatorState.setConnected(false);
-            if (Global.RANDOM)
                 generatorState.setRandomGenerator(false);
+            if(Global.ONLINE){
+                dataService.cancelMktData(contract, true);
+            }
             if (save) {
                 saverController.saveBatchTicks();
                 saverController.saveBatchCandles();
             }
+
         }
     }
-
-//    public Future<Tick> lastTick() {
-//        return executor.submit(() -> );
-//    }
 
     public GeneratorState getGeneratorState() {
         return generatorState;

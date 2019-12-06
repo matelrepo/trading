@@ -27,7 +27,6 @@ public class Processor extends FlowMerger {
     DoubleStatistics statsOnHeight;
 
 
-    private ProcessorState processorState;
     private int offset = 0; // Used for offset candle if frequency >0
     LogProcessorState logData;
 
@@ -43,26 +42,24 @@ public class Processor extends FlowMerger {
 
 
     public void process(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, boolean isCandleComputed) {
+
         merge(timestamp, idTick, open, high, low, close, isCandleComputed);
         logData = new LogProcessorState(contract.getIdcontract(), freq, offset);
         logData.idTick = idTick;
         logData.flowSizeGreaterThan4 = flow.size() > 4;
 
-        if(contract.getIdcontract()==8 && freq==5 && flow.size()>1) {
-            System.out.println("");
-            System.out.println(flow.get(1).toString());
-            System.out.println(flow.get(0).toString());
-        }
-
         if (flow.size() > 4)
             algorythm(isCandleComputed);
+
+        if (Global.ONLINE || Global.RANDOM)
+            wsController.sendLiveCandle(flow.get(0));
     }
 
     public void algorythm(boolean isCandleComputed) {
 
         logData.smallCandleNoiseRemoval = smallCandleNoiseRemoval;
 
-        if (isCandleComputed && freq == 1380 || freq == 0)
+        if ((isCandleComputed && freq == 1380) || freq == 0)
             offset = isCandleComputed ? 1 : 0;
 
         logData.timestamp = ZonedDateTime.now();
@@ -181,8 +178,6 @@ public class Processor extends FlowMerger {
         if (isCandleComputed || (flow.get(0).getClose() == flow.get(0).getHigh() || flow.get(0).getClose() == flow.get(0).getLow()))
             saverController.saveBatchLogProcessor(logData);
 
-        if (Global.ONLINE || Global.RANDOM)
-            wsController.sendLiveCandle(flow.get(0));
 
     }
 
@@ -230,7 +225,7 @@ public class Processor extends FlowMerger {
 
     private void recordEvent(EventType type) {
         processorState.setType(type);
-        if (freq > 0 && Global.READ_ONLY_CANDLES)
+        if (freq > 0 && !Global.READ_ONLY_CANDLES)
             processorStateRepository.save(processorState);
     }
 
@@ -239,7 +234,7 @@ public class Processor extends FlowMerger {
         logData.isHigh1LessThanOrEqualHigh2 = flow.get(1 - offset).getHigh() <= flow.get(2 - offset).getHigh();
         logData.isHigh3LessThanOrEqualHigh2 = flow.get(3 - offset).getHigh() <= flow.get(2 - offset).getHigh();
         logData.isHigh4LessThanOrEqualHigh2 = flow.get(4 - offset).getHigh() <= flow.get(2 - offset).getHigh();
-        return flow.get(0).isNewCandle() && flow.get(1 - offset).getHigh() <= flow.get(2 - offset).getHigh()
+        return flow.get(2-offset).getHigh() != processorState.getMax() && flow.get(0).isNewCandle() && flow.get(1 - offset).getHigh() <= flow.get(2 - offset).getHigh()
                 && flow.get(3 - offset).getHigh() <= flow.get(2 - offset).getHigh() && flow.get(4 - offset).getHigh() <= flow.get(2 - offset).getHigh();
     }
 
@@ -247,13 +242,15 @@ public class Processor extends FlowMerger {
         logData.isLow1GreaterThanOrEqualLow2 = flow.get(1 - offset).getLow() >= flow.get(2 - offset).getLow();
         logData.isLow3GreaterThanOrEqualLow2 = flow.get(3 - offset).getLow() >= flow.get(2 - offset).getLow();
         logData.isLow4GreaterThanOrEqualLow2 = flow.get(4 - offset).getLow() >= flow.get(2 - offset).getLow();
-        return flow.get(0).isNewCandle() && flow.get(1 - offset).getLow() >= flow.get(2 - offset).getLow()
+        return flow.get(2-offset).getLow() != processorState.getMin() &&flow.get(0).isNewCandle() && flow.get(1 - offset).getLow() >= flow.get(2 - offset).getLow()
                 && flow.get(3 - offset).getLow() >= flow.get(2 - offset).getLow() && flow.get(4 - offset).getLow() >= flow.get(2 - offset).getLow();
     }
 
     public void setProcessorState(ProcessorState processorState) {
-        if (processorState != null)
+        if (processorState != null) {
             this.processorState = processorState;
+lastDayOfQuarter = processorState.getLastDayOfQuarter();
+        }
     }
 
     public ProcessorState getProcessorState(){

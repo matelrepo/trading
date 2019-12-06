@@ -29,6 +29,7 @@ public class ProcessorState {
     private double minValue = Double.MIN_VALUE;
     private double minValid = Double.MIN_VALUE;
     private double min = Double.MIN_VALUE;
+    private ZonedDateTime lastDayOfQuarter;
 
     @Transient
     private Map<EventType, Boolean> activeEvents = new HashMap<>();
@@ -243,5 +244,13 @@ public class ProcessorState {
                 ", activeEvents=" + activeEvents +
                 ", events='" + events + '\'' +
                 '}';
+    }
+
+    public ZonedDateTime getLastDayOfQuarter() {
+        return lastDayOfQuarter;
+    }
+
+    public void setLastDayOfQuarter(ZonedDateTime lastDayOfQuarter) {
+        this.lastDayOfQuarter = lastDayOfQuarter;
     }
 }

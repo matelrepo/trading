@@ -5,12 +5,15 @@ import io.matel.app.controller.SaverController;
 import io.matel.app.controller.WsController;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
+import io.matel.app.state.ProcessorState;
 import io.matel.app.tools.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.time.temporal.IsoFields;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +31,16 @@ public class FlowMerger {
     @Autowired
     private Global global;
 
+    protected ProcessorState processorState;
+
+
     protected List<Candle> flow = new ArrayList<>();
     protected int freq;
     protected ContractBasic contract;
     protected long base;
     protected long stampReference;
     protected ZonedDateTime previousDate;
+    protected ZonedDateTime lastDayOfQuarter;
     protected double previousPrice = -1;
     private long lastIdcandleDatabase;
     boolean smallCandleNoiseRemoval = false;
@@ -119,12 +126,24 @@ public class FlowMerger {
     }
 
     protected void merge(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, boolean isCandleComputed) {
+
         if (freq > 420) {
             if (previousDate == null)
                 newCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
             else
                 switch (freq) {
                     case 100000:
+                        if(lastDayOfQuarter!=null) {
+                            if (timestamp.isAfter(lastDayOfQuarter)) { // new quarter
+                                newCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
+                            } else {
+                                updateCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
+                            }
+                        }
+                            lastDayOfQuarter = timestamp.withMonth(timestamp.get(IsoFields.QUARTER_OF_YEAR) * 3).with(TemporalAdjusters.lastDayOfMonth());
+                        processorState.setLastDayOfQuarter(lastDayOfQuarter);
+                        break;
+                    case 300000:
                         if (timestamp.getDayOfYear() < previousDate.getDayOfYear()){
                             if (flow.size() > 0)
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setYearlyMark(flow.get(0).getClose());
@@ -146,8 +165,7 @@ public class FlowMerger {
                         if (timestamp.getDayOfWeek().getValue() < previousDate.getDayOfWeek().getValue()){
                             if (flow.size() > 0) {
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setWeeklyMark(flow.get(0).getClose());
-                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setHigh(close);
-                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setLow(close);
+//
                             }
                             newCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                         }
@@ -156,8 +174,11 @@ public class FlowMerger {
                         break;
                     case 1380:
                         if (timestamp.getDayOfMonth() != previousDate.getDayOfMonth()) {
-                            if (flow.size() > 0)
+                            if (flow.size() > 0) {
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setDailyMark(flow.get(0).getClose());
+                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setHigh(close);
+                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setLow(close);
+                            }
                             newCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                         }
                         else

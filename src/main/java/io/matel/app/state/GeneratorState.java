@@ -6,6 +6,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.time.ZonedDateTime;
 import java.util.Random;
 
@@ -34,11 +35,22 @@ public class GeneratorState {
     private double yearlyMark = 10000; //ok
     private double changeValue; //ok
     private double changePerc; //ok
+
+    @Transient
     private double ask = -1; //ok
+
+    @Transient
     private double bid = -1; //ok
+
+    @Transient
     private double askQuantity; //ok
+
+    @Transient
     private double bidQuantity; //ok
+
+    @Transient
     private int tickQuantity = 0; //ok
+
     private int dailyVolume =0; //ok
     private double high=Double.MIN_VALUE; //ok
     private double low=Double.MAX_VALUE; //ok

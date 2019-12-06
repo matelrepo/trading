@@ -1,4 +1,4 @@
-package io.matel.app.dailycon;
+package io.matel.app.dailycandle;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 @Entity
-public class Dailys {
+public class DailyCandle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ public class Dailys {
     private ZonedDateTime updatedOn;
 
 
-    public Dailys(String symbol, LocalDate date, double open, double high, double low, double close, double volume) {
+    public DailyCandle(String symbol, LocalDate date, double open, double high, double low, double close, double volume) {
         this.symbol = symbol;
         this.date = date;
         this.open = open;
@@ -40,7 +40,7 @@ public class Dailys {
         this.volume = volume;
     }
 
-    public Dailys() {
+    public DailyCandle() {
     }
 
     public long getId() {

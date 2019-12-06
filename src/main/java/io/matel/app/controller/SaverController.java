@@ -4,9 +4,7 @@ import io.matel.app.AppController;
 import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.Tick;
-import io.matel.app.repo.CandleRepository;
-import io.matel.app.repo.LogProcessorStateRepo;
-import io.matel.app.repo.TickRepository;
+import io.matel.app.repo.*;
 import io.matel.app.state.LogProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,9 +20,8 @@ public class SaverController {
 
     @PreDestroy
     public void beforeClosing() throws InterruptedException {
-        while(global.isSaving()){
-            Thread.sleep(1000);
-        }
+        int num =  saveBatchTicks();
+        LOGGER.info("Saving with " + num + " ticks before closing!");
     }
 
     private static final Logger LOGGER = LogManager.getLogger(SaverController.class);
@@ -35,6 +32,12 @@ public class SaverController {
 
     @Autowired
     Global global;
+
+    @Autowired
+    GeneratorStateRepo generatorStateRepo;
+
+    @Autowired
+    ProcessorStateRepository processorStateRepository;
 
     LogProcessorStateRepo logProcessorStateRepository;
     TickRepository tickRepository;
@@ -55,6 +58,7 @@ public class SaverController {
         saveNow(null, inititalComputation);
     }
 
+
     public void saveNow(Long idcontract, boolean initialComputation) {
         global.setSaving(true);
         int num =  saveBatchTicks();
@@ -63,15 +67,16 @@ public class SaverController {
             saveBatchCandles();
             updateCurrentCandle(idcontract);
             saveBatchLogProcessor();
+            saveGeneratorStates();
+            saveProcessorStates();
         }else{
             LOGGER.warn("Cannot save candles because ticks were not saved!");
         }
 
         LOGGER.info("Saving completed");
         global.setSaving(false);
-
-
     }
+
 
     public synchronized int saveBatchTicks() {
         return saveBatchTicks(null);
@@ -88,6 +93,12 @@ public class SaverController {
                     results = tickRepository.saveAll(this.ticksBuffer);
                 ticksBuffer.clear();
             }
+
+//                appController.getGenerators().forEach((id, gen)->{
+//                    gen.getGeneratorState().setTimestamp(ZonedDateTime.now());
+//                    generatorStateRepo.save(gen.getGeneratorState());
+//                });
+
         }
         return results.size();
     }
@@ -98,7 +109,7 @@ public class SaverController {
 
 
     public synchronized void saveBatchLogProcessor(LogProcessorState data) {
-        if (!Global.READ_ONLY_CANDLES) {
+        if (!Global.READ_ONLY_LOG_PROCESSOR) {
             if (data != null)
                 this.logDataBuffer.add(data);
 
@@ -126,6 +137,20 @@ public class SaverController {
                 candlesBuffer.clear();
             }
         }
+    }
+
+    public void saveGeneratorStates(){
+        appController.getGenerators().forEach((id, gen)->{
+            generatorStateRepo.save(gen.getGeneratorState());
+        });
+    }
+
+    public void saveProcessorStates(){
+        appController.getGenerators().forEach((id,gen)->{
+            gen.getProcessors().forEach((freq, processor)->{
+                processorStateRepository.save(processor.getProcessorState());
+            });
+        });
     }
 
     private synchronized void updateCurrentCandle(Long idcontract) {
