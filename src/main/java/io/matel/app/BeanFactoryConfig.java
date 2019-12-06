@@ -1,7 +1,5 @@
-package io.matel.app.config;
+package io.matel.app;
 
-import io.matel.app.Generator;
-import io.matel.app.Processor;
 import io.matel.app.domain.ContractBasic;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
@@ -21,5 +19,11 @@ public class BeanFactoryConfig {
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public Processor createProcessor(ContractBasic contract, int freq) {
         return new Processor(contract, freq);
+    }
+
+    @Bean(name = "Database")
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    public DatabaseJdbc createDatabaseJdbc(String databaseName, String port, String username) {
+        return new DatabaseJdbc(databaseName, port, username);
     }
 }

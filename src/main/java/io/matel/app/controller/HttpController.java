@@ -3,7 +3,7 @@ package io.matel.app.controller;
 
 import io.matel.app.AppController;
 import io.matel.app.AppLauncher;
-import io.matel.app.config.Global;
+import io.matel.app.Global;
 import io.matel.app.connection.activeuser.ActiveUserEvent;
 import io.matel.app.connection.user.UserRepository;
 import io.matel.app.domain.Candle;

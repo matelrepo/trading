@@ -2,7 +2,6 @@ package io.matel.app;
 
 
 import com.ib.client.TickAttrib;
-import io.matel.app.config.Global;
 import io.matel.app.controller.SaverController;
 import io.matel.app.controller.WsController;
 import io.matel.app.domain.Candle;
@@ -56,7 +55,7 @@ public class Generator implements IbClient {
 
     private ContractBasic contract;
     private List<Tick> flowLive = new ArrayList<>();
-    private List<Tick> flowDelayed = new ArrayList<>();
+//    private List<Tick> flowDelayed = new ArrayList<>();
     private Map<Integer, Processor> processors = new ConcurrentHashMap<>();
     private GeneratorState generatorState;
 
@@ -64,7 +63,7 @@ public class Generator implements IbClient {
 
     public Generator(ContractBasic contract, boolean random) {
         this.contract = contract;
-        generatorState = new GeneratorState(contract.getIdcontract(), random, 3000);
+        generatorState = new GeneratorState(contract.getIdcontract(), random, 100);
     }
 
     public void connectMarketData() throws ExecutionException, InterruptedException {

@@ -1,7 +1,7 @@
 package io.matel.app.connection.security;
 
 import com.auth0.jwt.JWT;
-import io.matel.app.config.Global;
+import io.matel.app.Global;
 import io.matel.app.connection.user.User;
 import io.matel.app.connection.user.UserPrincipal;
 import io.matel.app.connection.user.UserRepository;

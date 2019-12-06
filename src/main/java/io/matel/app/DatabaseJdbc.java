@@ -1,13 +1,11 @@
-package io.matel.app.config;
+package io.matel.app;
 
-import io.matel.app.AppController;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.Tick;
 import io.matel.app.macro.domain.MacroDAO;
 import io.matel.app.tools.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 
 import java.sql.*;
 import java.time.ZonedDateTime;
@@ -15,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
+//@Configuration
 public class DatabaseJdbc {
     protected Connection connection;
     private String port;
@@ -30,12 +28,11 @@ public class DatabaseJdbc {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMyy");
 
 
-    public DatabaseJdbc() { }
-
-    public void init(String databaseName, String port, String username){
+    public DatabaseJdbc(String databaseName, String port, String username) {
         this.port = port;
         connect(databaseName, username);
     }
+
 
     public void close() {
         try {
@@ -103,7 +100,7 @@ public class DatabaseJdbc {
             while (rs.next()) {
                 MacroDAO item = new MacroDAO(rs.getString(1), rs.getDate(2).toLocalDate(),
                         rs.getDouble(3), rs.getDouble(4), rs.getString(5),rs.getString(6),
-                        rs.getTimestamp(7).toLocalDateTime().atZone(global.getZoneId()), rs.getTimestamp(8).toLocalDateTime().atZone(global.getZoneId()));
+                        rs.getTimestamp(7).toLocalDateTime().atZone(Global.ZONE_ID), rs.getTimestamp(8).toLocalDateTime().atZone(Global.ZONE_ID));
          list.add(item);
             }
             global.setTickerCrawl(list);
@@ -125,7 +122,7 @@ public class DatabaseJdbc {
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 ContractBasic contract = appController.getContractsBySymbol().get(rs.getString(6));
-                ZonedDateTime date = rs.getTimestamp(1).toLocalDateTime().atZone(global.getZoneId());
+                ZonedDateTime date = rs.getTimestamp(1).toLocalDateTime().atZone(Global.ZONE_ID);
                 try {
                     Candle candle = new Candle(date, Utils.round(rs.getDouble(2), contract.getRounding()), Utils.round(rs.getDouble(3), contract.getRounding()),
                             Utils.round(rs.getDouble(4), contract.getRounding()), Utils.round(rs.getDouble(5),
@@ -146,15 +143,14 @@ public class DatabaseJdbc {
         }
     }
 
-    public void getTicks2018(){
+    public void getTicks2018(long idcontract){
         try {
-            String sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM trading.data18 where contract =5 order by date LIMIT 100";
-            System.out.println(sql);
+            String sql = "SELECT id, close, created_on, idcontract, timestamp, trigger_down, trigger_up, updated_on FROM public.tick WHERE idcontract =" + idcontract + " order by timestamp ";
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 try {
-                    Tick tick = new Tick(rs.getLong(4), rs.getTimestamp(5).toLocalDateTime().atZone(global.getZoneId()), rs.getDouble(2));
-                    System.out.println(tick.toString());
+                    Tick tick = new Tick(rs.getLong(4), rs.getTimestamp(5).toLocalDateTime().atZone(Global.ZONE_ID), rs.getDouble(2));
+//                    System.out.println(tick.toString());
                     appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false);
                 }catch(NullPointerException e){
 

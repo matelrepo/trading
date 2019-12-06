@@ -1,7 +1,5 @@
-package io.matel.app.config;
+package io.matel.app;
 
-import io.matel.app.Generator;
-import io.matel.app.Processor;
 import io.matel.app.domain.ContractBasic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -25,6 +23,11 @@ public class BeanFactory {
     public Processor createBeanProcessor(ContractBasic contract, int freq) {
         final Processor processing = (Processor) applicationContext.getBean("Processor", contract, freq);
         return processing;
+    }
+
+    public DatabaseJdbc createDatabaseJdbc(String databaseName, String port, String username){
+        final DatabaseJdbc database = (DatabaseJdbc) applicationContext.getBean("Database", databaseName, port, username);
+    return database;
     }
 
 }

@@ -1,6 +1,5 @@
 package io.matel.app;
 
-import io.matel.app.config.Global;
 import io.matel.app.controller.SaverController;
 import io.matel.app.controller.WsController;
 import io.matel.app.domain.Candle;
@@ -52,7 +51,7 @@ public class FlowMerger {
     public FlowMerger(ContractBasic contract, int freq) {
         this.contract = contract;
         this.freq = freq;
-        base = 60000L * freq <= 0 ? 1L : 60000L * freq; // Special freq = 1380, 6900,35000
+        base = 1L * freq <= 0 ? 1L : 1L * freq; // Special freq = 1380, 6900,35000
     }
 
     public synchronized void newCandle(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, boolean isCandleComputed) {
@@ -190,7 +189,7 @@ public class FlowMerger {
             long currentStamp = timestamp.toEpochSecond()*1000;
             if ((currentStamp - currentStamp % (base)) != stampReference || freq == 0 || flow.size() == 0) {
                 stampReference = currentStamp - currentStamp % (base);
-                ZonedDateTime refDate = ZonedDateTime.ofInstant(Instant.ofEpochSecond(stampReference/1000), global.getZoneId());
+                ZonedDateTime refDate = ZonedDateTime.ofInstant(Instant.ofEpochSecond(stampReference/1000), Global.ZONE_ID);
                 newCandle(refDate, idTick, open, high, low, close, isCandleComputed);
             } else {
                 updateCandle(timestamp, idTick, open, high, low, close, isCandleComputed);

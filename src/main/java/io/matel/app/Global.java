@@ -1,4 +1,4 @@
-package io.matel.app.config;
+package io.matel.app;
 
 import io.matel.app.macro.domain.MacroDAO;
 import org.springframework.context.annotation.Configuration;
@@ -9,8 +9,8 @@ import java.util.List;
 @Configuration
 public class Global {
     public static final boolean ONLINE = false;
-    public static final boolean RANDOM = false;
-    public static final boolean READ_ONLY_TICKS = true;
+    public static final boolean RANDOM = true;
+    public static final boolean READ_ONLY_TICKS = false;
     public static final boolean READ_ONLY_CANDLES = false;
     public static final boolean READ_ONLY_LOG_PROCESSOR = true;
     public static final boolean UPDATE_MACRO = false;
@@ -25,14 +25,19 @@ public class Global {
     public static final int MAX_LENGTH_FLOW = 100;
     public static final int MAX_TICKS_SIZE_SAVING = 1000;
     public static final int MAX_CANDLES_SIZE_SAVING = 5000;
-    public static final int[] FREQUENCIES = {0, 1, 5, 15, 30, 60, 240, 1380, 6900,35000,100000, 300000};
+//    public static final int[] FREQUENCIES = {0, 1, 5, 15, 30, 60, 240, 1380, 6900,35000,100000, 300000};
+    public static final int[] FREQUENCIES = {0, 1, 2, 3, 4, 5, 6, 7, 8,9,10, 11};
+    public static final ZoneId ZONE_ID = ZoneId.of("Asia/Bangkok");
+    public static final String databaseName = "matel";
+    public static final String port = "5432";
+    public static final String username = "matel";
+
 
 
 
     private long idTick;
     private long idCandle;
     private boolean hasCompletedLoading = false;
-    private ZoneId zoneId = ZoneId.of("Asia/Bangkok");
     private List<MacroDAO> tickerCrawl;
     private boolean isSaving = false;
 
@@ -67,14 +72,6 @@ public class Global {
 
     public void setHasCompletedLoading(boolean hasCompletedLoading) {
         this.hasCompletedLoading = hasCompletedLoading;
-    }
-
-    public ZoneId getZoneId() {
-        return zoneId;
-    }
-
-    public void setZoneId(String zoneId) {
-        this.zoneId = ZoneId.of(zoneId);
     }
 
     public List<MacroDAO> getTickerCrawl() {

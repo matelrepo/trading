@@ -1,7 +1,5 @@
 package io.matel.app;
 
-import io.matel.app.config.DatabaseJdbc;
-import io.matel.app.config.Global;
 import io.matel.app.connection.user.UserRepository;
 import io.matel.app.controller.WsController;
 import io.matel.app.dailycandle.DailyCandleCsvUploader;
@@ -53,8 +51,8 @@ public class AppLauncher implements CommandLineRunner {
     @Autowired
     MacroWriter macroWriter;
 
-    @Autowired
-    DatabaseJdbc dbb;
+//    @Autowired
+//    DatabaseJdbc dbb;
 
     @Autowired
     DailyCandleCsvUploader dailyCandleCsvUploader;
@@ -81,6 +79,7 @@ public class AppLauncher implements CommandLineRunner {
 //        getterMacroCsv.readCsvLineByLine();
 //        getterCountryPrefCsv.readCsvLineByLine();
 
+        LOGGER.info("Starting with " + Global.EXECUTOR_THREADS + " cores");
 
         new Thread(() -> {
             try {
@@ -181,8 +180,11 @@ public class AppLauncher implements CommandLineRunner {
                 error.minTickIdBreaking = appController.candleRepository.getSmallestIdTickBreak(error.idcontract);
             }
 
-            tickRepository.getTicksGreatherThanTickByIdContractByOrderByTimestamp(error.idcontract, error.lastCandleId)
-                    .forEach(tick -> generator.processPrice(tick, false));
+            System.out.println("Requesting ticks for contract " + error.idcontract + " " + Thread.currentThread());
+            DatabaseJdbc database  = appController.createDatabase(Global.databaseName, Global.port, Global.username);
+            database.getTicks2018(error.idcontract);
+//            tickRepository.getTicksGreatherThanTickByIdContractByOrderByTimestamp(error.idcontract, error.lastCandleId)
+//                    .forEach(tick -> generator.processPrice(tick, false));
 
             return null;
         }
