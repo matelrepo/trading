@@ -3,6 +3,7 @@ package io.matel.app.config;
 import io.matel.app.AppController;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
+import io.matel.app.domain.Tick;
 import io.matel.app.macro.domain.MacroDAO;
 import io.matel.app.tools.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,9 @@ public class DatabaseJdbc {
 
     public DatabaseJdbc() { }
 
-    public void init(String databaseName, String port){
+    public void init(String databaseName, String port, String username){
         this.port = port;
-        connect(databaseName);
+        connect(databaseName, username);
     }
 
     public void close() {
@@ -44,10 +45,10 @@ public class DatabaseJdbc {
         }
     }
 
-    private Connection connect(String databaseName) {
+    private Connection connect(String databaseName, String username) {
         try {
             url = "jdbc:postgresql://127.0.0.1:" + port + "/" + databaseName;
-            String login = "matel";
+            String login = username;
             String password = "Mq1rrill";
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(url, login, password);
@@ -141,6 +142,29 @@ public class DatabaseJdbc {
             connection.commit();
             rs.close();
         } catch (SQLException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getTicks2018(){
+        try {
+            String sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM trading.data18 where contract =5 order by date LIMIT 100";
+            System.out.println(sql);
+            ResultSet rs = connection.createStatement().executeQuery(sql);
+            while (rs.next()) {
+                try {
+                    Tick tick = new Tick(rs.getLong(4), rs.getTimestamp(5).toLocalDateTime().atZone(global.getZoneId()), rs.getDouble(2));
+                    System.out.println(tick.toString());
+                    appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false);
+                }catch(NullPointerException e){
+
+                }
+            }
+
+            System.out.println("finish");
+            connection.commit();
+            rs.close();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

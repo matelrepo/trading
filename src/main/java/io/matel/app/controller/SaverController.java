@@ -19,7 +19,7 @@ import java.util.List;
 public class SaverController {
 
     @PreDestroy
-    public void beforeClosing() throws InterruptedException {
+    public void beforeClosing() {
         int num =  saveBatchTicks();
         LOGGER.info("Saving with " + num + " ticks before closing!");
     }
@@ -67,7 +67,6 @@ public class SaverController {
             saveBatchCandles();
             updateCurrentCandle(idcontract);
             saveBatchLogProcessor();
-            saveGeneratorStates();
             saveProcessorStates();
         }else{
             LOGGER.warn("Cannot save candles because ticks were not saved!");
@@ -140,7 +139,9 @@ public class SaverController {
     }
 
     public void saveGeneratorStates(){
+        LOGGER.info("Regular generators states saving");
         appController.getGenerators().forEach((id, gen)->{
+            if(gen.getGeneratorState().getTimestamp()!=null)
             generatorStateRepo.save(gen.getGeneratorState());
         });
     }

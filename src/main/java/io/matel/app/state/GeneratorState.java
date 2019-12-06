@@ -36,6 +36,8 @@ public class GeneratorState {
     private double changeValue; //ok
     private double changePerc; //ok
 
+    private int previousVolume = 0;
+
     @Transient
     private double ask = -1; //ok
 
@@ -284,5 +286,13 @@ public class GeneratorState {
 
     public void setYearlyMark(double yearlyMark) {
         this.yearlyMark = yearlyMark;
+    }
+
+    public int getPreviousVolume() {
+        return previousVolume;
+    }
+
+    public void setPreviousVolume(int previousVolume) {
+        this.previousVolume = previousVolume;
     }
 }

@@ -33,11 +33,11 @@ public class Tick {
     @Column(nullable = false)
     private int triggerDown;
 
-    @Column(nullable = false)
-    private long speed = -1;
+//    @Column(nullable = false)
+//    private long speed = -1;
 
-    @JsonIgnore
-    private boolean discarded;
+//    @JsonIgnore
+//    private boolean discarded;
 
     @Column(nullable = false)
     private int volume =0;
@@ -106,13 +106,13 @@ public class Tick {
         this.triggerDown = triggerDown;
     }
 
-    public boolean isDiscarded() {
-        return discarded;
-    }
-
-    public void setDiscarded(boolean discarded) {
-        this.discarded = discarded;
-    }
+//    public boolean isDiscarded() {
+//        return discarded;
+//    }
+//
+//    public void setDiscarded(boolean discarded) {
+//        this.discarded = discarded;
+//    }
 
     @Override
     public String toString() {
@@ -123,17 +123,17 @@ public class Tick {
                 ", idcontract=" + idcontract +
                 ", triggerUp=" + triggerUp +
                 ", triggerDown=" + triggerDown +
-                ", discarded=" + discarded +
+//                ", discarded=" + discarded +
                 '}';
     }
 
-    public long getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(long speed) {
-        this.speed = speed;
-    }
+//    public long getSpeed() {
+//        return speed;
+//    }
+//
+//    public void setSpeed(long speed) {
+//        this.speed = speed;
+//    }
 
     public int getVolume() {
         return volume;

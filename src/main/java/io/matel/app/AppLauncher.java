@@ -88,20 +88,23 @@ public class AppLauncher implements CommandLineRunner {
                     macroWriter.start();
                 else
                     LOGGER.info(">>> MACRO_UPDATE is switched off");
-                dbb.init("matel", "5432");
-                dbb.getMacroItemsByCountry("United States");
+//                dbb.init("matel", "5432", "matel");
+//                dbb.getMacroItemsByCountry("United States");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
 
+ //       dbb.init("cleanm", "5432", "atmuser");
 
 //        dailyCandleCsvUploader.start();
 //        startDailyCon();
 
-//        startLive();
-        System.out.println("coucou");
-        dataService.connect();
+        startLive();
+ //       dataService.connect();
+
+    //    dbb.getTicks2018();
+
     }
 
 //    public void startDailyCon(){

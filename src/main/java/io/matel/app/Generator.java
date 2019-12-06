@@ -61,6 +61,7 @@ public class Generator implements IbClient {
     private GeneratorState generatorState;
 
 
+
     public Generator(ContractBasic contract, boolean random) {
         this.contract = contract;
         generatorState = new GeneratorState(contract.getIdcontract(), random, 3000);
@@ -163,8 +164,10 @@ public class Generator implements IbClient {
 
         if(field ==8 || field == 74){
             generatorState.setDailyVolume((int) size);
-            if(flowLive.size()>0)
-            flowLive.get(0).setVolume(size);
+            if(flowLive.size()>0) {
+                flowLive.get(0).setVolume(size - generatorState.getPreviousVolume());
+                generatorState.setPreviousVolume(size);
+            }
         }
 
         if(field != 8 && field != 74 && field != 5 && field != 71 && field != 3 && field != 70 && field != 0 && field != 69)
@@ -182,7 +185,7 @@ public class Generator implements IbClient {
                 generatorState.setColor(newPrice > generatorState.getLastPrice() ? 1 : -1);
                 Tick tick = new Tick(contract.getIdcontract(), generatorState.getTimestamp(), newPrice);
 //                System.out.println(tick.toString());
-                tick.setSpeed(generatorState.getSpeed());
+//                tick.setSpeed(generatorState.getSpeed());
                 tick.setId(global.getIdTick(true));
                 generatorState.setIdtick(tick.getId());
 
@@ -216,11 +219,11 @@ public class Generator implements IbClient {
 //        Thread.sleep(1000);
     }
 
-    public void processPrice(Tick tick, boolean triggerProcessing) {
+    public void processPrice(Tick tick, boolean countConsecutiveUpDown) {
         flowLive.add(0, tick);
         if (flowLive.size() > Global.MAX_LENGTH_TICKS)
             flowLive.remove(Global.MAX_LENGTH_TICKS);
-        if (triggerProcessing)
+        if (countConsecutiveUpDown)
             consecutiveUpDownCounter(tick);
         processors.forEach((freq, processor) -> {
             processor.process(tick.getTimestamp(), tick.getId(), null, null, null, tick.getClose(), false);
@@ -274,23 +277,23 @@ public class Generator implements IbClient {
     }
 
     private void savingTick() {
-        if (flowLive.size() > 2) {
-            if (!flowLive.get(2).isDiscarded()
-                    && ((flowLive.get(2).getTriggerDown() == 1 && flowLive.get(2).getTriggerUp() == 0 && flowLive.get(1).getTriggerDown() == 0
-                    && flowLive.get(1).getTriggerUp() == 1 && flowLive.get(0).getTriggerDown() == 1 && flowLive.get(0).getTriggerUp() == 0)
-                    || (flowLive.get(2).getTriggerDown() == 0 && flowLive.get(2).getTriggerUp() == 1 && flowLive.get(1).getTriggerDown() == 1
-                    && flowLive.get(1).getTriggerUp() == 0 && flowLive.get(0).getTriggerDown() == 0 && flowLive.get(0).getTriggerUp() == 1))) {
-                flowLive.get(2).setDiscarded(true);
-                flowLive.get(1).setDiscarded(true);
-            } else {
-                if (!flowLive.get(2).isDiscarded()) {
-                    flowDelayed.add(0, flowLive.get(2));
-//                    saverController.saveBatchTicks(flowDelayed.get(0));
-                    if (flowDelayed.size() > Global.MAX_LENGTH_TICKS)
-                        flowDelayed.remove(Global.MAX_LENGTH_TICKS);
-                }
-            }
-        }
+//        if (flowLive.size() > 2) {
+//            if (!flowLive.get(2).isDiscarded()
+//                    && ((flowLive.get(2).getTriggerDown() == 1 && flowLive.get(2).getTriggerUp() == 0 && flowLive.get(1).getTriggerDown() == 0
+//                    && flowLive.get(1).getTriggerUp() == 1 && flowLive.get(0).getTriggerDown() == 1 && flowLive.get(0).getTriggerUp() == 0)
+//                    || (flowLive.get(2).getTriggerDown() == 0 && flowLive.get(2).getTriggerUp() == 1 && flowLive.get(1).getTriggerDown() == 1
+//                    && flowLive.get(1).getTriggerUp() == 0 && flowLive.get(0).getTriggerDown() == 0 && flowLive.get(0).getTriggerUp() == 1))) {
+//                flowLive.get(2).setDiscarded(true);
+//                flowLive.get(1).setDiscarded(true);
+//            } else {
+//                if (!flowLive.get(2).isDiscarded()) {
+//                    flowDelayed.add(0, flowLive.get(2));
+////                    saverController.saveBatchTicks(flowDelayed.get(0));
+//                    if (flowDelayed.size() > Global.MAX_LENGTH_TICKS)
+//                        flowDelayed.remove(Global.MAX_LENGTH_TICKS);
+//                }
+//            }
+//        }
         saverController.saveBatchTicks(flowLive.get(0));
     }
 
