@@ -1,10 +1,8 @@
 package io.matel.app.config;
 
-import io.matel.app.macro.domain.MacroDAO;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.ZoneId;
-import java.util.List;
 
 @Configuration
 public class Global {
@@ -14,6 +12,8 @@ public class Global {
     public static final boolean READ_ONLY_CANDLES = false;
     public static final boolean READ_ONLY_LOG_PROCESSOR = true;
     public static final boolean UPDATE_MACRO = false;
+    public static final boolean COMPUTE = false;
+
 
     public static final String SECRET = "SomeSecretForJWTGeneration";
     public static final int TOKEN_EXPIRATION_TIME = 864_000_000; // 10 days
@@ -24,7 +24,7 @@ public class Global {
     public static final int MAX_LENGTH_TICKS = 10;
     public static final int MAX_LENGTH_FLOW = 100;
     public static final int MAX_TICKS_SIZE_SAVING = 1000;
-    public static final int MAX_CANDLES_SIZE_SAVING = 5000;
+    public static final int MAX_CANDLES_SIZE_SAVING = 1000;
 //    public static final int[] FREQUENCIES = {0, 1, 5, 15, 30, 60, 240, 1380, 6900,35000,100000, 300000};
     public static final int[] FREQUENCIES = {0, 1, 2, 3, 4, 5, 6, 7, 8,9,10, 11};
     public static final ZoneId ZONE_ID = ZoneId.of("Asia/Bangkok");
@@ -34,11 +34,11 @@ public class Global {
 
 
 
-
+    public static long startIdCandle = 0;
+    public static long startIdTick = 0;
     private long idTick;
     private long idCandle;
     private boolean hasCompletedLoading = false;
-    private List<MacroDAO> tickerCrawl;
     private boolean isSaving = false;
 
 
@@ -72,14 +72,6 @@ public class Global {
 
     public void setHasCompletedLoading(boolean hasCompletedLoading) {
         this.hasCompletedLoading = hasCompletedLoading;
-    }
-
-    public List<MacroDAO> getTickerCrawl() {
-        return tickerCrawl;
-    }
-
-    public void setTickerCrawl(List<MacroDAO> tickerCrawl) {
-        this.tickerCrawl = tickerCrawl;
     }
 
     public boolean isSaving() {

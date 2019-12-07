@@ -22,9 +22,6 @@ public class FlowMerger {
     protected WsController wsController;
 
     @Autowired
-    SaverController saverController;
-
-    @Autowired
     AppController appController;
 
     @Autowired
@@ -69,7 +66,8 @@ public class FlowMerger {
 
             if (flow.size() > 0) {
                 candle.setColor(flow.get(0).getColor());
-                 saverController.saveBatchCandles(flow.get(0));
+                 appController.getGenerators().get(contract.getIdcontract())
+                         .getDatabase().getSaverController().saveBatchCandles(flow.get(0));
             }
 
                 flow.add(0, candle);

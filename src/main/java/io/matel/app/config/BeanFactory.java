@@ -1,6 +1,6 @@
 package io.matel.app.config;
 
-import io.matel.app.DatabaseJdbc;
+import io.matel.app.Database;
 import io.matel.app.Generator;
 import io.matel.app.Processor;
 import io.matel.app.domain.ContractBasic;
@@ -28,8 +28,8 @@ public class BeanFactory {
         return processing;
     }
 
-    public DatabaseJdbc createDatabaseJdbc(String databaseName, String port, String username){
-        final DatabaseJdbc database = (DatabaseJdbc) applicationContext.getBean("Database", databaseName, port, username);
+    public Database createDatabaseJdbc(String databaseName, String port, String username){
+        final Database database = (Database) applicationContext.getBean("Database", databaseName, port, username);
     return database;
     }
 

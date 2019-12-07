@@ -1,7 +1,6 @@
 package io.matel.app.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.matel.app.tools.Utils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -52,11 +51,11 @@ public class Candle {
     @Column(nullable = false)
     private int triggerDown;
 
-    @JsonIgnore
-    private boolean discarded;
+//    @JsonIgnore
+//    private boolean discarded;
 
     private boolean newCandle;
-    private long speed = -1;
+//    private long speed = -1;
     private int progress = 0;
 
     private double closeAverage;
@@ -76,11 +75,11 @@ public class Candle {
 
     public Candle() { }
 
-    public Candle(long idcontract ,long timestamp, double close) {
-        this.timestamp = ZonedDateTime.now();
-        this.close = close;
-        this.idcontract = idcontract;
-    }
+//    public Candle(long idcontract ,long timestamp, double close) {
+//        this.timestamp = ZonedDateTime.now();
+//        this.close = close;
+//        this.idcontract = idcontract;
+//    }
 
     public Candle(ZonedDateTime timestamp, double open, double high, double low, double close, long idcontract, int freq) {
         this.timestamp = timestamp;
@@ -91,6 +90,7 @@ public class Candle {
         this.idcontract = idcontract;
         this.freq = freq;
     }
+
 
     public Candle(ZonedDateTime timestamp, double lastPrice, Double open, Double high, Double low, double close, ContractBasic contract, int freq, boolean isCandleComputed) {
         if(isCandleComputed){
@@ -125,6 +125,35 @@ public class Candle {
             this.freq = freq;
             this.newCandle = true;
 
+    }
+
+    public Candle(long id, long idcontract, int freq, long idtick, ZonedDateTime timestamp,
+                  double open, double high, double low, double close,
+                  int color, boolean newCandle, int progress,
+                  int triggerDown, int triggerUp,
+                  double abnormalHeightLevel, boolean bigCandle, double closeAverage,
+                  ZonedDateTime createdOn, ZonedDateTime updatedOn, int volume){
+
+        this.id = id;
+        this.idcontract = idcontract;
+        this.freq = freq;
+        this.idtick = idtick;
+        this.timestamp = timestamp;
+        this.open = open;
+        this.high = high;
+        this.low = low ;
+        this.close = close;
+        this.color = color;
+        this.newCandle = newCandle;
+        this.progress = progress;
+        this.triggerDown = triggerDown;
+        this.triggerUp = triggerUp;
+        this.abnormalHeightLevel  =  abnormalHeightLevel;
+        this.bigCandle = bigCandle;
+        this.closeAverage = closeAverage;
+        this.createdOn = createdOn;
+        this.updatedOn = updatedOn;
+        this.volume = volume;
     }
 
     public long getId() {
@@ -207,13 +236,13 @@ public class Candle {
         this.newCandle = newCandle;
     }
 
-    public long getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(long speed) {
-        this.speed = speed;
-    }
+//    public long getSpeed() {
+//        return speed;
+//    }
+//
+//    public void setSpeed(long speed) {
+//        this.speed = speed;
+//    }
 
     public int getProgress() {
         return progress;
@@ -239,13 +268,13 @@ public class Candle {
         this.triggerDown = triggerDown;
     }
 
-    public boolean isDiscarded() {
-        return discarded;
-    }
-
-    public void setDiscarded(boolean discarded) {
-        this.discarded = discarded;
-    }
+//    public boolean isDiscarded() {
+//        return discarded;
+//    }
+//
+//    public void setDiscarded(boolean discarded) {
+//        this.discarded = discarded;
+//    }
 
     public int getVolume() {
         return volume;
@@ -287,9 +316,9 @@ public class Candle {
                 ", color=" + color +
                 ", triggerUp=" + triggerUp +
                 ", triggerDown=" + triggerDown +
-                ", discarded=" + discarded +
+//                ", discarded=" + discarded +
                 ", newCandle=" + newCandle +
-                ", speed=" + speed +
+//                ", speed=" + speed +
                 ", progress=" + progress +
                 '}';
     }

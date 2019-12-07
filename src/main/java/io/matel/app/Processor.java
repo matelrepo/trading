@@ -5,11 +5,9 @@ import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.EventType;
-import io.matel.app.repo.ProcessorStateRepository;
 import io.matel.app.state.LogProcessorState;
 import io.matel.app.state.ProcessorState;
 import io.matel.app.tools.DoubleStatistics;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -17,11 +15,8 @@ import java.util.stream.Collector;
 
 public class Processor extends FlowMerger {
 
-    @Autowired
-    SaverController saverController;
-
-    @Autowired
-    ProcessorStateRepository processorStateRepository;
+//    @Autowired
+//    ProcessorStateRepository processorStateRepository;
     Double closingAverage;
     DoubleStatistics statsOnHeight;
 
@@ -174,8 +169,8 @@ public class Processor extends FlowMerger {
         flow.get(0).setColor(processorState.getColor());
         logData.color0 = processorState.getColor();
 
-        if (isCandleComputed || (flow.get(0).getClose() == flow.get(0).getHigh() || flow.get(0).getClose() == flow.get(0).getLow()))
-            saverController.saveBatchLogProcessor(logData);
+//        if (isCandleComputed || (flow.get(0).getClose() == flow.get(0).getHigh() || flow.get(0).getClose() == flow.get(0).getLow()))
+//            saverController.saveBatchLogProcessor(logData);
 
 
     }
@@ -224,8 +219,8 @@ public class Processor extends FlowMerger {
 
     private void recordEvent(EventType type) {
         processorState.setType(type);
-        if (freq > 0 && !Global.READ_ONLY_CANDLES)
-            processorStateRepository.save(processorState);
+//        if (freq > 0 && !Global.READ_ONLY_CANDLES)
+//            processorStateRepository.save(processorState);
     }
 
     private boolean isMaxDetect() {

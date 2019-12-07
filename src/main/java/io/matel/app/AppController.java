@@ -5,6 +5,7 @@ import io.matel.app.config.Global;
 import io.matel.app.connection.activeuser.ActiveUserEvent;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
+import io.matel.app.macro.domain.MacroDAO;
 import io.matel.app.repo.*;
 import io.matel.app.state.GeneratorState;
 import io.matel.app.state.ProcessorState;
@@ -34,22 +35,32 @@ public class AppController {
     @Autowired
     BeanFactory beanFactory;
 
-    @Autowired
-    CandleRepository candleRepository;
+//    @Autowired
+//    CandleRepository candleRepository;
 
-    @Autowired
-    TickRepository tickRepository;
-
-    @Autowired
-    SaverController saverController;
+//    @Autowired
+//    TickRepository tickRepository;
+//
+//    @Autowired
+//    SaverController saverController;
 
     @Autowired
     GeneratorStateRepo generatorStateRepo;
 
+    Database database;
+
     @Autowired
     Global global;
 
-    private static final Logger LOGGER = LogManager.getLogger(AppLauncher.class);
+    public Database getDatabase(){
+        if(database == null){
+            return new Database("matel", "5432", "matel");
+        }else{
+            return database;
+        }
+    }
+
+    private static final Logger LOGGER = LogManager.getLogger(AppController.class);
     private ExecutorService executor = Executors.newFixedThreadPool(Global.EXECUTOR_THREADS);
     private List<ContractBasic> contractsLive = new ArrayList<>();
     private List<ContractBasic> contractsDailyCon = new ArrayList<>();
@@ -57,6 +68,8 @@ public class AppController {
     private Map<Long, Generator> generators = new ConcurrentHashMap<>();
     private Map<Long, GeneratorState> generatorsState = new ConcurrentHashMap<>();
     private Map<String, ActiveUserEvent> activeUsers = new ConcurrentHashMap<>();  //By SessionId
+        private List<MacroDAO> tickerCrawl;
+
 
     public void loadHistoricalCandlesFromDbb(Long idcontract, boolean reset) {
         generators.get(idcontract).getProcessors().forEach((freq, processor) -> {
@@ -69,12 +82,13 @@ public class AppController {
     public List<Candle> getCandlesByIdContractByFreq(long idcontract, int freq){
             List<Candle> candles;
             if(generators.get(idcontract).getProcessors().get(freq).getFlow().size()>0){
-                LOGGER.info("Processor has some flow (" + idcontract +"," + generators.get(idcontract).getProcessors().get(freq).getFlow().size()+")");
+//                LOGGER.info("Processor has some flow (" + idcontract +"," + generators.get(idcontract).getProcessors().get(freq).getFlow().size()+")");
                 candles = generators.get(idcontract).getProcessors().get(freq).getFlow();
             }else {
-                candles = candleRepository.findTop100ByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
+//                Database database  = createDatabase("matel", "5432", "matel");
+                candles = generators.get(idcontract).getDatabase().findTop100ByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
                 if (candles.size() > 0) {
-                    LOGGER.info("Loading from dbb " + candles.size() +" (" + idcontract+ "," + freq + ")");
+//                    LOGGER.info("Loading from dbb " + candles.size() +" (" + idcontract+ "," + freq + ")");
                     generators.get(idcontract).getProcessors().get(freq).setFlow(candles);
                 } else {
  //                   LOGGER.info("No historical data for contract " + idcontract + " and freq = " + freq);
@@ -83,8 +97,8 @@ public class AppController {
         return candles;
     }
 
-    public DatabaseJdbc createDatabase(String databaseName, String port, String username){
-        DatabaseJdbc database = beanFactory.createDatabaseJdbc(databaseName, port, username);
+    public Database createDatabase(String databaseName, String port, String username){
+        Database database = beanFactory.createDatabaseJdbc(databaseName, port, username);
         return database;
     }
 
@@ -172,4 +186,12 @@ public class AppController {
 //
 ////        }
 //    }
+
+    public List<MacroDAO> getTickerCrawl() {
+        return tickerCrawl;
+    }
+
+    public void setTickerCrawl(List<MacroDAO> tickerCrawl) {
+        this.tickerCrawl = tickerCrawl;
+    }
 }

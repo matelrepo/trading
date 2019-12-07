@@ -9,9 +9,7 @@ import io.matel.app.controller.WsController;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.Tick;
-import io.matel.app.repo.CandleRepository;
 import io.matel.app.repo.GeneratorStateRepo;
-import io.matel.app.repo.TickRepository;
 import io.matel.app.state.GeneratorState;
 import io.matel.app.tools.Utils;
 import org.apache.logging.log4j.LogManager;
@@ -40,15 +38,6 @@ public class Generator implements IbClient {
     AppController appController;
 
     @Autowired
-    TickRepository tickRepository;
-
-    @Autowired
-    CandleRepository candleRepository;
-
-    @Autowired
-    SaverController saverController;
-
-    @Autowired
     GeneratorStateRepo generatorStateRepo;
 
     @Autowired
@@ -60,25 +49,42 @@ public class Generator implements IbClient {
 //    private List<Tick> flowDelayed = new ArrayList<>();
     private Map<Integer, Processor> processors = new ConcurrentHashMap<>();
     private GeneratorState generatorState;
+    private Database database;
 
+    public Database getDatabase(){
+        return database;
+    }
 
 
     public Generator(ContractBasic contract, boolean random) {
         this.contract = contract;
         generatorState = new GeneratorState(contract.getIdcontract(), random, 100);
+
+    }
+
+    public void initDatabase(){
+        System.out.println("init database");
+        database = appController.createDatabase("matel", "5432", "matel");
     }
 
     public void connectMarketData() throws ExecutionException, InterruptedException {
+        System.out.println("coucou1");
+
         Random rand = new Random();
-        if (this.generatorState.isConnected())
-            disconnectMarketData(false);
+//        if (this.generatorState.isConnected())
+//            disconnectMarketData(false);
+
+        Double close = database.findTopCloseByIdContractOrderByTimeStampDesc(contract.getIdcontract());
+        if(close == null){
+            System.out.println("coucou");
+        }
 
         if (Global.RANDOM) {
             generatorState.setRandomGenerator(true);
-            Tick tick = tickRepository.findTopByIdcontractOrderByTimestampDesc(contract.getIdcontract());
-            if (tick != null) {
-            LOGGER.info("Connecting market data contract " + contract.getIdcontract() + " -> " + tick.getClose());
-                generatorState.setLastPrice(tick.getClose());
+//            Tick tick = tickRepository.findTopByIdcontractOrderByTimestampDesc(contract.getIdcontract());
+            if (close != null) {
+            LOGGER.info("Connecting market data contract " + contract.getIdcontract() + " -> " + close);
+                generatorState.setLastPrice(close);
             } else {
                 generatorState.setLastPrice(Global.STARTING_PRICE);
             }
@@ -121,10 +127,10 @@ public class Generator implements IbClient {
         t.setName(contract.getSymbol() + "." + contract.getCurrency() + "." + contract.getIdcontract());
         t.start();
 
-        Tick tick = tickRepository.findTopByIdcontractOrderByTimestampDesc(contract.getIdcontract());
-        if (tick != null) {
+//        Tick tick = tickRepository.findTopByIdcontractOrderByTimestampDesc(contract.getIdcontract());
+        if (close != null) {
             if (generatorState.getLastPrice() < 0) {
-                Double price = tick.getClose();
+                Double price = close;
                 if (price != null) {
                     generatorState.setLastPrice(price);
                 }
@@ -295,24 +301,28 @@ public class Generator implements IbClient {
 //                }
 //            }
 //        }
-        saverController.saveBatchTicks(flowLive.get(0));
+        int count = database.getSaverController().saveBatchTicks(flowLive.get(0));
+        if (count > 0 )
+            appController.getGeneratorsState().forEach((id, state)->{
+                generatorStateRepo.save(state);
+        });
     }
 
-    public void disconnectMarketData(boolean save) {
-        LOGGER.info("Disconnecting market data for contract " + contract.getIdcontract());
-        if (this.generatorState.isConnected()) {
-            this.generatorState.setConnected(false);
-                generatorState.setRandomGenerator(false);
-            if(Global.ONLINE){
-                dataService.cancelMktData(contract, true);
-            }
-            if (save) {
-                saverController.saveBatchTicks();
-                saverController.saveBatchCandles();
-            }
-
-        }
-    }
+//    public void disconnectMarketData(boolean save) {
+//        LOGGER.info("Disconnecting market data for contract " + contract.getIdcontract());
+//        if (this.generatorState.isConnected()) {
+//            this.generatorState.setConnected(false);
+//                generatorState.setRandomGenerator(false);
+//            if(Global.ONLINE){
+//                dataService.cancelMktData(contract, true);
+//            }
+//            if (save) {
+//                saverController.saveBatchTicks();
+//                saverController.saveBatchCandles();
+//            }
+//
+//        }
+//    }
 
     public GeneratorState getGeneratorState() {
         return generatorState;
@@ -326,9 +336,9 @@ public class Generator implements IbClient {
         return contract;
     }
 
-    public GeneratorStateRepo getGeneratorStateRepo() {
-        return generatorStateRepo;
-    }
+//    public GeneratorStateRepo getGeneratorStateRepo() {
+//        return generatorStateRepo;
+//    }
 
     public void setGeneratorState() {
         GeneratorState generatorState = generatorStateRepo.findByIdcontract(contract.getIdcontract());

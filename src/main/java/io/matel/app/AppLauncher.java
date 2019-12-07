@@ -5,11 +5,9 @@ import io.matel.app.config.Global;
 import io.matel.app.connection.user.UserRepository;
 import io.matel.app.controller.WsController;
 import io.matel.app.dailycandle.DailyCandleCsvUploader;
-import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.macro.MacroWriter;
 import io.matel.app.macro.config.GetterCountryCsv;
-import io.matel.app.repo.TickRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +29,6 @@ public class AppLauncher implements CommandLineRunner {
     private ExecutorService executor = Executors.newFixedThreadPool(Global.EXECUTOR_THREADS);
     private AppController appController;
     private WsController wsController;
-//    private boolean errorDetected = false;
     private ConcurrentHashMap<Long, LoadingErrorHandler> errors = new ConcurrentHashMap();
 
 
@@ -42,9 +39,6 @@ public class AppLauncher implements CommandLineRunner {
     UserRepository userRepository;
 
     @Autowired
-    TickRepository tickRepository;
-
-    @Autowired
     GetterCountryCsv getterCountryPrefCsv;
 
     @Autowired
@@ -52,9 +46,6 @@ public class AppLauncher implements CommandLineRunner {
 
     @Autowired
     MacroWriter macroWriter;
-
-//    @Autowired
-//    DatabaseJdbc dbb;
 
     @Autowired
     DailyCandleCsvUploader dailyCandleCsvUploader;
@@ -96,15 +87,15 @@ public class AppLauncher implements CommandLineRunner {
             }
         }).start();
 
- //       dbb.init("cleanm", "5432", "atmuser");
+        //       dbb.init("cleanm", "5432", "atmuser");
 
 //        dailyCandleCsvUploader.start();
 //        startDailyCon();
 
         startLive();
- //       dataService.connect();
+        //       dataService.connect();
 
-    //    dbb.getTicks2018();
+        //    dbb.getTicks2018();
 
     }
 
@@ -128,27 +119,30 @@ public class AppLauncher implements CommandLineRunner {
 //    }
 
     public void startLive() {
+        Database database = appController.createDatabase("matel", "5432", "matel");
         appController.setContractsLive(appController.contractRepository.findTop100ByActiveAndType(true, "LIVE"));
         LOGGER.info(appController.getContractsLive().size() + " contracts found");
         try {
-            global.setIdTick(tickRepository.findTopByOrderByIdDesc().getId());
-            global.setIdCandle(appController.candleRepository.findTopByOrderByIdDesc().getId());
+            Global.startIdTick = database.findTopIdTickOrderByIdDesc();
+            Global.startIdCandle = database.findTopIdCandleOrderByIdDesc();
+            global.setIdTick(Global.startIdTick);
+            global.setIdCandle(Global.startIdCandle);
         } catch (NullPointerException e) {
         }
-        LOGGER.info("Setting up last id tick: " + global.getIdTick(false));
+        LOGGER.info("Setting up last id tick: " + Global.startIdTick);
+        LOGGER.info("Setting up last id candle: " + Global.startIdCandle);
+
         if (Global.READ_ONLY_TICKS)
             LOGGER.warn(">>> Read only lock! <<<");
+
         LOGGER.info("Running checks and computation...");
         runChecks(errors);
+        appController.getDatabase().getSaverController().saveNow(true);
         LOGGER.info("Checks completed");
-        appController.saverController.saveNow(true);
 
+//        appController.getContractsLive().forEach(con -> {
+//        });
 
-
-        appController.getContractsLive().forEach(con ->{
-            appController.loadHistoricalCandlesFromDbb(con.getIdcontract(), false);
-
-        });
 
         ConnectMarketData();
 
@@ -172,21 +166,18 @@ public class AppLauncher implements CommandLineRunner {
             LoadingErrorHandler error = new LoadingErrorHandler();
             this.errors.put(contract.getIdcontract(), error);
             error.idcontract = contract.getIdcontract();
-            error.lastTickByContract = appController.tickRepository.findTopByIdcontractOrderByTimestampDesc(error.idcontract);
-            error.numTicksBreaking = appController.candleRepository.countIdTickBreaks(error.idcontract);
-            Candle lastCandleByContract = appController.candleRepository.findTopByIdcontractOrderByIdDesc(error.idcontract);
-            error.lastCandleId = lastCandleByContract == null ? 0 : lastCandleByContract.getId();
+            error.numTicksBreaking = generator.getDatabase().countIdTickBreaks(error.idcontract);
+            error.lastCandleId = generator.getDatabase().findTopIdCandleByIdcontractOrderByIdDesc(error.idcontract);
 
             if (error.numTicksBreaking > 1) {
                 error.errorDetected = true;
-                error.minTickIdBreaking = appController.candleRepository.getSmallestIdTickBreak(error.idcontract);
+                error.minTickIdBreaking = generator.getDatabase().getSmallestIdTickBreak(error.idcontract);
             }
 
             System.out.println("Requesting ticks for contract " + error.idcontract + " " + Thread.currentThread());
-            DatabaseJdbc database  = appController.createDatabase("cleanm", Global.port, "atmuser");
-            database.getTicks2018(error.idcontract);
-//            tickRepository.getTicksGreatherThanTickByIdContractByOrderByTimestamp(error.idcontract, error.lastCandleId)
-//                    .forEach(tick -> generator.processPrice(tick, false));
+            Database tickDatabase = appController.createDatabase("cleanm", Global.port, "atmuser");
+            tickDatabase.getTicks2018(error.idcontract);
+            tickDatabase.close();
 
             return null;
         }
@@ -194,12 +185,15 @@ public class AppLauncher implements CommandLineRunner {
 
     private class LoadAndConnectTask implements Callable {
         ContractBasic contract;
+
         public LoadAndConnectTask(ContractBasic contract) {
             this.contract = contract;
         }
+
         @Override
         public FutureTask<Void> call() {
             try {
+//                appController.loadHistoricalCandlesFromDbb(contract.getIdcontract(), false);
                 appController.connectMarketData(contract);
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
@@ -208,15 +202,18 @@ public class AppLauncher implements CommandLineRunner {
         }
     }
 
-    private void runChecks(ConcurrentHashMap errors){
+    private void runChecks(ConcurrentHashMap errors) {
         List<FutureTask<Void>> tasks = new ArrayList<>();
         for (ContractBasic contract : appController.getContractsLive()) {
             Generator generator = createGenerator(contract);
+            generator.initDatabase();
             createProcessor(contract, 0);
-            RunChecksTask callable = new RunChecksTask(contract, generator, errors);
-            FutureTask task = new FutureTask(callable);
-            tasks.add(task);
-            executor.execute(task);
+            if (Global.COMPUTE) {
+                RunChecksTask callable = new RunChecksTask(contract, generator, errors);
+                FutureTask task = new FutureTask(callable);
+                tasks.add(task);
+                executor.execute(task);
+            }
         }
 
         tasks.forEach(task -> {
@@ -230,7 +227,7 @@ public class AppLauncher implements CommandLineRunner {
         });
     }
 
-    private void ConnectMarketData(){
+    private void ConnectMarketData() {
         List<FutureTask<Void>> tasks = new ArrayList<>();
         for (ContractBasic contract : appController.getContractsLive()) {
             LoadAndConnectTask callable = new LoadAndConnectTask(contract);
@@ -250,11 +247,11 @@ public class AppLauncher implements CommandLineRunner {
         });
     }
 
-    private Generator createGenerator(ContractBasic contract){
+    private Generator createGenerator(ContractBasic contract) {
         return appController.createGenerator(contract);
     }
 
-    private void createProcessor(ContractBasic contract, int minFreq){
+    private void createProcessor(ContractBasic contract, int minFreq) {
         appController.createProcessors(contract, minFreq);
     }
 
@@ -262,7 +259,6 @@ public class AppLauncher implements CommandLineRunner {
     public void clock() {
         this.wsController.sendPrices(appController.getGeneratorsState());
     }
-
 
 
 }

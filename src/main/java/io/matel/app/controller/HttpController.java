@@ -4,15 +4,12 @@ package io.matel.app.controller;
 import io.matel.app.AppController;
 import io.matel.app.AppLauncher;
 import io.matel.app.config.Global;
-import io.matel.app.SaverController;
 import io.matel.app.connection.activeuser.ActiveUserEvent;
 import io.matel.app.connection.user.UserRepository;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.macro.domain.MacroDAO;
-import io.matel.app.repo.CandleRepository;
 import io.matel.app.repo.ContractRepository;
-import io.matel.app.repo.TickRepository;
 import io.matel.app.state.GeneratorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,13 +32,12 @@ public class HttpController {
 //    private PasswordEncoder passwordEncoder;
     private WsController wsController;
     private AppController appController;
-    private SaverController saverController;
 
-    @Autowired
-    CandleRepository candleRepository;
+//    @Autowired
+//    CandleRepository candleRepository;
 
-    @Autowired
-    TickRepository tickRepository;
+//    @Autowired
+//    TickRepository tickRepository;
 
     @Autowired
     ContractRepository contractRepository;
@@ -54,13 +50,11 @@ public class HttpController {
                           PasswordEncoder passwordEncoder,
                           WsController wsController,
                           AppController appController,
-                          SaverController saverController,
                           AppLauncher appLauncher) {
 //        this.userRepository = userRepository;
 //        this.passwordEncoder = passwordEncoder;
         this.wsController = wsController;
         this.appController = appController;
-        this.saverController = saverController;
     }
 
     @GetMapping("/contracts/{type}")
@@ -77,7 +71,7 @@ public class HttpController {
 
     @GetMapping("/ticker-crawl")
     public List<MacroDAO> getTickerCrawl(){
-        return global.getTickerCrawl();
+        return appController.getTickerCrawl();
     }
 
     @GetMapping("/histo-candles/{id}/{frequency}")
@@ -141,13 +135,13 @@ public class HttpController {
     @PostMapping("/connect/{id}")
     public Map<Long, GeneratorState> connectMarketData(@PathVariable String id, @RequestBody String connect) throws ExecutionException, InterruptedException {
         long idcontract = Long.valueOf(id);
-        saverController.saveBatchTicks();
+        appController.getDatabase().getSaverController().saveBatchTicks();
         if(Boolean.valueOf(connect)) {
             LOGGER.info("Connect data for contract " + idcontract);
             appController.getGenerators().get(idcontract).connectMarketData();
         }else{
-            LOGGER.info("Disconnect data for contract " + idcontract);
-            appController.getGenerators().get(idcontract).disconnectMarketData(true);
+//            LOGGER.info("Disconnect data for contract " + idcontract);
+//            appController.getGenerators().get(idcontract).disconnectMarketData(true);
         }
         return appController.getGeneratorsState();
     }
