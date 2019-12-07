@@ -55,35 +55,35 @@ public class Generator implements IbClient {
         return database;
     }
 
+    public void setDatabase(Database database){
+        this.database = database;
+    }
+
 
     public Generator(ContractBasic contract, boolean random) {
         this.contract = contract;
-        generatorState = new GeneratorState(contract.getIdcontract(), random, 100);
+        generatorState = new GeneratorState(contract.getIdcontract(), random, 3000);
 
     }
 
     public void initDatabase(){
-        System.out.println("init database");
+//        LOGGER.info("init. database for contract " + contract.getIdcontract());
         database = appController.createDatabase("matel", "5432", "matel");
     }
 
     public void connectMarketData() throws ExecutionException, InterruptedException {
-        System.out.println("coucou1");
 
         Random rand = new Random();
 //        if (this.generatorState.isConnected())
 //            disconnectMarketData(false);
 
         Double close = database.findTopCloseByIdContractOrderByTimeStampDesc(contract.getIdcontract());
-        if(close == null){
-            System.out.println("coucou");
-        }
 
         if (Global.RANDOM) {
             generatorState.setRandomGenerator(true);
 //            Tick tick = tickRepository.findTopByIdcontractOrderByTimestampDesc(contract.getIdcontract());
             if (close != null) {
-            LOGGER.info("Connecting market data contract " + contract.getIdcontract() + " -> " + close);
+//            LOGGER.info("Connecting market data contract " + contract.getIdcontract() + " -> " + close);
                 generatorState.setLastPrice(close);
             } else {
                 generatorState.setLastPrice(Global.STARTING_PRICE);

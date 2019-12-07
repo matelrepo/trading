@@ -52,12 +52,11 @@ public class AppController {
     @Autowired
     Global global;
 
-    public Database getDatabase(){
-        if(database == null){
-            return new Database("matel", "5432", "matel");
-        }else{
-            return database;
+    public Database getDatabase() {
+        if (database == null) {
+            database = new Database("matel", "5432", "matel");
         }
+        return database;
     }
 
     private static final Logger LOGGER = LogManager.getLogger(AppController.class);
@@ -68,41 +67,36 @@ public class AppController {
     private Map<Long, Generator> generators = new ConcurrentHashMap<>();
     private Map<Long, GeneratorState> generatorsState = new ConcurrentHashMap<>();
     private Map<String, ActiveUserEvent> activeUsers = new ConcurrentHashMap<>();  //By SessionId
-        private List<MacroDAO> tickerCrawl;
+    private List<MacroDAO> tickerCrawl;
 
 
-    public void loadHistoricalCandlesFromDbb(Long idcontract, boolean reset) {
+    public boolean loadHistoricalCandlesFromDbb(Long idcontract, boolean reset) {
         generators.get(idcontract).getProcessors().forEach((freq, processor) -> {
-            if (reset)  processor.resetFlow();
-            if(freq>0)
-            getCandlesByIdContractByFreq(idcontract, freq);
+            if (reset) processor.resetFlow();
+            if (freq > 0)
+               getCandlesByIdContractByFreq(idcontract, freq);
         });
+        return true;
     }
 
-    public List<Candle> getCandlesByIdContractByFreq(long idcontract, int freq){
-            List<Candle> candles;
-            if(generators.get(idcontract).getProcessors().get(freq).getFlow().size()>0){
-//                LOGGER.info("Processor has some flow (" + idcontract +"," + generators.get(idcontract).getProcessors().get(freq).getFlow().size()+")");
-                candles = generators.get(idcontract).getProcessors().get(freq).getFlow();
-            }else {
-//                Database database  = createDatabase("matel", "5432", "matel");
-                candles = generators.get(idcontract).getDatabase().findTop100ByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
-                if (candles.size() > 0) {
-//                    LOGGER.info("Loading from dbb " + candles.size() +" (" + idcontract+ "," + freq + ")");
-                    generators.get(idcontract).getProcessors().get(freq).setFlow(candles);
-                } else {
- //                   LOGGER.info("No historical data for contract " + idcontract + " and freq = " + freq);
-                }
-            }
+    public List<Candle> getCandlesByIdContractByFreq(long idcontract, int freq) {
+        List<Candle> candles;
+        if (generators.get(idcontract).getProcessors().get(freq).getFlow().size() > 0) {
+            candles = generators.get(idcontract).getProcessors().get(freq).getFlow();
+        } else {
+            candles = generators.get(idcontract).getDatabase().findTop100ByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
+            if (candles.size() > 0)
+                generators.get(idcontract).getProcessors().get(freq).setFlow(candles);
+        }
         return candles;
     }
 
-    public Database createDatabase(String databaseName, String port, String username){
+    public Database createDatabase(String databaseName, String port, String username) {
         Database database = beanFactory.createDatabaseJdbc(databaseName, port, username);
         return database;
     }
 
-    public Generator createGenerator(ContractBasic contract){
+    public Generator createGenerator(ContractBasic contract) {
         Generator generator = beanFactory.createBeanGenerator(contract, Global.RANDOM);
         generators.put(contract.getIdcontract(), generator);
         generator.setGeneratorState();
@@ -110,14 +104,14 @@ public class AppController {
         return generator;
     }
 
-    public void createProcessors(ContractBasic contract, int minFreq){
+    public void createProcessors(ContractBasic contract, int minFreq) {
         Map<Integer, ProcessorState> procData = new HashMap<>();
-        processorStateRepository.findByIdcontract(contract.getIdcontract()).forEach(data ->{
+        processorStateRepository.findByIdcontract(contract.getIdcontract()).forEach(data -> {
             procData.put(data.getFreq(), data);
         });
 
         for (int frequency : Global.FREQUENCIES) {
-            if(frequency >= minFreq) {
+            if (frequency >= minFreq) {
                 Processor processor = beanFactory.createBeanProcessor(contract, frequency);
                 processor.setProcessorState(procData.get(frequency));
                 generators.get(contract.getIdcontract()).getProcessors().put(frequency, processor);
@@ -148,8 +142,6 @@ public class AppController {
     public Map<String, ActiveUserEvent> getActiveUsers() {
         return activeUsers;
     }
-
-
 
 
     public List<ContractBasic> getContractsDailyCon() {

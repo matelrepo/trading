@@ -22,10 +22,12 @@ public class Database {
     AppController appController;
     private static final Logger LOGGER = LogManager.getLogger(Database.class);
     private SaverController saverController;
+    private String databaseName;
 
 
     public Database(String databaseName, String port, String username) {
-        System.out.println("Creation database " + databaseName);
+        this.databaseName = databaseName;
+//        LOGGER.info("Creation database " + databaseName);
         connect(databaseName, port, username);
         saverController = new SaverController(this);
     }
@@ -36,6 +38,7 @@ public class Database {
 
 
     public void close() {
+//        LOGGER.info("Closing database " + databaseName);
         try {
             connection.close();
         } catch (SQLException e) {
@@ -180,13 +183,11 @@ public class Database {
     public int countIdTickBreaks(long idcontract) {
         int breaks = 0;
         try {
-            String sql = "SELECT COUNT(t2.mtick) FROM(\" +\n" +
-                    "            \"SELECT t.mtick from(\" +\n" +
-                    "            \"SELECT max(idtick) as mtick, freq FROM public.candle WHERE idcontract = :idcontract GROUP BY freq ORDER BY freq\"+\n" +
-                    "            \") as t GROUP BY mtick\"+\n" +
-                    "            \") as t2;";
+            String sql = "SELECT COUNT(t2.mtick) FROM(SELECT t.mtick from (SELECT max(idtick) as mtick, freq FROM public.candle WHERE idcontract = " + idcontract + " GROUP BY freq ORDER BY freq) as t GROUP BY mtick) as t2";
+            System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
+                System.out.println("cooucou");
                 breaks = rs.getInt(1);
             }
         } catch (SQLException e) {
@@ -197,11 +198,8 @@ public class Database {
     public long findTopIdCandleByIdcontractOrderByIdDesc(long idcontract) {
         long idCandle = 0;
         try {
-            String sql = "SELECT MIN(t2.mtick) FROM(\" +\n" +
-                    "            \"SELECT t.mtick from(\" +\n" +
-                    "            \"SELECT max(idtick) as mtick, freq FROM candle WHERE idcontract = :idcontract GROUP BY freq ORDER BY freq\" +\n" +
-                    "            \") as t GROUP BY mtick\" +\n" +
-                    "            \") as t2;";
+            String sql = "SELECT MIN(t2.mtick) FROM(SELECT t.mtick from (SELECT max(idtick) as mtick, freq FROM public.candle WHERE idcontract =" + idcontract + " GROUP BY freq ORDER BY freq) as t GROUP BY mtick) as t2";
+            System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 idCandle = rs.getLong(1);
@@ -214,11 +212,7 @@ public class Database {
     public Long getSmallestIdTickBreak(long idcontract) {
         Long idTick = null;
         try {
-            String sql = "SELECT MIN(t2.mtick) FROM(\" +\n" +
-                    "            \"SELECT t.mtick from(\" +\n" +
-                    "            \"SELECT max(idtick) as mtick, freq FROM public.candle WHERE idcontract = :idcontract GROUP BY freq ORDER BY freq\" +\n" +
-                    "            \") as t GROUP BY mtick\" +\n" +
-                    "            \") as t2;";
+            String sql = "SELECT MIN(t2.mtick) FROM( SELECT t.mtick from(SELECT max(idtick) as mtick, freq FROM public.candle WHERE idcontract = " + idcontract + " GROUP BY freq ORDER BY freq) as t GROUP BY mtick) as t2";
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 idTick = rs.getLong(1);
@@ -257,7 +251,7 @@ public class Database {
 
     public void getTicks2018(long idcontract) {
         try {
-            String sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM trading.data18 WHERE contract =" + idcontract + " order by date ";
+            String sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM trading.data18 WHERE contract =" + idcontract + " LIMIT 1000000 ";
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 try {
