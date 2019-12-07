@@ -76,7 +76,7 @@ public class AppLauncher implements CommandLineRunner {
             LOGGER.warn(">>> Read only lock! <<<");
 
         for (ContractBasic contract : appController.getContractsLive()) {
-            if(contract.getIdcontract()==12) {
+            if(contract.getIdcontract()==5) {
                 createGenerator(contract);
                 createProcessor(contract, 0);
             }
@@ -106,6 +106,7 @@ public class AppLauncher implements CommandLineRunner {
                     if(Global.COMPUTE) {
                         Database tickDatabase = appController.createDatabase("cleanm", Global.port, "atmuser");
                         tickDatabase.getTicks2018(error.idcontract);
+                        tickDatabase.getTicks2019(error.idcontract);
                         generator.getDatabase().getSaverController().saveNow(generator.getContract().getIdcontract(),true);
                         tickDatabase.close();
                     }

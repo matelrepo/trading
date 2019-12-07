@@ -131,13 +131,15 @@ public class FlowMerger {
                 switch (freq) {
                     case 100000:
                         if(lastDayOfQuarter!=null) {
+                            System.out.println(timestamp + " " + lastDayOfQuarter + " " + timestamp.isAfter(lastDayOfQuarter));
                             if (timestamp.isAfter(lastDayOfQuarter)) { // new quarter
                                 newCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                             } else {
                                 updateCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                             }
                         }
-                            lastDayOfQuarter = timestamp.withMonth(timestamp.get(IsoFields.QUARTER_OF_YEAR) * 3).with(TemporalAdjusters.lastDayOfMonth());
+                        lastDayOfQuarter = timestamp.withMonth(timestamp.get(IsoFields.QUARTER_OF_YEAR) * 3).with(TemporalAdjusters.lastDayOfMonth());
+                        System.out.println(lastDayOfQuarter);
                         processorState.setLastDayOfQuarter(lastDayOfQuarter);
                         break;
                     case 300000:
