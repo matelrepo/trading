@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.matel.app.domain.EventType;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class ProcessorState {
     private double minValue = Double.MIN_VALUE;
     private double minValid = Double.MIN_VALUE;
     private double min = Double.MIN_VALUE;
-    private ZonedDateTime lastDayOfQuarter;
+    private LocalDate lastDayOfQuarter;
 
     @Transient
     private Map<EventType, Boolean> activeEvents = new HashMap<>();
@@ -246,11 +247,11 @@ public class ProcessorState {
                 '}';
     }
 
-    public ZonedDateTime getLastDayOfQuarter() {
+    public LocalDate getLastDayOfQuarter() {
         return lastDayOfQuarter;
     }
 
-    public void setLastDayOfQuarter(ZonedDateTime lastDayOfQuarter) {
+    public void setLastDayOfQuarter(LocalDate lastDayOfQuarter) {
         this.lastDayOfQuarter = lastDayOfQuarter;
     }
 }
