@@ -48,7 +48,7 @@ public class FlowMerger {
     public FlowMerger(ContractBasic contract, int freq) {
         this.contract = contract;
         this.freq = freq;
-        base = 1L * freq <= 0 ? 1L : 1L * freq; // Special freq = 1380, 6900,35000
+        base = 60000L * freq <= 0 ? 60000L : 60000L * freq; // Special freq = 1380, 6900,35000
     }
 
     public synchronized void newCandle(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, boolean isCandleComputed) {

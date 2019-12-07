@@ -26,20 +26,20 @@ public class SaverController {
 
 
     public void saveNow(Long idcontract, boolean initialComputation) {
-////        global.setSaving(true);
-//        int num =  saveBatchTicks();
-//        LOGGER.info("Saving now with " + num + " ticks for contract " + idcontract);
-//        if(num>0 || initialComputation) {
-//            saveBatchCandles();
-////            updateCurrentCandle(idcontract);
-////            saveBatchLogProcessor();
-////            saveProcessorStates();
-//        }else{
-//            LOGGER.warn("Cannot save candles because ticks were not saved!");
-//        }
-//
-//        LOGGER.info("Saving completed");
-////        global.setSaving(false);
+        int numTicks =  saveBatchTicks();
+        LOGGER.info("Saving now " + numTicks + " ticks for contract " + idcontract);
+        if(numTicks>0 || initialComputation) {
+           int numCandles=  saveBatchCandles();
+            LOGGER.info("Saving now " + numCandles + " candles for contract " + idcontract);
+//            updateCurrentCandle(idcontract);
+//            saveBatchLogProcessor();
+//            saveProcessorStates();
+        }else{
+            LOGGER.warn("Cannot save candles because ticks were not saved!");
+        }
+
+        LOGGER.info("Saving completed");
+//        global.setSaving(false);
     }
 
 
@@ -62,7 +62,12 @@ public class SaverController {
         return count;
     }
 
-    public synchronized void saveBatchCandles(Candle candle) {
+    public synchronized int saveBatchCandles() {
+              return  saveBatchCandles(null);
+    }
+
+    public synchronized int saveBatchCandles(Candle candle) {
+        int count =0;
         if (!Global.READ_ONLY_CANDLES) {
             if (candle != null)
                 if (candle.getFreq() > 0) {
@@ -74,9 +79,10 @@ public class SaverController {
                 }
             if (insertCandlesBuffer.size() > Global.MAX_CANDLES_SIZE_SAVING || candle == null) {
                 LOGGER.info("Regular batch candles saving (" + insertCandlesBuffer.size() + ")");
-                database.saveCandles(this.insertCandlesBuffer);
+               count =  database.saveCandles(this.insertCandlesBuffer);
                 insertCandlesBuffer.clear();
             }
         }
+        return count;
     }
 }

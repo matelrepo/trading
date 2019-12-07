@@ -53,7 +53,7 @@ public class Tick {
     public Tick(){}
 
     public Tick(long idcontract , ZonedDateTime timestamp, double close) {
-        this.timestamp = ZonedDateTime.now();
+        this.timestamp = timestamp;
         this.close = close;
         this.idcontract = idcontract;
     }

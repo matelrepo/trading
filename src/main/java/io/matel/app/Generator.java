@@ -223,10 +223,11 @@ public class Generator implements IbClient {
             processor.process(candle.getTimestamp(), candle.getId(), candle.getOpen(),
                     candle.getHigh(), candle.getLow(), candle.getClose(), true);
         });
-//        Thread.sleep(1000);
+        Thread.sleep(1000);
+        System.out.println(candle.toString());
     }
 
-    public void processPrice(Tick tick, boolean countConsecutiveUpDown) {
+    public void processPrice(Tick tick, boolean countConsecutiveUpDown)  {
         flowLive.add(0, tick);
         if (flowLive.size() > Global.MAX_LENGTH_TICKS)
             flowLive.remove(Global.MAX_LENGTH_TICKS);
@@ -238,6 +239,13 @@ public class Generator implements IbClient {
         generatorState.setLastPrice(tick.getClose());
         generatorState.setChangeValue(Utils.round(generatorState.getLastPrice() - generatorState.getDailyMark(), contract.getRounding()));
         generatorState.setChangePerc(generatorState.getLastPrice() / generatorState.getDailyMark()-1);
+
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(tick.toString());
     }
 
 

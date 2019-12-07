@@ -248,11 +248,12 @@ public class Database {
 
     public void getTicks2018(long idcontract) {
         try {
-            String sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM trading.data18 WHERE contract =" + idcontract + " LIMIT 1000000 ";
+            String sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM trading.data18 WHERE contract =" + idcontract + " order by date ";
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 try {
-                    Tick tick = new Tick(rs.getLong(4), rs.getTimestamp(5).toLocalDateTime().atZone(Global.ZONE_ID), rs.getDouble(2));
+                    Tick tick = new Tick(rs.getLong(4), ZonedDateTime.ofInstant(rs.getTimestamp(5).toInstant(), Global.ZONE_ID), rs.getDouble(2));
+//                    System.out.println("tick: " + tick.toString());
                     appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false);
                 } catch (NullPointerException e) {
 
