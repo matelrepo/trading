@@ -93,7 +93,6 @@ public class AppLauncher implements CommandLineRunner {
                     this.errors.put(generator.getContract().getIdcontract(), error);
                     error.idcontract = generator.getContract().getIdcontract();
                     error.numTicksBreaking = generator.getDatabase().countIdTickBreaks(error.idcontract);
-                    System.out.println(error.numTicksBreaking);
                     error.lastCandleId = generator.getDatabase().findTopIdCandleByIdcontractOrderByIdDesc(error.idcontract);
 
                     if (error.numTicksBreaking > 1) {
@@ -105,7 +104,6 @@ public class AppLauncher implements CommandLineRunner {
                         LOGGER.warn("Error: " + error.toString());
 
                     if(Global.COMPUTE) {
-                        System.out.println("hey");
                         Database tickDatabase = appController.createDatabase("cleanm", Global.port, "atmuser");
                         tickDatabase.getTicks2018(error.idcontract);
                         generator.getDatabase().getSaverController().saveNow(true);

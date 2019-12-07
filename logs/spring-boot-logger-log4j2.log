@@ -20325,3 +20325,109 @@ Caused by: java.lang.NullPointerException
 2019-12-07 17:03:56,291 INFO o.s.o.j.AbstractEntityManagerFactoryBean [Thread-3] Closing JPA EntityManagerFactory for persistence unit 'default'
 2019-12-07 17:03:56,336 INFO c.z.h.HikariDataSource [Thread-3] HikariPool-1 - Shutdown initiated...
 2019-12-07 17:03:56,365 INFO c.z.h.HikariDataSource [Thread-3] HikariPool-1 - Shutdown completed.
+2019-12-07 17:08:47,002 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Mathieus-MacBook-Air.local with PID 12779 (/Users/matel/IdeaProjects/server-jwt/target/classes started by matel in /Users/matel/IdeaProjects/server-jwt)
+2019-12-07 17:08:47,015 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
+2019-12-07 17:08:48,330 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-12-07 17:08:48,490 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 142ms. Found 11 repository interfaces.
+2019-12-07 17:08:49,118 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$8e3fa244] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-12-07 17:08:49,473 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
+2019-12-07 17:08:49,501 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2019-12-07 17:08:49,521 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2019-12-07 17:08:49,522 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
+2019-12-07 17:08:49,713 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2019-12-07 17:08:49,713 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 2615 ms
+2019-12-07 17:08:49,945 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2019-12-07 17:08:50,092 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2019-12-07 17:08:50,180 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2019-12-07 17:08:50,278 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
+2019-12-07 17:08:50,280 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
+2019-12-07 17:08:50,548 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2019-12-07 17:08:50,870 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2019-12-07 17:08:50,977 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
+2019-12-07 17:08:50,983 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@52cb52bd
+2019-12-07 17:08:51,438 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
+2019-12-07 17:08:51,893 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
+2019-12-07 17:08:52,303 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2019-12-07 17:08:53,131 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
+2019-12-07 17:08:53,136 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
+2019-12-07 17:08:53,801 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4d529bc0, org.springframework.security.web.context.SecurityContextPersistenceFilter@c3c63c1, org.springframework.security.web.header.HeaderWriterFilter@441762b8, org.springframework.web.filter.CorsFilter@429dde4d, org.springframework.security.web.authentication.logout.LogoutFilter@497c1d78, io.matel.app.connection.security.JwtAuthenticationFilter@610d0067, io.matel.app.connection.security.JwtAuthorizationFilter@5ef48b08, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6f12fca0, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@390978, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7a1878d, org.springframework.security.web.session.SessionManagementFilter@38213efa, org.springframework.security.web.access.ExceptionTranslationFilter@6b6fde93, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7a023e34]
+2019-12-07 17:08:53,826 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
+2019-12-07 17:08:53,865 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
+2019-12-07 17:08:54,135 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2019-12-07 17:08:54,343 INFO o.s.c.l.CompositeLog [main] Starting...
+2019-12-07 17:08:54,345 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+2019-12-07 17:08:54,346 INFO o.s.c.l.CompositeLog [main] Started.
+2019-12-07 17:08:54,364 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2019-12-07 17:08:54,391 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
+2019-12-07 17:08:54,395 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplication in 8.419 seconds (JVM running for 10.456)
+2019-12-07 17:08:54,398 INFO i.m.a.AppLauncher [main] Starting with 4 cores
+2019-12-07 17:08:54,445 INFO o.h.h.i.QueryTranslatorFactoryInitiator [main] HHH000397: Using ASTQueryTranslatorFactory
+2019-12-07 17:08:54,673 INFO i.m.a.AppLauncher [main] 86 contracts found
+2019-12-07 17:08:54,676 INFO i.m.a.AppLauncher [main] Setting up last id tick: 0
+2019-12-07 17:08:54,677 INFO i.m.a.AppLauncher [main] Setting up last id candle: 0
+2019-12-07 17:08:54,709 INFO i.m.a.AppLauncher [main] Loading historical candles...
+2019-12-07 17:09:02,170 INFO o.s.c.l.CompositeLog [Thread-3] Stopping...
+2019-12-07 17:09:02,173 INFO o.s.c.l.CompositeLog [Thread-3] BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+2019-12-07 17:09:02,174 INFO o.s.c.l.CompositeLog [Thread-3] Stopped.
+2019-12-07 17:09:02,185 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'brokerChannelExecutor'
+2019-12-07 17:09:02,188 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'messageBrokerTaskScheduler'
+2019-12-07 17:09:02,195 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'clientOutboundChannelExecutor'
+2019-12-07 17:09:02,196 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'clientInboundChannelExecutor'
+2019-12-07 17:09:02,200 INFO o.s.o.j.AbstractEntityManagerFactoryBean [Thread-3] Closing JPA EntityManagerFactory for persistence unit 'default'
+2019-12-07 17:09:02,221 INFO c.z.h.HikariDataSource [Thread-3] HikariPool-1 - Shutdown initiated...
+2019-12-07 17:09:02,232 INFO c.z.h.HikariDataSource [Thread-3] HikariPool-1 - Shutdown completed.
+2019-12-07 17:10:20,720 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Mathieus-MacBook-Air.local with PID 12827 (/Users/matel/IdeaProjects/server-jwt/target/classes started by matel in /Users/matel/IdeaProjects/server-jwt)
+2019-12-07 17:10:20,738 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
+2019-12-07 17:10:22,243 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-12-07 17:10:22,388 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 131ms. Found 11 repository interfaces.
+2019-12-07 17:10:22,927 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$79fa716f] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-12-07 17:10:23,292 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
+2019-12-07 17:10:23,318 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2019-12-07 17:10:23,335 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2019-12-07 17:10:23,336 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
+2019-12-07 17:10:23,526 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2019-12-07 17:10:23,527 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 2624 ms
+2019-12-07 17:10:23,754 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2019-12-07 17:10:23,947 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2019-12-07 17:10:24,034 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2019-12-07 17:10:24,146 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
+2019-12-07 17:10:24,149 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
+2019-12-07 17:10:24,406 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2019-12-07 17:10:24,728 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2019-12-07 17:10:24,837 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
+2019-12-07 17:10:24,843 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@5a48d186
+2019-12-07 17:10:25,399 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
+2019-12-07 17:10:25,878 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
+2019-12-07 17:10:26,271 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2019-12-07 17:10:27,043 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
+2019-12-07 17:10:27,048 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
+2019-12-07 17:10:27,728 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@363a09a2, org.springframework.security.web.context.SecurityContextPersistenceFilter@4c89c98a, org.springframework.security.web.header.HeaderWriterFilter@20cf3ab3, org.springframework.web.filter.CorsFilter@63d14dbf, org.springframework.security.web.authentication.logout.LogoutFilter@350d9d23, io.matel.app.connection.security.JwtAuthenticationFilter@67521a79, io.matel.app.connection.security.JwtAuthorizationFilter@73839f22, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7e24a2e2, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2e590e36, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1512efe9, org.springframework.security.web.session.SessionManagementFilter@725490dd, org.springframework.security.web.access.ExceptionTranslationFilter@6af0407c, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@18ab513d]
+2019-12-07 17:10:27,753 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
+2019-12-07 17:10:27,787 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
+2019-12-07 17:10:28,080 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2019-12-07 17:10:28,316 INFO o.s.c.l.CompositeLog [main] Starting...
+2019-12-07 17:10:28,317 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+2019-12-07 17:10:28,318 INFO o.s.c.l.CompositeLog [main] Started.
+2019-12-07 17:10:28,331 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2019-12-07 17:10:28,359 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
+2019-12-07 17:10:28,364 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplication in 8.522 seconds (JVM running for 10.202)
+2019-12-07 17:10:28,388 INFO i.m.a.AppLauncher [main] Starting with 4 cores
+2019-12-07 17:10:28,440 INFO o.h.h.i.QueryTranslatorFactoryInitiator [main] HHH000397: Using ASTQueryTranslatorFactory
+2019-12-07 17:10:28,634 INFO i.m.a.AppLauncher [main] 86 contracts found
+2019-12-07 17:10:28,638 INFO i.m.a.AppLauncher [main] Setting up last id tick: 0
+2019-12-07 17:10:28,639 INFO i.m.a.AppLauncher [main] Setting up last id candle: 0
+2019-12-07 17:10:28,672 INFO i.m.a.AppLauncher [main] Loading historical candles...
+2019-12-07 17:10:38,000 INFO o.s.c.l.CompositeLog [Thread-3] Stopping...
+2019-12-07 17:10:38,002 INFO o.s.c.l.CompositeLog [Thread-3] BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+2019-12-07 17:10:38,003 INFO o.s.c.l.CompositeLog [Thread-3] Stopped.
+2019-12-07 17:10:38,005 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'brokerChannelExecutor'
+2019-12-07 17:10:38,007 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'messageBrokerTaskScheduler'
+2019-12-07 17:10:38,009 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'clientOutboundChannelExecutor'
+2019-12-07 17:10:38,010 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'clientInboundChannelExecutor'
+2019-12-07 17:10:38,017 INFO o.s.o.j.AbstractEntityManagerFactoryBean [Thread-3] Closing JPA EntityManagerFactory for persistence unit 'default'
+2019-12-07 17:10:38,040 INFO c.z.h.HikariDataSource [Thread-3] HikariPool-1 - Shutdown initiated...
+2019-12-07 17:10:38,059 INFO c.z.h.HikariDataSource [Thread-3] HikariPool-1 - Shutdown completed.

@@ -184,10 +184,8 @@ public class Database {
         int breaks = 0;
         try {
             String sql = "SELECT COUNT(t2.mtick) FROM(SELECT t.mtick from (SELECT max(idtick) as mtick, freq FROM public.candle WHERE idcontract = " + idcontract + " GROUP BY freq ORDER BY freq) as t GROUP BY mtick) as t2";
-            System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
-                System.out.println("cooucou");
                 breaks = rs.getInt(1);
             }
         } catch (SQLException e) {
@@ -199,7 +197,6 @@ public class Database {
         long idCandle = 0;
         try {
             String sql = "SELECT MIN(t2.mtick) FROM(SELECT t.mtick from (SELECT max(idtick) as mtick, freq FROM public.candle WHERE idcontract =" + idcontract + " GROUP BY freq ORDER BY freq) as t GROUP BY mtick) as t2";
-            System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 idCandle = rs.getLong(1);
