@@ -270,10 +270,15 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if(count ==0 )
+        if(count ==0 ) {
+            System.out.println(maxIdTick);
+
             return -1;
-        else
-        return maxIdTick;
+        }
+        else {
+            System.out.println(maxIdTick);
+            return maxIdTick;
+        }
     }
 
     public synchronized int saveTicks(List<Tick> ticks) {
