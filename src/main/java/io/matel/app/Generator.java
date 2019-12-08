@@ -214,8 +214,7 @@ public class Generator implements IbClient {
 //                if (price < generatorState.getLow())
 //                    generatorState.setLow(Utils.round(price, contract.getRounding()));
 
-                processPrice(tick, true);
-                savingTick();
+                processPrice(tick, true, true);
                 wsController.sendLiveGeneratorState(generatorState);
             }
         }else if((price > 0 && (field == 1 || field == 2) && contract.getFlowType().equals("TRADES"))){
@@ -239,7 +238,7 @@ public class Generator implements IbClient {
 //        System.out.println(candle.toString());
     }
 
-    public void processPrice(Tick tick, boolean countConsecutiveUpDown)  {
+    public void processPrice(Tick tick, boolean countConsecutiveUpDown, boolean savingTick)  {
         updateGeneratorState(tick);
         flowLive.add(0, tick);
         if (flowLive.size() > Global.MAX_LENGTH_TICKS)
@@ -249,6 +248,14 @@ public class Generator implements IbClient {
         processors.forEach((freq, processor) -> {
             processor.process(tick.getTimestamp(), tick.getId(), null, null, null, tick.getClose(), false);
         });
+
+        if(savingTick) {
+            int count = database.getSaverController().saveBatchTicks(flowLive.get(0));
+            if (count > 0)
+                appController.getGeneratorsState().forEach((id, state) -> {
+                    generatorStateRepo.save(state);
+                });
+        }
     }
 
 

@@ -61,26 +61,32 @@ public class AppLauncher implements CommandLineRunner {
         Database database = appController.createDatabase("matel", "5432", "matel");
         appController.setContractsLive(appController.contractRepository.findTop100ByActiveAndType(true, "LIVE"));
         LOGGER.info(appController.getContractsLive().size() + " contracts found");
-        try {
-            Global.startIdTick = database.findTopIdTickOrderByIdDesc();
-            Global.startIdCandle = database.findTopIdCandleOrderByIdDesc();
-            global.setIdTick(Global.startIdTick);
-            global.setIdCandle(Global.startIdCandle);
-        } catch (NullPointerException e) {
-        }
-        LOGGER.info("Setting up last id tick: " + Global.startIdTick);
-        LOGGER.info("Setting up last id candle: " + Global.startIdCandle);
+//        try {
+            Long idTick = database.findTopIdTickOrderByIdDesc();
+            if(idTick == null) idTick =0L;
+            Global.startIdTick = idTick;
+            Long idCandle = database.findTopIdCandleOrderByIdDesc();
+            if(idCandle == null) idCandle =0L;
+            Global.startIdCandle = idCandle;
+
+        global.setIdTick(idTick);
+            global.setIdCandle(idCandle);
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//        }
+        LOGGER.info("Setting up last id tick: " + global.getIdTick(false));
+        LOGGER.info("Setting up last id candle: " + global.getIdCandle(false));
         database.close();
 
         if (Global.READ_ONLY_TICKS)
             LOGGER.warn(">>> Read only lock! <<<");
 
         for (ContractBasic contract : appController.getContractsLive()) {
-            if(contract.getIdcontract()==12) {
+            if (contract.getIdcontract() == 12) {
                 createGenerator(contract);
                 createProcessor(contract, 0);
             }
-            }
+        }
 
         LOGGER.info("Loading historical candles...");
         appController.getGenerators().forEach((id, generator) -> {
@@ -103,13 +109,16 @@ public class AppLauncher implements CommandLineRunner {
                     if (error.errorDetected)
                         LOGGER.warn("Error: " + error.toString());
 
-                    if(Global.COMPUTE_DEEP_HISTORICAL) {
+                    if (Global.COMPUTE_DEEP_HISTORICAL) {
                         Database tickDatabase = appController.createDatabase("cleanm", Global.port, "atmuser");
-                        tickDatabase.getTicks2018(error.idcontract);
-                        tickDatabase.getTicks2019(error.idcontract);
-                        generator.getDatabase().getSaverController().saveNow(generator.getContract().getIdcontract(),true);
+//                        tickDatabase.getTicksByTable(error.idcontract, false, "trading.data18");
+//                        tickDatabase.getTicksByTable(error.idcontract, false, "trading.data19");
+                        tickDatabase.getTicksByTable(error.idcontract, true, "trading.data20");
                         tickDatabase.close();
                     }
+
+                    generator.getDatabase().getSaverController().saveNow(generator, true);
+
 
                     appController.loadHistoricalCandlesFromDbb(generator.getContract().getIdcontract(), false);
                     generator.getDatabase().close();
@@ -117,27 +126,26 @@ public class AppLauncher implements CommandLineRunner {
 
 
                     LOGGER.info("Connecting market data for all contracts...");
-                        try {
-                            generator.setDatabase(appController.getDatabase());
-                            appController.connectMarketData(generator.getContract());
-                        } catch (ExecutionException | InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                    try {
+                        generator.setDatabase(appController.getDatabase());
+                        appController.connectMarketData(generator.getContract());
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     LOGGER.info(">>> Finished!");
 
-                        appController.getGenerators().forEach((idcon, gen)->{
-                            gen.saveGeneratorState();
-                            gen.getProcessors().forEach((freq, proc)->{
-                                proc.saveProcessorState();
-                            });
+                    appController.getGenerators().forEach((idcon, gen) -> {
+                        gen.saveGeneratorState();
+                        gen.getProcessors().forEach((freq, proc) -> {
+                            proc.saveProcessorState();
                         });
+                    });
 
                 }).start();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
-
 
 
     }

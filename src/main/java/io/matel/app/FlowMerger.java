@@ -65,7 +65,7 @@ public class FlowMerger {
             if (flow.size() > 0) {
                 candle.setColor(flow.get(0).getColor());
                 appController.getGenerators().get(contract.getIdcontract())
-                        .getDatabase().getSaverController().saveBatchCandles(flow.get(0));
+                        .getDatabase().getSaverController().saveBatchCandles(flow.get(0), false);
             }
 
             flow.add(0, candle);

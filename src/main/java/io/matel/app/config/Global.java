@@ -8,11 +8,11 @@ import java.time.ZoneId;
 public class Global {
     public static final boolean ONLINE = false;
     public static final boolean RANDOM = false;
-    public static final boolean READ_ONLY_TICKS = true;
+    public static final boolean READ_ONLY_TICKS = false;
     public static final boolean READ_ONLY_CANDLES = true;
     public static final boolean READ_ONLY_LOG_PROCESSOR = true;
     public static final boolean UPDATE_MACRO = false;
-    public static final boolean COMPUTE_DEEP_HISTORICAL = false;
+    public static final boolean COMPUTE_DEEP_HISTORICAL = true;
 
 
     public static final String SECRET = "SomeSecretForJWTGeneration";

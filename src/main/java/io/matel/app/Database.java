@@ -141,18 +141,19 @@ public class Database {
         }
     }
 
-    public Integer findTopIdTickOrderByIdDesc() {
-        Integer idTick = null;
+    public Long findTopIdTickOrderByIdDesc() {
+        Long idTick = null;
         try {
             String sql = "SELECT id FROM public.tick order by id desc limit 1";
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
-                idTick = rs.getInt(1);
+                idTick = rs.getLong(1);
             }
         } catch (SQLException e) {
         }
         return idTick;
     }
+
 
     public Double findTopCloseByIdContractOrderByTimeStampDesc(long idcontract) {
         Double close = null;
@@ -246,35 +247,14 @@ public class Database {
         return candles;
     }
 
-    public void getTicks2018(long idcontract) {
+    public void getTicksByTable(long idcontract, boolean saveTick, String table) {
         try {
-            String sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM trading.data18 WHERE contract =" + idcontract + " order by date ";
+            String sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM " + table + " WHERE contract =" + idcontract + " order by date ";
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 try {
                     Tick tick = new Tick(rs.getLong(1), rs.getLong(4), ZonedDateTime.ofInstant(rs.getTimestamp(5).toInstant(), Global.ZONE_ID), rs.getDouble(2));
-                    appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false);
-                } catch (NullPointerException e) {
-
-                }
-            }
-
-            LOGGER.info("Historical completed for contract " + idcontract);
-            connection.commit();
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void getTicks2019(long idcontract) {
-        try {
-            String sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM trading.data19 WHERE contract =" + idcontract + " order by date ";
-            ResultSet rs = connection.createStatement().executeQuery(sql);
-            while (rs.next()) {
-                try {
-                    Tick tick = new Tick(rs.getLong(1),rs.getLong(4), ZonedDateTime.ofInstant(rs.getTimestamp(5).toInstant(), Global.ZONE_ID), rs.getDouble(2));
-                    appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false);
+                    appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false, saveTick);
                 } catch (NullPointerException e) {
 
                 }
