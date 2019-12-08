@@ -82,10 +82,10 @@ public class AppLauncher implements CommandLineRunner {
             LOGGER.warn(">>> Read only lock! <<<");
 
         for (ContractBasic contract : appController.getContractsLive()) {
-            if (contract.getIdcontract() == 2) {
+//            if (contract.getIdcontract() == 2) {
                 createGenerator(contract);
                 createProcessor(contract, 0);
-            }
+//            }
         }
 
         LOGGER.info("Loading historical candles...");
@@ -126,7 +126,6 @@ public class AppLauncher implements CommandLineRunner {
                             count++;
                             minIdTick =tickDatabase.getTicksByTable(error.idcontract, false, "trading.data19", minIdTick);
                         }
-//                        tickDatabase.getTicksByTable(error.idcontract, true, "trading.data20");
                         tickDatabase.close();
                     }
 
@@ -159,7 +158,6 @@ public class AppLauncher implements CommandLineRunner {
                 e.printStackTrace();
             }
         });
-
 
     }
 
