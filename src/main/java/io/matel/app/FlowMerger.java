@@ -143,7 +143,7 @@ public class FlowMerger {
                         }
                         break;
                     case 300000:
-                        if (timestamp.getDayOfYear() < previousDate.getDayOfYear()) {
+                        if (timestamp.getYear() > previousDate.getYear()) {
                             if (flow.size() > 0)
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setYearlyMark(flow.get(0).getClose());
                             newCandle(timestamp, idTick, open, high, low, close, isCandleComputed);

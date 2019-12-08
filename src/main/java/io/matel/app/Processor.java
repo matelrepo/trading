@@ -48,6 +48,8 @@ public class Processor extends FlowMerger {
 
         if (Global.ONLINE || Global.RANDOM)
             wsController.sendLiveCandle(flow.get(0));
+
+      //  System.out.println(flow.get(0).toString());
     }
 
     public void algorythm(boolean isCandleComputed) {

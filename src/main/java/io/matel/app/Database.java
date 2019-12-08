@@ -251,7 +251,13 @@ public class Database {
         int count =0;
         long maxIdTick =0;
         try {
-            String sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM " + table + " WHERE contract =" + idcontract + " and id>" + idTick + " order by date LIMIT 250000";
+            String sql ="";
+            if(table.equals("public.tick")){
+                sql = "SELECT id, close, created_on, idcontract, timestamp, trigger_down, trigger_up, updated_on FROM " + table + " WHERE idcontract =" + idcontract + " and id>" + idTick + " order by timestamp LIMIT 250000";
+
+            }else{
+                 sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM " + table + " WHERE contract =" + idcontract + " and id>" + idTick + " order by date LIMIT 250000";
+            }
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 try {

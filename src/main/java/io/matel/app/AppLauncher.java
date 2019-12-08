@@ -82,10 +82,8 @@ public class AppLauncher implements CommandLineRunner {
             LOGGER.warn(">>> Read only lock! <<<");
 
         for (ContractBasic contract : appController.getContractsLive()) {
-//            if (contract.getIdcontract() == 2) {
                 createGenerator(contract);
                 createProcessor(contract, 0);
-//            }
         }
 
         LOGGER.info("Loading historical candles...");
@@ -109,6 +107,7 @@ public class AppLauncher implements CommandLineRunner {
                     if (error.errorDetected)
                         LOGGER.warn("Error: " + error.toString());
 
+
                     if (Global.COMPUTE_DEEP_HISTORICAL) {
                         Database tickDatabase = appController.createDatabase("cleanm", Global.port, "atmuser");
                         long minIdTick = 0;
@@ -127,12 +126,17 @@ public class AppLauncher implements CommandLineRunner {
                             minIdTick =tickDatabase.getTicksByTable(error.idcontract, false, "trading.data19", minIdTick);
                         }
                         tickDatabase.close();
+                        generator.getDatabase().getSaverController().saveNow(generator, true);
+
                     }
 
-                    generator.getDatabase().getSaverController().saveNow(generator, true);
+                    if(!Global.COMPUTE_DEEP_HISTORICAL && !error.errorDetected){
+                        appController.loadHistoricalCandlesFromDbb(generator.getContract().getIdcontract(), false);
+                        LOGGER.info("Computing ticks...");
+                        generator.getDatabase().getTicksByTable(error.idcontract, false, "public.tick", error.lastCandleId);
+                        generator.getDatabase().getSaverController().saveNow(generator, true);
+                    }
 
-
-                    appController.loadHistoricalCandlesFromDbb(generator.getContract().getIdcontract(), false);
                     generator.getDatabase().close();
                     semaphore.release();
 
@@ -158,6 +162,9 @@ public class AppLauncher implements CommandLineRunner {
                 e.printStackTrace();
             }
         });
+
+        LOGGER.info("All completed");
+
 
     }
 
