@@ -82,10 +82,10 @@ public class AppLauncher implements CommandLineRunner {
             LOGGER.warn(">>> Read only lock! <<<");
 
         for (ContractBasic contract : appController.getContractsLive()) {
-            if (contract.getIdcontract() == 12) {
+//            if (contract.getIdcontract() == 12) {
                 createGenerator(contract);
                 createProcessor(contract, 0);
-            }
+//            }
         }
 
         LOGGER.info("Loading historical candles...");
@@ -111,9 +111,9 @@ public class AppLauncher implements CommandLineRunner {
 
                     if (Global.COMPUTE_DEEP_HISTORICAL) {
                         Database tickDatabase = appController.createDatabase("cleanm", Global.port, "atmuser");
-//                        tickDatabase.getTicksByTable(error.idcontract, false, "trading.data18");
-//                        tickDatabase.getTicksByTable(error.idcontract, false, "trading.data19");
-                        tickDatabase.getTicksByTable(error.idcontract, true, "trading.data20");
+                        tickDatabase.getTicksByTable(error.idcontract, false, "trading.data18");
+                        tickDatabase.getTicksByTable(error.idcontract, false, "trading.data19");
+//                        tickDatabase.getTicksByTable(error.idcontract, true, "trading.data20");
                         tickDatabase.close();
                     }
 
@@ -132,14 +132,14 @@ public class AppLauncher implements CommandLineRunner {
                     } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                     }
-                    LOGGER.info(">>> Finished!");
+                    LOGGER.info(">>> Finished contract " + generator.getContract().getIdcontract());
 
-                    appController.getGenerators().forEach((idcon, gen) -> {
-                        gen.saveGeneratorState();
-                        gen.getProcessors().forEach((freq, proc) -> {
+//                    appController.getGenerators().forEach((idcon, gen) -> {
+                        generator.saveGeneratorState();
+                        generator.getProcessors().forEach((freq, proc) -> {
                             proc.saveProcessorState();
                         });
-                    });
+//                    });
 
                 }).start();
             } catch (InterruptedException e) {

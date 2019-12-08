@@ -9,7 +9,7 @@ public class Global {
     public static final boolean ONLINE = false;
     public static final boolean RANDOM = false;
     public static final boolean READ_ONLY_TICKS = false;
-    public static final boolean READ_ONLY_CANDLES = true;
+    public static final boolean READ_ONLY_CANDLES = false;
     public static final boolean READ_ONLY_LOG_PROCESSOR = true;
     public static final boolean UPDATE_MACRO = false;
     public static final boolean COMPUTE_DEEP_HISTORICAL = true;
@@ -19,12 +19,12 @@ public class Global {
     public static final int TOKEN_EXPIRATION_TIME = 864_000_000; // 10 days
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
-    public static final int EXECUTOR_THREADS = Runtime.getRuntime().availableProcessors();
+    public static final int EXECUTOR_THREADS = Runtime.getRuntime().availableProcessors()/2+1;
     public static final int STARTING_PRICE = 10000;
     public static final int MAX_LENGTH_TICKS = 10;
-    public static final int MAX_LENGTH_FLOW = 100;
+    public static final int MAX_LENGTH_FLOW = 25;
     public static final int MAX_TICKS_SIZE_SAVING = 2500;
-    public static final int MAX_CANDLES_SIZE_SAVING = 1000;
+    public static final int MAX_CANDLES_SIZE_SAVING = 5000;
     public static final int[] FREQUENCIES = {0, 1, 5, 15, 30, 60, 240, 1380, 6900,35000,100000, 300000};
 //    public static final int[] FREQUENCIES = {0, 1, 2, 3, 4, 5, 6, 7, 8,9,10, 11};
     public static final ZoneId ZONE_ID = ZoneId.of("Asia/Bangkok");
