@@ -247,14 +247,18 @@ public class Database {
         return candles;
     }
 
-    public void getTicksByTable(long idcontract, boolean saveTick, String table) {
+    public long getTicksByTable(long idcontract, boolean saveTick, String table, long idTick) {
+        int count =0;
+        long maxIdTick =0;
         try {
-            String sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM " + table + " WHERE contract =" + idcontract + " order by date ";
+            String sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM " + table + " WHERE contract =" + idcontract + " and id>" + idTick + " order by date LIMIT 250000";
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 try {
                     Tick tick = new Tick(rs.getLong(1), rs.getLong(4), ZonedDateTime.ofInstant(rs.getTimestamp(5).toInstant(), Global.ZONE_ID), rs.getDouble(2));
+                    if(tick.getId() > maxIdTick) maxIdTick = tick.getId();
                     appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false, saveTick);
+               count++;
                 } catch (NullPointerException e) {
 
                 }
@@ -266,6 +270,10 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        if(count ==0 )
+            return -1;
+        else
+        return maxIdTick;
     }
 
     public synchronized int saveTicks(List<Tick> ticks) {

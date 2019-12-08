@@ -82,10 +82,10 @@ public class AppLauncher implements CommandLineRunner {
             LOGGER.warn(">>> Read only lock! <<<");
 
         for (ContractBasic contract : appController.getContractsLive()) {
-//            if (contract.getIdcontract() == 12) {
+            if (contract.getIdcontract() == 5) {
                 createGenerator(contract);
                 createProcessor(contract, 0);
-//            }
+            }
         }
 
         LOGGER.info("Loading historical candles...");
@@ -111,8 +111,21 @@ public class AppLauncher implements CommandLineRunner {
 
                     if (Global.COMPUTE_DEEP_HISTORICAL) {
                         Database tickDatabase = appController.createDatabase("cleanm", Global.port, "atmuser");
-                        tickDatabase.getTicksByTable(error.idcontract, false, "trading.data18");
-                        tickDatabase.getTicksByTable(error.idcontract, false, "trading.data19");
+                        long minIdTick = 0;
+                        int count =0;
+
+                        while(minIdTick >=0) {
+                            System.out.println(count + " round(s) with tick " + minIdTick);
+                            count++;
+                            minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data18", minIdTick);
+                        }
+                        minIdTick =0;
+                        count =0;
+                        while(minIdTick >=0) {
+                            System.out.println(count + " round(s) with tick " + minIdTick);
+                            count++;
+                            tickDatabase.getTicksByTable(error.idcontract, false, "trading.data19", minIdTick);
+                        }
 //                        tickDatabase.getTicksByTable(error.idcontract, true, "trading.data20");
                         tickDatabase.close();
                     }

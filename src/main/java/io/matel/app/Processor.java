@@ -225,6 +225,7 @@ public class Processor extends FlowMerger {
     }
 
     public void saveProcessorState(){
+        if(!Global.READ_ONLY_CANDLES)
         processorStateRepository.save(processorState);
     }
 
