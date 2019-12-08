@@ -5,9 +5,11 @@ import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.EventType;
+import io.matel.app.repo.ProcessorStateRepository;
 import io.matel.app.state.LogProcessorState;
 import io.matel.app.state.ProcessorState;
 import io.matel.app.tools.DoubleStatistics;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -15,10 +17,10 @@ import java.util.stream.Collector;
 
 public class Processor extends FlowMerger {
 
-//    @Autowired
-//    ProcessorStateRepository processorStateRepository;
-    Double closingAverage;
-    DoubleStatistics statsOnHeight;
+    @Autowired
+    ProcessorStateRepository processorStateRepository;
+//    Double closingAverage;
+//    DoubleStatistics statsOnHeight;
 
 
     private int offset = 0; // Used for offset candle if frequency >0
@@ -36,7 +38,6 @@ public class Processor extends FlowMerger {
 
 
     public void process(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, boolean isCandleComputed) {
-
         merge(timestamp, idTick, open, high, low, close, isCandleComputed);
         logData = new LogProcessorState(contract.getIdcontract(), freq, offset);
         logData.idTick = idTick;
@@ -219,8 +220,12 @@ public class Processor extends FlowMerger {
 
     private void recordEvent(EventType type) {
         processorState.setType(type);
-//        if (freq > 0 && !Global.READ_ONLY_CANDLES)
-//            processorStateRepository.save(processorState);
+        if (freq > 0 && !Global.READ_ONLY_CANDLES && Global.hasCompletedLoading)
+            processorStateRepository.save(processorState);
+    }
+
+    public void saveProcessorState(){
+        processorStateRepository.save(processorState);
     }
 
     private boolean isMaxDetect() {

@@ -1,6 +1,5 @@
 package io.matel.app.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -52,7 +51,8 @@ public class Tick {
 
     public Tick(){}
 
-    public Tick(long idcontract , ZonedDateTime timestamp, double close) {
+    public Tick(long idtick,long idcontract , ZonedDateTime timestamp, double close) {
+        this.id = idtick;
         this.timestamp = timestamp;
         this.close = close;
         this.idcontract = idcontract;

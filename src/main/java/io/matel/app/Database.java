@@ -252,7 +252,7 @@ public class Database {
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 try {
-                    Tick tick = new Tick(rs.getLong(4), ZonedDateTime.ofInstant(rs.getTimestamp(5).toInstant(), Global.ZONE_ID), rs.getDouble(2));
+                    Tick tick = new Tick(rs.getLong(1), rs.getLong(4), ZonedDateTime.ofInstant(rs.getTimestamp(5).toInstant(), Global.ZONE_ID), rs.getDouble(2));
                     appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false);
                 } catch (NullPointerException e) {
 
@@ -273,7 +273,7 @@ public class Database {
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 try {
-                    Tick tick = new Tick(rs.getLong(4), ZonedDateTime.ofInstant(rs.getTimestamp(5).toInstant(), Global.ZONE_ID), rs.getDouble(2));
+                    Tick tick = new Tick(rs.getLong(1),rs.getLong(4), ZonedDateTime.ofInstant(rs.getTimestamp(5).toInstant(), Global.ZONE_ID), rs.getDouble(2));
                     appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false);
                 } catch (NullPointerException e) {
 

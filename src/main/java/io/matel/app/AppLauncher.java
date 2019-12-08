@@ -103,7 +103,7 @@ public class AppLauncher implements CommandLineRunner {
                     if (error.errorDetected)
                         LOGGER.warn("Error: " + error.toString());
 
-                    if(Global.COMPUTE) {
+                    if(Global.COMPUTE_DEEP_HISTORICAL) {
                         Database tickDatabase = appController.createDatabase("cleanm", Global.port, "atmuser");
                         tickDatabase.getTicks2018(error.idcontract);
                         tickDatabase.getTicks2019(error.idcontract);
@@ -124,6 +124,13 @@ public class AppLauncher implements CommandLineRunner {
                             e.printStackTrace();
                         }
                     LOGGER.info(">>> Finished!");
+
+                        appController.getGenerators().forEach((idcon, gen)->{
+                            gen.saveGeneratorState();
+                            gen.getProcessors().forEach((freq, proc)->{
+                                proc.saveProcessorState();
+                            });
+                        });
 
                 }).start();
             } catch (InterruptedException e) {

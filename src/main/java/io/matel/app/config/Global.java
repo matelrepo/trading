@@ -8,11 +8,11 @@ import java.time.ZoneId;
 public class Global {
     public static final boolean ONLINE = false;
     public static final boolean RANDOM = false;
-    public static final boolean READ_ONLY_TICKS = false;
-    public static final boolean READ_ONLY_CANDLES = false;
+    public static final boolean READ_ONLY_TICKS = true;
+    public static final boolean READ_ONLY_CANDLES = true;
     public static final boolean READ_ONLY_LOG_PROCESSOR = true;
     public static final boolean UPDATE_MACRO = false;
-    public static final boolean COMPUTE = true;
+    public static final boolean COMPUTE_DEEP_HISTORICAL = false;
 
 
     public static final String SECRET = "SomeSecretForJWTGeneration";
@@ -36,9 +36,10 @@ public class Global {
 
     public static long startIdCandle = 0;
     public static long startIdTick = 0;
+    public static boolean hasCompletedLoading = false;
+
     private long idTick;
     private long idCandle;
-    private boolean hasCompletedLoading = false;
     private boolean isSaving = false;
 
 
@@ -66,13 +67,13 @@ public class Global {
         this.idCandle = idCandle;
     }
 
-    public boolean isHasCompletedLoading() {
-        return hasCompletedLoading;
-    }
-
-    public void setHasCompletedLoading(boolean hasCompletedLoading) {
-        this.hasCompletedLoading = hasCompletedLoading;
-    }
+//    public boolean isHasCompletedLoading() {
+//        return hasCompletedLoading;
+//    }
+//
+//    public void setHasCompletedLoading(boolean hasCompletedLoading) {
+//        this.hasCompletedLoading = hasCompletedLoading;
+//    }
 
     public boolean isSaving() {
         return isSaving;

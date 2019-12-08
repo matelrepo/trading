@@ -139,6 +139,7 @@ public class FlowMerger {
                         } else {
                             newCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                             lastDayOfQuarter = Utils.getEndDayOfTheQuarter(timestamp.getYear(), timestamp.getMonth().getValue());
+                            processorState.setLastDayOfQuarter(lastDayOfQuarter);
                         }
                         break;
                     case 300000:

@@ -16,7 +16,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -182,25 +181,38 @@ public class Generator implements IbClient {
 
     }
 
+    private void updateGeneratorState(Tick tick){
+        double price = tick.getClose();
+        generatorState.setIdtick(tick.getId());
+        generatorState.setColor(price > generatorState.getLastPrice() ? 1 : -1);
+
+        if (price > generatorState.getHigh())
+            generatorState.setHigh(Utils.round(price, contract.getRounding()));
+
+        if (price < generatorState.getLow())
+            generatorState.setLow(Utils.round(price, contract.getRounding()));
+
+        generatorState.setTimestamp(tick.getTimestamp());
+        generatorState.setLastPrice(tick.getClose());
+        generatorState.setChangeValue(Utils.round(generatorState.getLastPrice() - generatorState.getDailyMark(), contract.getRounding()));
+        generatorState.setChangePerc(generatorState.getLastPrice() / generatorState.getDailyMark()-1);
+
+    }
+
     private void runPrice(long tickerId, int field, double price, TickAttrib attrib) {
-        generatorState.setTimestamp(ZonedDateTime.now());
 
         if ((price > 0 && (field == 4 || field == 68) && contract.getFlowType().equals("TRADES"))
         || ((field == 1 || field == 2) && contract.getFlowType().equals("MID"))) {
             double newPrice = reformatPrice(price, field);
             if (newPrice > 0 && newPrice != generatorState.getLastPrice()) {
-                generatorState.setColor(newPrice > generatorState.getLastPrice() ? 1 : -1);
-                Tick tick = new Tick(contract.getIdcontract(), generatorState.getTimestamp(), newPrice);
-//                System.out.println(tick.toString());
-//                tick.setSpeed(generatorState.getSpeed());
-                tick.setId(global.getIdTick(true));
-                generatorState.setIdtick(tick.getId());
-
-                if (price > generatorState.getHigh())
-                    generatorState.setHigh(Utils.round(price, contract.getRounding()));
-
-                if (price < generatorState.getLow())
-                    generatorState.setLow(Utils.round(price, contract.getRounding()));
+//                generatorState.setColor(newPrice > generatorState.getLastPrice() ? 1 : -1);
+                Tick tick = new Tick(global.getIdTick(true),contract.getIdcontract(), generatorState.getTimestamp(), newPrice);
+//                generatorState.setIdtick(tick.getId());
+//                if (price > generatorState.getHigh())
+//                    generatorState.setHigh(Utils.round(price, contract.getRounding()));
+//
+//                if (price < generatorState.getLow())
+//                    generatorState.setLow(Utils.round(price, contract.getRounding()));
 
                 processPrice(tick, true);
                 savingTick();
@@ -223,11 +235,12 @@ public class Generator implements IbClient {
             processor.process(candle.getTimestamp(), candle.getId(), candle.getOpen(),
                     candle.getHigh(), candle.getLow(), candle.getClose(), true);
         });
-        Thread.sleep(1000);
-        System.out.println(candle.toString());
+//        Thread.sleep(1000);
+//        System.out.println(candle.toString());
     }
 
     public void processPrice(Tick tick, boolean countConsecutiveUpDown)  {
+        updateGeneratorState(tick);
         flowLive.add(0, tick);
         if (flowLive.size() > Global.MAX_LENGTH_TICKS)
             flowLive.remove(Global.MAX_LENGTH_TICKS);
@@ -236,16 +249,6 @@ public class Generator implements IbClient {
         processors.forEach((freq, processor) -> {
             processor.process(tick.getTimestamp(), tick.getId(), null, null, null, tick.getClose(), false);
         });
-        generatorState.setLastPrice(tick.getClose());
-        generatorState.setChangeValue(Utils.round(generatorState.getLastPrice() - generatorState.getDailyMark(), contract.getRounding()));
-        generatorState.setChangePerc(generatorState.getLastPrice() / generatorState.getDailyMark()-1);
-
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(tick.toString());
     }
 
 
@@ -314,6 +317,9 @@ public class Generator implements IbClient {
             appController.getGeneratorsState().forEach((id, state)->{
                 generatorStateRepo.save(state);
         });
+    }
+    public void saveGeneratorState(){
+        generatorStateRepo.save(generatorState);
     }
 
 //    public void disconnectMarketData(boolean save) {
