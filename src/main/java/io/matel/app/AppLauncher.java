@@ -82,10 +82,10 @@ public class AppLauncher implements CommandLineRunner {
             LOGGER.warn(">>> Read only lock! <<<");
 
         for (ContractBasic contract : appController.getContractsLive()) {
-            if (contract.getIdcontract() == 5) {
+//            if (contract.getIdcontract() == 5) {
                 createGenerator(contract);
                 createProcessor(contract, 0);
-            }
+//            }
         }
 
         LOGGER.info("Loading historical candles...");

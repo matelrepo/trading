@@ -1,428 +1,1195 @@
-2019-12-08 04:34:17,188 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Lenovo-PC with PID 17404 (C:\Users\user\IdeaProjects\server-jwt\target\classes started by Matel in C:\Users\user\IdeaProjects\server-jwt)
-2019-12-08 04:34:17,223 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
-2019-12-08 04:34:18,237 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
-2019-12-08 04:34:18,396 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 141ms. Found 11 repository interfaces.
-2019-12-08 04:34:18,848 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$d669a47] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2019-12-08 04:34:19,131 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
-2019-12-08 04:34:19,148 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
-2019-12-08 04:34:19,161 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
-2019-12-08 04:34:19,162 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
-2019-12-08 04:34:19,311 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
-2019-12-08 04:34:19,312 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1994 ms
-2019-12-08 04:34:19,849 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
-2019-12-08 04:34:20,189 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
-2019-12-08 04:34:20,397 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
+2019-12-08 05:02:20,812 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Lenovo-PC with PID 3384 (C:\Users\user\IdeaProjects\server-jwt\target\classes started by Matel in C:\Users\user\IdeaProjects\server-jwt)
+2019-12-08 05:02:20,907 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
+2019-12-08 05:02:24,693 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-12-08 05:02:24,995 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 285ms. Found 11 repository interfaces.
+2019-12-08 05:02:25,706 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$76957a4f] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-12-08 05:02:26,263 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
+2019-12-08 05:02:26,331 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2019-12-08 05:02:26,370 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2019-12-08 05:02:26,373 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
+2019-12-08 05:02:26,835 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2019-12-08 05:02:26,836 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 5627 ms
+2019-12-08 05:02:27,389 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2019-12-08 05:02:27,744 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2019-12-08 05:02:28,011 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
 	name: default
 	...]
-2019-12-08 04:34:20,677 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
-2019-12-08 04:34:20,682 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
-2019-12-08 04:34:21,073 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
-2019-12-08 04:34:21,665 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2019-12-08 04:34:21,997 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
-2019-12-08 04:34:22,018 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@15e8c040
-2019-12-08 04:34:23,073 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
-2019-12-08 04:34:23,955 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
-2019-12-08 04:34:24,838 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2019-12-08 04:34:26,518 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
-2019-12-08 04:34:26,530 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
-2019-12-08 04:34:27,953 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1002f859, org.springframework.security.web.context.SecurityContextPersistenceFilter@48d14ea0, org.springframework.security.web.header.HeaderWriterFilter@4f571c0e, org.springframework.web.filter.CorsFilter@67cd193d, org.springframework.security.web.authentication.logout.LogoutFilter@27422187, io.matel.app.connection.security.JwtAuthenticationFilter@34525143, io.matel.app.connection.security.JwtAuthorizationFilter@126e2710, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@677274e7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@304704ae, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1529d534, org.springframework.security.web.session.SessionManagementFilter@36ae17ef, org.springframework.security.web.access.ExceptionTranslationFilter@5b3c2a9f, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@267e0ca0]
-2019-12-08 04:34:27,997 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
-2019-12-08 04:34:28,061 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
-2019-12-08 04:34:28,647 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2019-12-08 04:34:29,261 INFO o.s.c.l.CompositeLog [main] Starting...
-2019-12-08 04:34:29,263 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2019-12-08 04:34:29,266 INFO o.s.c.l.CompositeLog [main] Started.
-2019-12-08 04:34:29,313 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
-2019-12-08 04:34:29,372 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
-2019-12-08 04:34:29,381 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplication in 12.908 seconds (JVM running for 15.631)
-2019-12-08 04:34:29,391 INFO i.m.a.AppLauncher [main] Starting with 5 cores
-2019-12-08 04:34:29,636 INFO o.h.h.i.QueryTranslatorFactoryInitiator [main] HHH000397: Using ASTQueryTranslatorFactory
-2019-12-08 04:34:30,267 INFO i.m.a.AppLauncher [main] 86 contracts found
-2019-12-08 04:34:30,845 INFO i.m.a.AppLauncher [main] Setting up last id tick: 0
-2019-12-08 04:34:30,846 INFO i.m.a.AppLauncher [main] Setting up last id candle: 0
-2019-12-08 04:34:31,700 INFO i.m.a.AppLauncher [main] Loading historical candles...
-2019-12-08 04:34:32,182 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
-2019-12-08 04:34:32,187 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
-2019-12-08 04:34:32,188 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
-2019-12-08 04:34:35,747 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
-2019-12-08 04:34:37,098 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
-2019-12-08 04:34:37,102 INFO i.m.a.SaverController [Thread-5] Saving now 0 ticks for contract 2
-2019-12-08 04:34:37,102 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (3291)
-2019-12-08 04:34:37,456 INFO i.m.a.SaverController [Thread-5] Saving now 3291 candles for contract 2
-2019-12-08 04:34:37,457 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (1)
-2019-12-08 04:34:37,458 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (1)
-2019-12-08 04:34:37,459 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (1)
-2019-12-08 04:34:37,460 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (1)
-2019-12-08 04:34:37,461 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (1)
-2019-12-08 04:34:37,462 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (1)
-2019-12-08 04:34:37,463 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (1)
-2019-12-08 04:34:37,464 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (1)
-2019-12-08 04:34:37,465 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (1)
-2019-12-08 04:34:37,465 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (1)
-2019-12-08 04:34:37,466 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (1)
-2019-12-08 04:34:37,467 INFO i.m.a.SaverController [Thread-5] Candle updated completed
-2019-12-08 04:34:37,467 INFO i.m.a.SaverController [Thread-5] Saving completed
-2019-12-08 04:34:37,468 INFO i.m.a.AppLauncher [Thread-5] Connecting market data for all contracts...
-2019-12-08 04:34:37,561 INFO i.m.a.AppLauncher [Thread-5] >>> Finished contract 2
-2019-12-08 04:34:41,718 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
-2019-12-08 04:34:42,854 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
-2019-12-08 04:34:43,562 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:34:45,888 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
-2019-12-08 04:34:46,748 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
-2019-12-08 04:34:47,843 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:34:49,594 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:34:49,879 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
-2019-12-08 04:34:50,658 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
-2019-12-08 04:34:51,636 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:34:53,962 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:34:55,326 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
-2019-12-08 04:34:55,359 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
-2019-12-08 04:34:56,566 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:34:58,445 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:34:59,863 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
-2019-12-08 04:35:00,717 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:01,208 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
-2019-12-08 04:35:02,670 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:04,632 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
-2019-12-08 04:35:04,767 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:05,694 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
-2019-12-08 04:35:07,473 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:08,921 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
-2019-12-08 04:35:08,929 INFO i.m.a.SaverController [Thread-6] Saving now 0 ticks for contract 3
-2019-12-08 04:35:08,930 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (4405)
-2019-12-08 04:35:09,452 INFO i.m.a.SaverController [Thread-6] Saving now 4405 candles for contract 3
-2019-12-08 04:35:09,452 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (1)
-2019-12-08 04:35:09,453 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (1)
-2019-12-08 04:35:09,454 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (1)
-2019-12-08 04:35:09,455 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (1)
-2019-12-08 04:35:09,456 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (1)
-2019-12-08 04:35:09,457 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (1)
-2019-12-08 04:35:09,458 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (1)
-2019-12-08 04:35:09,459 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (1)
-2019-12-08 04:35:09,460 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (1)
-2019-12-08 04:35:09,461 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (1)
-2019-12-08 04:35:09,462 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (1)
-2019-12-08 04:35:09,463 INFO i.m.a.SaverController [Thread-6] Candle updated completed
-2019-12-08 04:35:09,463 INFO i.m.a.SaverController [Thread-6] Saving completed
-2019-12-08 04:35:09,463 INFO i.m.a.AppLauncher [Thread-6] Connecting market data for all contracts...
-2019-12-08 04:35:09,466 INFO i.m.a.AppLauncher [Thread-6] >>> Finished contract 3
-2019-12-08 04:35:09,754 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:11,049 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
-2019-12-08 04:35:12,263 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:14,438 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:15,070 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
-2019-12-08 04:35:16,258 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:18,194 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
-2019-12-08 04:35:18,203 INFO i.m.a.SaverController [Thread-4] Saving now 0 ticks for contract 1
-2019-12-08 04:35:18,203 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (3891)
-2019-12-08 04:35:18,562 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:18,656 INFO i.m.a.SaverController [Thread-4] Saving now 3891 candles for contract 1
-2019-12-08 04:35:18,657 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (1)
-2019-12-08 04:35:18,659 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (1)
-2019-12-08 04:35:18,663 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (1)
-2019-12-08 04:35:18,665 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (1)
-2019-12-08 04:35:18,668 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (1)
-2019-12-08 04:35:18,670 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (1)
-2019-12-08 04:35:18,674 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (1)
-2019-12-08 04:35:18,698 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (1)
-2019-12-08 04:35:18,702 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (1)
-2019-12-08 04:35:18,708 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (1)
-2019-12-08 04:35:18,716 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (1)
-2019-12-08 04:35:18,718 INFO i.m.a.SaverController [Thread-4] Candle updated completed
-2019-12-08 04:35:18,718 INFO i.m.a.SaverController [Thread-4] Saving completed
-2019-12-08 04:35:18,719 INFO i.m.a.AppLauncher [Thread-4] Connecting market data for all contracts...
-2019-12-08 04:35:18,721 INFO i.m.a.AppLauncher [Thread-4] >>> Finished contract 1
-2019-12-08 04:35:19,661 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
-2019-12-08 04:35:30,563 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:32,456 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:34,482 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:35,394 INFO i.m.a.SaverController [Thread-11] Regular batch candles saving (5001)
-2019-12-08 04:35:36,625 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:38,579 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:40,705 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:42,779 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:44,674 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:44,676 INFO i.m.a.SaverController [Thread-11] Regular batch candles saving (5001)
-2019-12-08 04:35:46,541 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
-2019-12-08 04:35:46,731 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
-2019-12-08 04:35:47,453 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
-2019-12-08 04:35:47,460 INFO i.m.a.SaverController [Thread-7] Saving now 0 ticks for contract 4
-2019-12-08 04:35:47,460 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (427)
-2019-12-08 04:35:47,512 INFO i.m.a.SaverController [Thread-7] Saving now 427 candles for contract 4
-2019-12-08 04:35:47,513 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (1)
-2019-12-08 04:35:47,514 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (1)
-2019-12-08 04:35:47,523 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (1)
-2019-12-08 04:35:47,525 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (1)
-2019-12-08 04:35:47,527 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (1)
-2019-12-08 04:35:47,534 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (1)
-2019-12-08 04:35:47,539 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (1)
-2019-12-08 04:35:47,548 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (1)
-2019-12-08 04:35:47,555 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (1)
-2019-12-08 04:35:47,562 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (1)
-2019-12-08 04:35:47,588 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (1)
-2019-12-08 04:35:47,589 INFO i.m.a.SaverController [Thread-7] Candle updated completed
-2019-12-08 04:35:47,589 INFO i.m.a.SaverController [Thread-7] Saving completed
-2019-12-08 04:35:47,589 INFO i.m.a.AppLauncher [Thread-7] Connecting market data for all contracts...
-2019-12-08 04:35:47,590 INFO i.m.a.AppLauncher [Thread-7] >>> Finished contract 4
-2019-12-08 04:35:54,904 INFO i.m.a.SaverController [Thread-11] Regular batch candles saving (5001)
-2019-12-08 04:35:58,989 INFO i.m.a.SaverController [Thread-11] Regular batch candles saving (5001)
-2019-12-08 04:36:02,832 INFO i.m.a.SaverController [Thread-11] Regular batch candles saving (5001)
-2019-12-08 04:36:04,805 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
-2019-12-08 04:36:06,673 INFO i.m.a.SaverController [Thread-11] Regular batch candles saving (5001)
-2019-12-08 04:36:12,992 INFO i.m.a.SaverController [Thread-11] Regular batch candles saving (5001)
-2019-12-08 04:38:25,583 ERROR o.s.s.s.TaskUtils$LoggingErrorHandler [MessageBroker-8] Unexpected error occurred in scheduled task.
-java.lang.OutOfMemoryError: Java heap space
-2019-12-08 04:38:39,784 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
-2019-12-08 04:38:55,583 WARN c.z.h.p.HikariPool$HouseKeeper [HikariPool-1 housekeeper] HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m18s674ms330µs600ns).
-2019-12-08 11:51:17,324 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Mathieus-MacBook-Air.local with PID 5912 (/Users/matel/IdeaProjects/server-jwt/target/classes started by matel in /Users/matel/IdeaProjects/server-jwt)
-2019-12-08 11:51:17,347 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
-2019-12-08 11:51:19,100 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
-2019-12-08 11:51:19,295 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 180ms. Found 11 repository interfaces.
-2019-12-08 11:51:19,916 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$a70258c7] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2019-12-08 11:51:20,368 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
-2019-12-08 11:51:20,393 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
-2019-12-08 11:51:20,410 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
-2019-12-08 11:51:20,411 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
-2019-12-08 11:51:20,616 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
-2019-12-08 11:51:20,617 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 3144 ms
-2019-12-08 11:51:20,881 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
-2019-12-08 11:51:21,050 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
-2019-12-08 11:51:21,152 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
-	name: default
-	...]
-2019-12-08 11:51:21,295 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
-2019-12-08 11:51:21,297 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
-2019-12-08 11:51:21,574 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
-2019-12-08 11:51:21,930 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2019-12-08 11:51:22,064 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
-2019-12-08 11:51:22,070 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@b1d19ff
-2019-12-08 11:51:22,649 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
-2019-12-08 11:51:23,143 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
-2019-12-08 11:51:23,739 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2019-12-08 11:51:24,678 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
-2019-12-08 11:51:24,687 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
-2019-12-08 11:51:25,700 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@bb1b872, org.springframework.security.web.context.SecurityContextPersistenceFilter@3af6c672, org.springframework.security.web.header.HeaderWriterFilter@4c89c98a, org.springframework.web.filter.CorsFilter@64245ca9, org.springframework.security.web.authentication.logout.LogoutFilter@3b8a063d, io.matel.app.connection.security.JwtAuthenticationFilter@66cb9a63, io.matel.app.connection.security.JwtAuthorizationFilter@256d8f17, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@497c1d78, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@136690b1, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2319c1e0, org.springframework.security.web.session.SessionManagementFilter@7e24a2e2, org.springframework.security.web.access.ExceptionTranslationFilter@725490dd, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@2566247d]
-2019-12-08 11:51:25,725 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
-2019-12-08 11:51:25,776 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
-2019-12-08 11:51:26,177 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2019-12-08 11:51:26,610 INFO o.s.c.l.CompositeLog [main] Starting...
-2019-12-08 11:51:26,611 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2019-12-08 11:51:26,613 INFO o.s.c.l.CompositeLog [main] Started.
-2019-12-08 11:51:26,626 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
-2019-12-08 11:51:26,680 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
-2019-12-08 11:51:26,686 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplication in 10.419 seconds (JVM running for 12.85)
-2019-12-08 11:51:26,691 INFO i.m.a.AppLauncher [main] Starting with 3 cores
-2019-12-08 11:51:26,779 INFO o.h.h.i.QueryTranslatorFactoryInitiator [main] HHH000397: Using ASTQueryTranslatorFactory
-2019-12-08 11:51:27,282 INFO i.m.a.AppLauncher [main] 86 contracts found
-2019-12-08 11:51:27,286 INFO i.m.a.AppLauncher [main] Setting up last id tick: 0
-2019-12-08 11:51:27,287 INFO i.m.a.AppLauncher [main] Setting up last id candle: 0
-2019-12-08 11:51:27,308 INFO i.m.a.AppLauncher [main] Loading historical candles...
-2019-12-08 11:51:27,336 INFO i.m.a.SaverController [Thread-4] Saving now 0 ticks for contract 5
-2019-12-08 11:51:27,337 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (0)
-2019-12-08 11:51:27,339 INFO i.m.a.SaverController [Thread-4] Saving now 0 candles for contract 5
-2019-12-08 11:51:27,340 INFO i.m.a.SaverController [Thread-4] Candle updated completed
-2019-12-08 11:51:27,340 INFO i.m.a.SaverController [Thread-4] Saving completed
-2019-12-08 11:51:27,404 INFO i.m.a.AppLauncher [Thread-4] Connecting market data for all contracts...
-2019-12-08 11:51:27,471 INFO i.m.a.AppLauncher [Thread-4] >>> Finished contract 5
-2019-12-08 11:51:27,599 WARN o.h.e.j.s.SqlExceptionHelper [Thread-4] SQL Error: 0, SQLState: 23502
-2019-12-08 11:51:27,599 ERROR o.h.e.j.s.SqlExceptionHelper [Thread-4] ERROR: null value in column "timestamp" violates not-null constraint
-  Detail: Failing row contains (5, 0, 0, 0, 10000, 0, 5e-324, 0, t, f, -1, 1.7976931348623157e+308, 10000, 0, 3000, null, 0, 0, 2019-12-08 11:51:27.536264+07, 10000, 10000).
-2019-12-08 11:51:27,613 ERROR o.h.i.ExceptionMapperStandardImpl [Thread-4] HHH000346: Error during managed flush [org.hibernate.exception.ConstraintViolationException: could not execute statement]
-2019-12-08 11:51:32,236 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2019-12-08 11:51:32,237 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
-2019-12-08 11:51:32,262 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 24 ms
-2019-12-08 11:51:32,643 INFO i.m.a.c.a.ActiveUserEvent [http-nio-8080-exec-1] UserActivityEvent{type='login', username='trader', eventSessionId='1ede9b8d-93b1-eec7-773d-dfeff08a9b3d', timestamp=2019-12-08T11:51:32.610700+07:00[Indian/Christmas]}
-2019-12-08 11:51:34,747 INFO i.m.a.c.a.ActiveUserEvent [Thread-3] UserActivityEvent{type='logout', username='trader', eventSessionId='1ede9b8d-93b1-eec7-773d-dfeff08a9b3d', timestamp=2019-12-08T11:51:34.747237+07:00[Indian/Christmas]}
-2019-12-08 11:51:34,796 INFO o.s.c.l.CompositeLog [Thread-3] Stopping...
-2019-12-08 11:51:34,797 INFO o.s.c.l.CompositeLog [Thread-3] BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2019-12-08 11:51:34,798 INFO o.s.c.l.CompositeLog [Thread-3] Stopped.
-2019-12-08 11:51:34,803 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'brokerChannelExecutor'
-2019-12-08 11:51:34,804 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'messageBrokerTaskScheduler'
-2019-12-08 11:51:34,806 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'clientOutboundChannelExecutor'
-2019-12-08 11:51:34,806 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'clientInboundChannelExecutor'
-2019-12-08 11:51:34,814 INFO o.s.o.j.AbstractEntityManagerFactoryBean [Thread-3] Closing JPA EntityManagerFactory for persistence unit 'default'
-2019-12-08 11:51:34,832 INFO c.z.h.HikariDataSource [Thread-3] HikariPool-1 - Shutdown initiated...
-2019-12-08 11:51:34,840 INFO c.z.h.HikariDataSource [Thread-3] HikariPool-1 - Shutdown completed.
-2019-12-08 11:52:47,382 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Mathieus-MacBook-Air.local with PID 5950 (/Users/matel/IdeaProjects/server-jwt/target/classes started by matel in /Users/matel/IdeaProjects/server-jwt)
-2019-12-08 11:52:47,395 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
-2019-12-08 11:52:49,021 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
-2019-12-08 11:52:49,181 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 145ms. Found 11 repository interfaces.
-2019-12-08 11:52:49,884 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$8eae4fcb] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2019-12-08 11:52:50,320 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
-2019-12-08 11:52:50,344 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
-2019-12-08 11:52:50,359 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
-2019-12-08 11:52:50,360 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
-2019-12-08 11:52:50,545 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
-2019-12-08 11:52:50,546 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 3043 ms
-2019-12-08 11:52:50,808 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
-2019-12-08 11:52:50,976 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
-2019-12-08 11:52:51,102 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
-	name: default
-	...]
-2019-12-08 11:52:51,254 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
-2019-12-08 11:52:51,257 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
-2019-12-08 11:52:51,579 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
-2019-12-08 11:52:51,932 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2019-12-08 11:52:52,050 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
-2019-12-08 11:52:52,056 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@3dfe59d7
-2019-12-08 11:52:52,634 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
-2019-12-08 11:52:53,144 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
-2019-12-08 11:52:53,680 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2019-12-08 11:52:54,590 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
-2019-12-08 11:52:54,595 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
-2019-12-08 11:52:55,381 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@52afcdd8, org.springframework.security.web.context.SecurityContextPersistenceFilter@601e7c97, org.springframework.security.web.header.HeaderWriterFilter@32d8e58d, org.springframework.web.filter.CorsFilter@397f925e, org.springframework.security.web.authentication.logout.LogoutFilter@df04d12, io.matel.app.connection.security.JwtAuthenticationFilter@35975b05, io.matel.app.connection.security.JwtAuthorizationFilter@474deb4c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@18d09283, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@438a65a7, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6ba02f70, org.springframework.security.web.session.SessionManagementFilter@5248c05a, org.springframework.security.web.access.ExceptionTranslationFilter@3fb42ec7, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@350d9d23]
-2019-12-08 11:52:55,404 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
-2019-12-08 11:52:55,439 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
-2019-12-08 11:52:55,770 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2019-12-08 11:52:56,042 INFO o.s.c.l.CompositeLog [main] Starting...
-2019-12-08 11:52:56,043 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2019-12-08 11:52:56,045 INFO o.s.c.l.CompositeLog [main] Started.
-2019-12-08 11:52:56,060 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
-2019-12-08 11:52:56,099 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
-2019-12-08 11:52:56,103 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplication in 9.971 seconds (JVM running for 14.076)
-2019-12-08 11:52:56,106 INFO i.m.a.AppLauncher [main] Starting with 3 cores
-2019-12-08 11:52:56,182 INFO o.h.h.i.QueryTranslatorFactoryInitiator [main] HHH000397: Using ASTQueryTranslatorFactory
-2019-12-08 11:52:56,439 INFO i.m.a.AppLauncher [main] 86 contracts found
-2019-12-08 11:52:56,443 INFO i.m.a.AppLauncher [main] Setting up last id tick: 0
-2019-12-08 11:52:56,444 INFO i.m.a.AppLauncher [main] Setting up last id candle: 0
-2019-12-08 11:52:56,465 INFO i.m.a.AppLauncher [main] Loading historical candles...
-2019-12-08 11:52:56,510 INFO i.m.a.SaverController [Thread-4] Saving now 0 ticks for contract 5
-2019-12-08 11:52:56,511 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (0)
-2019-12-08 11:52:56,517 INFO i.m.a.SaverController [Thread-4] Saving now 0 candles for contract 5
-2019-12-08 11:52:56,518 INFO i.m.a.SaverController [Thread-4] Candle updated completed
-2019-12-08 11:52:56,518 INFO i.m.a.SaverController [Thread-4] Saving completed
-2019-12-08 11:52:56,531 INFO i.m.a.AppLauncher [Thread-4] Connecting market data for all contracts...
-2019-12-08 11:52:56,549 INFO i.m.a.AppLauncher [Thread-4] >>> Finished contract 5
-2019-12-08 11:52:56,616 WARN o.h.e.j.s.SqlExceptionHelper [Thread-4] SQL Error: 0, SQLState: 23502
-2019-12-08 11:52:56,617 ERROR o.h.e.j.s.SqlExceptionHelper [Thread-4] ERROR: null value in column "timestamp" violates not-null constraint
-  Detail: Failing row contains (5, 0, 0, 0, 10000, 0, 5e-324, 0, t, f, -1, 1.7976931348623157e+308, 10000, 0, 3000, null, 0, 0, 2019-12-08 11:52:56.604244+07, 10000, 10000).
-2019-12-08 11:52:56,623 ERROR o.h.i.ExceptionMapperStandardImpl [Thread-4] HHH000346: Error during managed flush [org.hibernate.exception.ConstraintViolationException: could not execute statement]
-2019-12-08 11:52:57,575 INFO o.s.c.l.CompositeLog [Thread-3] Stopping...
-2019-12-08 11:52:57,576 INFO o.s.c.l.CompositeLog [Thread-3] BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2019-12-08 11:52:57,577 INFO o.s.c.l.CompositeLog [Thread-3] Stopped.
-2019-12-08 11:52:57,579 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'brokerChannelExecutor'
-2019-12-08 11:52:57,580 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'messageBrokerTaskScheduler'
-2019-12-08 11:52:57,584 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'clientOutboundChannelExecutor'
-2019-12-08 11:52:57,585 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'clientInboundChannelExecutor'
-2019-12-08 11:52:57,589 INFO o.s.o.j.AbstractEntityManagerFactoryBean [Thread-3] Closing JPA EntityManagerFactory for persistence unit 'default'
-2019-12-08 11:52:57,607 INFO c.z.h.HikariDataSource [Thread-3] HikariPool-1 - Shutdown initiated...
-2019-12-08 11:52:57,616 INFO c.z.h.HikariDataSource [Thread-3] HikariPool-1 - Shutdown completed.
-2019-12-08 11:53:40,734 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Mathieus-MacBook-Air.local with PID 5976 (/Users/matel/IdeaProjects/server-jwt/target/classes started by matel in /Users/matel/IdeaProjects/server-jwt)
-2019-12-08 11:53:40,762 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
-2019-12-08 11:53:42,211 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
-2019-12-08 11:53:42,366 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 142ms. Found 11 repository interfaces.
-2019-12-08 11:53:43,008 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$cdfc6655] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2019-12-08 11:53:43,339 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
-2019-12-08 11:53:43,360 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
-2019-12-08 11:53:43,374 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
-2019-12-08 11:53:43,375 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
-2019-12-08 11:53:43,533 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
-2019-12-08 11:53:43,533 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 2677 ms
-2019-12-08 11:53:43,771 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
-2019-12-08 11:53:43,936 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
-2019-12-08 11:53:44,019 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
-	name: default
-	...]
-2019-12-08 11:53:44,139 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
-2019-12-08 11:53:44,142 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
-2019-12-08 11:53:44,367 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
-2019-12-08 11:53:44,687 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2019-12-08 11:53:44,827 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
-2019-12-08 11:53:44,832 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@4be12f6c
-2019-12-08 11:53:45,310 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
-2019-12-08 11:53:45,803 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
-2019-12-08 11:53:46,291 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2019-12-08 11:53:47,184 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
-2019-12-08 11:53:47,192 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
-2019-12-08 11:53:48,038 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2e88ad38, org.springframework.security.web.context.SecurityContextPersistenceFilter@2926f7bd, org.springframework.security.web.header.HeaderWriterFilter@751b901a, org.springframework.web.filter.CorsFilter@2148849f, org.springframework.security.web.authentication.logout.LogoutFilter@390978, io.matel.app.connection.security.JwtAuthenticationFilter@9771c71, io.matel.app.connection.security.JwtAuthorizationFilter@63c66980, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@211cf27b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@51d34f02, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@8cce9ad, org.springframework.security.web.session.SessionManagementFilter@1ccce165, org.springframework.security.web.access.ExceptionTranslationFilter@c8ed958, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@3a36da5e]
-2019-12-08 11:53:48,070 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
-2019-12-08 11:53:48,109 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
-2019-12-08 11:53:48,456 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2019-12-08 11:53:49,721 INFO o.s.c.l.CompositeLog [main] Starting...
-2019-12-08 11:53:49,725 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2019-12-08 11:53:49,727 INFO o.s.c.l.CompositeLog [main] Started.
-2019-12-08 11:53:49,754 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
-2019-12-08 11:53:49,808 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
-2019-12-08 11:53:49,813 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplication in 10.079 seconds (JVM running for 11.952)
-2019-12-08 11:53:49,821 INFO i.m.a.AppLauncher [main] Starting with 3 cores
-2019-12-08 11:53:50,275 INFO o.h.h.i.QueryTranslatorFactoryInitiator [main] HHH000397: Using ASTQueryTranslatorFactory
-2019-12-08 11:53:50,947 INFO i.m.a.AppLauncher [main] 86 contracts found
-2019-12-08 11:53:50,952 INFO i.m.a.AppLauncher [main] Setting up last id tick: 0
-2019-12-08 11:53:50,952 INFO i.m.a.AppLauncher [main] Setting up last id candle: 0
-2019-12-08 11:53:50,977 INFO i.m.a.AppLauncher [main] Loading historical candles...
-2019-12-08 11:53:53,034 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2019-12-08 11:53:53,036 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
-2019-12-08 11:53:53,089 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 52 ms
-2019-12-08 11:53:53,561 INFO i.m.a.c.a.ActiveUserEvent [http-nio-8080-exec-1] UserActivityEvent{type='login', username='trader', eventSessionId='33107a6e-fde1-a67a-0165-9a413ab99778', timestamp=2019-12-08T11:53:53.523366+07:00[Indian/Christmas]}
-2019-12-08 11:54:26,563 INFO i.m.a.c.a.ActiveUserEvent [Thread-3] UserActivityEvent{type='logout', username='trader', eventSessionId='33107a6e-fde1-a67a-0165-9a413ab99778', timestamp=2019-12-08T11:54:26.563032+07:00[Indian/Christmas]}
-2019-12-08 11:54:26,623 INFO o.s.c.l.CompositeLog [Thread-3] Stopping...
-2019-12-08 11:54:26,624 INFO o.s.c.l.CompositeLog [Thread-3] BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2019-12-08 11:54:26,625 INFO o.s.c.l.CompositeLog [Thread-3] Stopped.
-2019-12-08 11:54:26,631 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'brokerChannelExecutor'
-2019-12-08 11:54:26,633 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'messageBrokerTaskScheduler'
-2019-12-08 11:54:26,635 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'clientOutboundChannelExecutor'
-2019-12-08 11:54:26,636 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'clientInboundChannelExecutor'
-2019-12-08 11:54:26,643 INFO o.s.o.j.AbstractEntityManagerFactoryBean [Thread-3] Closing JPA EntityManagerFactory for persistence unit 'default'
-2019-12-08 11:54:26,673 INFO c.z.h.HikariDataSource [Thread-3] HikariPool-1 - Shutdown initiated...
-2019-12-08 11:54:26,680 INFO c.z.h.HikariDataSource [Thread-3] HikariPool-1 - Shutdown completed.
-2019-12-08 11:54:44,498 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Mathieus-MacBook-Air.local with PID 6006 (/Users/matel/IdeaProjects/server-jwt/target/classes started by matel in /Users/matel/IdeaProjects/server-jwt)
-2019-12-08 11:54:44,539 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
-2019-12-08 11:54:46,047 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
-2019-12-08 11:54:46,210 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 152ms. Found 11 repository interfaces.
-2019-12-08 11:54:46,835 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$56c2853a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2019-12-08 11:54:47,258 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
-2019-12-08 11:54:47,291 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
-2019-12-08 11:54:47,305 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
-2019-12-08 11:54:47,307 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
-2019-12-08 11:54:47,487 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
-2019-12-08 11:54:47,488 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 2839 ms
-2019-12-08 11:54:47,742 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
-2019-12-08 11:54:47,901 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
-2019-12-08 11:54:47,985 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
-	name: default
-	...]
-2019-12-08 11:54:48,096 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
-2019-12-08 11:54:48,098 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
-2019-12-08 11:54:48,321 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
-2019-12-08 11:54:48,642 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2019-12-08 11:54:48,820 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
-2019-12-08 11:54:48,826 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@1d1c37d5
-2019-12-08 11:54:49,300 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
-2019-12-08 11:54:49,754 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
-2019-12-08 11:54:50,284 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2019-12-08 11:54:51,164 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
-2019-12-08 11:54:51,170 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
-2019-12-08 11:54:51,982 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5b6ec94a, org.springframework.security.web.context.SecurityContextPersistenceFilter@70b0dc92, org.springframework.security.web.header.HeaderWriterFilter@757f47f0, org.springframework.web.filter.CorsFilter@64745270, org.springframework.security.web.authentication.logout.LogoutFilter@136690b1, io.matel.app.connection.security.JwtAuthenticationFilter@596d17f4, io.matel.app.connection.security.JwtAuthorizationFilter@35a2ea5a, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@390978, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@15ca7322, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@18ab513d, org.springframework.security.web.session.SessionManagementFilter@70680f88, org.springframework.security.web.access.ExceptionTranslationFilter@7d0e43d6, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@2b625e82]
-2019-12-08 11:54:52,007 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
-2019-12-08 11:54:52,058 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
-2019-12-08 11:54:52,366 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2019-12-08 11:54:52,627 INFO o.s.c.l.CompositeLog [main] Starting...
-2019-12-08 11:54:52,628 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2019-12-08 11:54:52,630 INFO o.s.c.l.CompositeLog [main] Started.
-2019-12-08 11:54:52,643 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
-2019-12-08 11:54:52,680 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
-2019-12-08 11:54:52,685 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplication in 9.176 seconds (JVM running for 11.21)
-2019-12-08 11:54:52,688 INFO i.m.a.AppLauncher [main] Starting with 3 cores
-2019-12-08 11:54:52,743 INFO o.h.h.i.QueryTranslatorFactoryInitiator [main] HHH000397: Using ASTQueryTranslatorFactory
-2019-12-08 11:54:52,961 INFO i.m.a.AppLauncher [main] 86 contracts found
-2019-12-08 11:54:52,969 INFO i.m.a.AppLauncher [main] Setting up last id tick: 0
-2019-12-08 11:54:52,970 INFO i.m.a.AppLauncher [main] Setting up last id candle: 0
-2019-12-08 11:54:52,993 INFO i.m.a.AppLauncher [main] Loading historical candles...
-2019-12-08 11:54:53,871 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2019-12-08 11:54:53,877 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
-2019-12-08 11:54:53,924 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 47 ms
-2019-12-08 11:54:55,056 INFO i.m.a.c.a.ActiveUserEvent [http-nio-8080-exec-1] UserActivityEvent{type='login', username='trader', eventSessionId='347d7352-2491-5c08-411e-6c9d34b6da9d', timestamp=2019-12-08T11:54:55.006626+07:00[Indian/Christmas]}
-2019-12-08 11:57:36,455 INFO i.m.a.Database [Thread-4] Historical completed for contract 5
-2019-12-08 11:59:46,426 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
-2019-12-08 11:59:49,549 INFO i.m.a.Database [Thread-4] Historical completed for contract 5
-2019-12-08 12:00:24,088 INFO i.m.a.c.a.ActiveUserEvent [Thread-3] UserActivityEvent{type='logout', username='trader', eventSessionId='347d7352-2491-5c08-411e-6c9d34b6da9d', timestamp=2019-12-08T12:00:24.087069+07:00[Indian/Christmas]}
-2019-12-08 12:00:24,166 INFO o.s.c.l.CompositeLog [Thread-3] Stopping...
-2019-12-08 12:00:24,167 INFO o.s.c.l.CompositeLog [Thread-3] BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2019-12-08 12:00:24,167 INFO o.s.c.l.CompositeLog [Thread-3] Stopped.
-2019-12-08 12:00:24,177 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'brokerChannelExecutor'
-2019-12-08 12:00:24,179 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'messageBrokerTaskScheduler'
-2019-12-08 12:00:24,184 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'clientOutboundChannelExecutor'
-2019-12-08 12:00:24,187 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-3] Shutting down ExecutorService 'clientInboundChannelExecutor'
-2019-12-08 12:00:24,191 INFO o.s.o.j.AbstractEntityManagerFactoryBean [Thread-3] Closing JPA EntityManagerFactory for persistence unit 'default'
-2019-12-08 12:00:24,267 INFO c.z.h.HikariDataSource [Thread-3] HikariPool-1 - Shutdown initiated...
-2019-12-08 12:00:24,417 INFO c.z.h.HikariDataSource [Thread-3] HikariPool-1 - Shutdown completed.
+2019-12-08 05:02:28,447 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
+2019-12-08 05:02:28,455 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
+2019-12-08 05:02:29,019 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2019-12-08 05:02:29,979 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2019-12-08 05:02:30,405 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
+2019-12-08 05:02:30,424 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@4dd1548e
+2019-12-08 05:02:31,584 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
+2019-12-08 05:02:32,681 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
+2019-12-08 05:02:33,621 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2019-12-08 05:02:35,320 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
+2019-12-08 05:02:35,334 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
+2019-12-08 05:02:37,001 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1da61a29, org.springframework.security.web.context.SecurityContextPersistenceFilter@74ed7111, org.springframework.security.web.header.HeaderWriterFilter@3da6950f, org.springframework.web.filter.CorsFilter@47cf922d, org.springframework.security.web.authentication.logout.LogoutFilter@2eb31735, io.matel.app.connection.security.JwtAuthenticationFilter@6b64921f, io.matel.app.connection.security.JwtAuthorizationFilter@439d649c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3314f179, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@43c3354, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6e475994, org.springframework.security.web.session.SessionManagementFilter@45a05350, org.springframework.security.web.access.ExceptionTranslationFilter@981d9d2, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@3a720ae3]
+2019-12-08 05:02:37,051 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
+2019-12-08 05:02:37,120 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
+2019-12-08 05:02:37,735 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2019-12-08 05:02:38,276 INFO o.s.c.l.CompositeLog [main] Starting...
+2019-12-08 05:02:38,278 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+2019-12-08 05:02:38,281 INFO o.s.c.l.CompositeLog [main] Started.
+2019-12-08 05:02:38,315 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2019-12-08 05:02:38,359 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
+2019-12-08 05:02:38,368 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplication in 19.281 seconds (JVM running for 24.01)
+2019-12-08 05:02:38,377 INFO i.m.a.AppLauncher [main] Starting with 5 cores
+2019-12-08 05:02:38,623 INFO o.h.h.i.QueryTranslatorFactoryInitiator [main] HHH000397: Using ASTQueryTranslatorFactory
+2019-12-08 05:02:39,145 INFO i.m.a.AppLauncher [main] 86 contracts found
+2019-12-08 05:02:39,163 INFO i.m.a.AppLauncher [main] Setting up last id tick: 0
+2019-12-08 05:02:39,164 INFO i.m.a.AppLauncher [main] Setting up last id candle: 0
+2019-12-08 05:02:40,155 INFO i.m.a.AppLauncher [main] Loading historical candles...
+2019-12-08 05:02:40,918 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:02:40,918 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:02:40,932 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:02:50,486 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:02:52,660 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:02:53,970 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:02:58,814 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:00,377 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:00,398 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:02,215 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:04,127 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:03:04,151 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:04,551 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:04,761 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:03:05,565 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:06,413 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:07,098 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:07,790 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:07,959 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:03:08,516 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:03:08,647 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:08,702 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:10,571 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:10,723 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:11,598 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:03:11,636 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:12,176 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:03:12,795 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:13,071 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:14,496 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:14,932 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:15,424 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:16,082 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:16,122 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:03:16,196 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:03:17,350 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:17,621 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:18,609 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:19,115 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:19,536 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:20,001 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:03:20,237 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:03:20,746 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:21,441 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:22,204 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:22,322 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:23,439 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:03:23,468 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:23,490 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:03:24,039 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:25,218 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:25,602 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:25,707 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:26,156 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:03:26,354 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:03:27,180 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:27,296 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:03:27,730 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:28,592 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:29,005 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:29,532 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:03:29,546 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:03:29,920 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:03:30,032 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:30,788 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:03:31,871 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:32,417 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:32,684 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:33,737 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:34,271 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:34,764 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:03:35,266 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:03:35,270 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:36,060 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:36,242 INFO i.m.a.Database [Thread-8] Historical completed for contract 5
+2019-12-08 05:03:36,622 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:36,875 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:38,291 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:38,496 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:39,223 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:03:39,411 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:03:39,647 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:40,042 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:40,693 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:41,673 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:42,515 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:43,036 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:03:43,121 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:43,215 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:44,438 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:03:44,651 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:44,679 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:45,330 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:03:46,370 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:47,037 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:47,409 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:47,893 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:03:48,530 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:03:48,755 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:48,860 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:50,085 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:50,263 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:51,201 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:51,974 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:03:52,123 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:52,728 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:03:53,150 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:53,417 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:53,819 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:55,066 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:03:55,243 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:55,336 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:55,593 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:03:56,798 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:57,107 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:03:57,123 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:03:57,764 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:03:58,116 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:03:58,346 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:03:59,501 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:03:59,684 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:00,545 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:04:00,721 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:01,365 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:01,929 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:02,817 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:03,643 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:04:03,827 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:04,392 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:04,438 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:04,466 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:04:05,973 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:06,093 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:07,032 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:04:07,191 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:04:07,690 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:07,747 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:08,347 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:09,359 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:10,138 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:11,078 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:11,251 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:11,754 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:04:11,795 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:04:12,450 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:12,645 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:13,161 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:04:14,113 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:14,248 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:14,815 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:14,909 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:04:16,075 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:04:16,428 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:16,868 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:17,374 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:04:17,969 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:18,191 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:18,457 INFO i.m.a.Database [Thread-8] Historical completed for contract 5
+2019-12-08 05:04:18,716 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:19,696 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:20,620 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:21,119 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:04:21,420 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:21,674 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:22,267 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:04:22,826 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:22,907 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:24,610 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:24,725 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:25,171 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:04:25,298 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:26,099 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:04:26,197 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:27,125 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:27,682 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:28,647 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:28,741 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:04:29,254 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:04:29,438 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:30,292 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:04:30,729 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:31,184 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:04:31,572 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:32,018 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:32,685 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:33,563 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:33,996 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:35,176 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:04:35,214 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:36,051 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:36,624 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:36,974 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:37,175 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:04:38,343 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:38,435 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:39,004 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:04:39,769 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:40,210 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:40,573 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:40,674 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:04:41,613 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:41,911 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:04:42,600 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:42,821 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:04:43,509 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:43,592 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:44,846 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:04:44,953 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:45,311 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:04:45,828 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:04:46,862 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:47,169 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:47,646 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:48,441 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:49,718 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:50,049 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:50,739 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:04:51,192 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:51,837 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:52,075 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:52,388 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:04:53,634 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:54,004 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:54,901 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:55,154 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:04:55,370 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:56,251 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:56,347 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:04:57,063 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:58,157 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:04:58,554 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:04:58,609 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:04:58,978 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:04:59,555 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:05:00,076 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:00,495 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:00,795 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:05:01,300 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:05:01,304 INFO i.m.a.Database [Thread-8] Historical completed for contract 5
+2019-12-08 05:05:01,932 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:02,796 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:05:02,868 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:02,941 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:04,544 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:04,889 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:05:05,002 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:05,422 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:05:05,853 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:06,031 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:07,307 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:08,061 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:09,319 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:10,422 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:10,691 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:11,441 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:05:12,693 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:05:12,696 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:13,129 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:14,345 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:14,594 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:15,333 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:15,946 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:05:16,195 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:16,865 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:05:17,411 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:17,717 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:05:18,446 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:19,749 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:20,058 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:05:20,148 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:21,238 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:22,022 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:05:22,068 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:22,629 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:22,812 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:23,927 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:05:24,569 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:24,763 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:25,810 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:25,849 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:05:26,573 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:26,766 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:05:27,028 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:28,229 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:29,019 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:29,844 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:29,998 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:31,341 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:31,596 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:31,889 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:05:33,219 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:33,237 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:33,386 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:05:33,781 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:34,010 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:05:34,303 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:05:35,897 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:35,986 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:05:36,277 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:37,178 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:37,227 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:05:37,640 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:38,309 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:39,245 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:39,726 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:05:40,617 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:41,135 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:41,226 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:05:41,357 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:42,274 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:05:42,730 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:42,967 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:44,580 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:44,789 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:45,399 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:45,788 INFO i.m.a.Database [Thread-8] Historical completed for contract 5
+2019-12-08 05:05:46,426 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:46,647 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:05:47,657 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:48,259 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:48,507 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:05:48,919 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:49,797 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:50,073 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:50,862 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:05:51,761 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:05:52,297 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:52,674 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:05:52,976 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:53,195 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:54,624 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:54,684 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:55,777 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:05:57,330 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:05:57,499 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:05:57,909 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:05:58,485 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:05:59,745 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:00,830 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:00,938 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:06:01,407 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:02,134 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:06:03,193 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:06:03,378 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:03,553 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:04,821 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:06:05,172 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:05,340 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:05,962 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:06:05,992 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:06:06,262 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:06:06,789 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:07,727 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:08,012 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:06:08,077 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:06:09,501 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:06:09,871 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:10,292 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:10,929 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:06:11,226 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:12,271 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:06:12,272 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:12,989 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:13,462 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:06:13,884 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:06:14,638 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:14,692 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:16,173 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:06:16,469 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:16,636 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:17,190 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:06:17,228 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:06:17,444 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:06:18,135 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:18,288 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:06:18,920 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:19,809 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:20,544 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:06:21,252 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:21,420 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:22,820 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:06:23,080 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:06:23,176 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:23,493 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:24,027 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:06:24,505 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:06:24,541 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:06:25,873 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:26,092 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:27,449 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:06:27,641 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:28,133 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:28,756 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:06:29,193 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:29,236 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:06:29,321 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:06:30,552 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:31,006 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:32,084 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:06:32,120 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:06:32,506 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:32,840 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:33,133 INFO i.m.a.Database [Thread-8] Historical completed for contract 5
+2019-12-08 05:06:33,843 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:06:34,297 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:35,082 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:36,044 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:36,153 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:06:36,317 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:06:37,509 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:37,517 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:38,611 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:06:39,270 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:06:39,594 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:40,059 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:06:40,137 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:06:40,813 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:41,879 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:42,075 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:43,616 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:06:45,354 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:06:46,752 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:06:47,068 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:47,574 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:06:47,989 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:49,359 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:50,538 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:50,794 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:06:51,362 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:51,649 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:06:52,863 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:06:53,261 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:53,276 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:54,794 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:06:55,318 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:55,381 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:06:55,794 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:06:55,829 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:56,832 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:06:56,996 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:58,092 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:06:58,838 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:06:59,517 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:06:59,612 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:00,229 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:07:00,698 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:02,118 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:02,289 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:07:02,732 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:03,581 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:03,798 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:04,222 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:07:04,771 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:07:05,287 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:05,304 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:06,757 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:07:06,937 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:07,120 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:07,593 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:08,522 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:08,997 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:07:09,568 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:10,131 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:07:10,194 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:10,863 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:07:10,939 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:11,772 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:11,882 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:13,078 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:07:13,239 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:13,736 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:14,590 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:14,802 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:15,340 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:07:15,594 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:07:15,605 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:07:16,049 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:17,829 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:17,831 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:07:17,951 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:18,528 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:19,378 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:19,440 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:07:20,416 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:20,904 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:21,627 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:22,354 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:07:22,414 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:07:22,627 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:22,739 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:23,234 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:07:24,249 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:24,716 INFO i.m.a.Database [Thread-8] Historical completed for contract 5
+2019-12-08 05:07:24,739 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:25,615 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:26,093 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:26,509 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:07:26,874 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:07:27,068 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:27,533 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:07:27,667 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:28,962 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:29,079 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:29,502 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:29,866 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:07:30,517 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:07:30,649 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:07:31,470 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:32,289 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:32,892 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:33,758 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:33,987 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:35,614 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:37,469 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:37,614 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:07:37,866 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:38,297 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:39,763 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:39,849 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:40,025 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:07:41,291 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:41,547 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:42,135 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:42,509 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:07:42,950 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:07:43,093 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:44,093 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:44,762 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:44,797 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:07:45,352 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:46,428 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:46,625 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:46,731 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:07:47,857 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:07:48,619 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:07:48,976 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:49,550 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:07:49,833 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:49,853 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:51,264 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:51,361 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:51,525 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:07:53,018 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:53,249 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:53,881 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:54,730 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:07:54,751 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:07:54,782 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:55,831 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:56,208 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:07:56,316 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:56,981 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:07:58,110 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:58,133 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:07:59,024 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:07:59,735 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:07:59,799 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:08:00,042 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:00,727 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:01,273 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:02,377 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:02,465 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:08:02,787 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:02,943 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:08:03,489 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:08:03,712 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:08:04,116 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:04,805 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:05,829 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:06,152 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:08:06,741 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:07,131 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:08:07,293 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:07,842 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:08,788 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:08,815 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:08:09,074 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:10,717 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:10,848 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:08:11,059 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:11,791 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:12,187 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:08:12,316 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:13,412 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:14,168 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:14,282 INFO i.m.a.Database [Thread-8] Historical completed for contract 5
+2019-12-08 05:08:15,044 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:08:15,142 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:15,944 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:16,005 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:16,894 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:08:17,564 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:17,948 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:18,944 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:08:19,020 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:20,045 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:08:20,102 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:20,583 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:21,731 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:08:21,904 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:22,105 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:22,736 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:23,421 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:24,232 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:08:24,503 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:25,161 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:25,727 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:08:26,119 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:26,837 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:26,860 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:28,116 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:08:28,600 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:28,985 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:29,452 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:08:29,979 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:30,016 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:08:30,132 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:31,298 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:31,676 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:32,886 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:08:33,210 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:33,236 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:33,507 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:08:33,792 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:34,134 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:08:34,606 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:08:35,576 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:36,110 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:36,994 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:37,411 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:08:37,501 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:37,596 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:08:37,784 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:38,163 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:08:39,164 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:39,887 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:40,260 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:08:40,863 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:41,209 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:41,999 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:08:42,237 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:08:42,348 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:42,514 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:46,669 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:47,296 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:47,767 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:08:47,842 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:48,184 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:08:48,748 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:49,769 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:08:50,021 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:50,295 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:51,530 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:52,054 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:52,141 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:08:52,434 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:52,585 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:08:53,376 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:08:54,491 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:54,720 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:08:54,854 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:55,459 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:56,373 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:56,714 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:57,064 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:08:57,875 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:57,898 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:08:58,572 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:08:59,010 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:08:59,515 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:08:59,678 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:09:01,017 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:01,050 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:01,338 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:09:02,383 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:02,768 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:09:02,821 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:03,327 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:04,282 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:04,978 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:09:05,228 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:05,588 INFO i.m.a.Database [Thread-8] Historical completed for contract 5
+2019-12-08 05:09:05,869 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:06,026 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:06,436 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:09:06,884 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:09:07,114 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:09:07,503 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:08,792 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:09,360 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:09,841 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:10,122 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:10,538 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:09:11,095 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:09:11,785 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:11,797 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:13,132 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:13,452 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:14,036 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:14,371 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:09:15,026 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:15,814 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:09:16,006 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:16,601 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:16,768 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:09:16,940 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:18,287 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:18,414 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:19,645 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:09:19,775 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:20,316 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:20,869 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:21,462 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:22,292 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:09:22,478 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:09:22,590 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:09:22,928 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:23,541 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:09:24,322 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:24,448 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:25,287 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:25,941 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:09:25,961 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:26,219 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:09:27,063 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:09:27,374 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:27,572 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:28,192 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:29,442 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:29,725 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:30,944 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:31,035 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:09:31,395 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:09:31,550 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:32,128 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:32,156 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:09:32,729 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:34,026 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:34,353 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:35,179 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:35,302 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:09:35,479 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:09:35,855 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:36,282 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:36,478 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:09:37,382 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:09:38,170 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:38,913 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:38,938 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:39,594 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:09:40,170 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:09:40,297 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:40,406 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:41,242 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:09:41,776 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:42,123 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:42,720 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:43,161 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:09:43,366 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:44,183 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:09:44,582 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:45,030 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:45,225 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:09:45,728 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:46,592 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:46,760 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:47,105 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:09:47,975 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:09:48,268 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:48,616 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:49,355 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:49,495 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:09:49,973 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:50,189 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:09:51,197 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:51,459 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:09:51,779 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:53,032 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:09:53,204 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:53,410 INFO i.m.a.Database [Thread-8] Historical completed for contract 5
+2019-12-08 05:09:53,955 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:54,615 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:09:55,143 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:56,277 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:09:56,747 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:57,132 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:09:57,570 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:09:58,337 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:09:58,510 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:09:58,828 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:00,021 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:00,860 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:00,922 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:10:01,540 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:01,621 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:02,307 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:10:03,205 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:03,217 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:04,444 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:10:04,966 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:04,985 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:05,730 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:05,755 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:10:06,454 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:07,744 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:08,097 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:08,121 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:10:08,844 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:10:08,971 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:10,211 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:10,299 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:10:11,007 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:11,191 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:10:12,116 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:10:12,137 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:12,444 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:12,767 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:13,917 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:14,376 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:15,224 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:10:15,233 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:10:15,739 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:15,953 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:16,507 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:10:16,753 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:17,267 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:18,699 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:19,055 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:19,230 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:10:19,773 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:20,041 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:10:20,661 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:21,113 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:22,215 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:22,900 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:10:22,973 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:23,355 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:10:23,473 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:10:23,818 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:24,164 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:10:24,874 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:10:25,269 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:25,680 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:27,058 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:27,455 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:28,644 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:29,852 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:29,897 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:10:31,229 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:10:31,249 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:31,785 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:32,174 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:33,333 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:33,502 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:33,759 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:10:34,411 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:10:35,006 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:35,485 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:36,037 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:36,676 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:37,868 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:38,020 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:10:38,050 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:10:38,068 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:10:38,206 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:39,479 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:39,975 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:40,293 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:40,915 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:10:41,514 INFO i.m.a.Database [Thread-8] Historical completed for contract 5
+2019-12-08 05:10:42,020 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:10:42,306 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:42,471 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:10:42,841 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:43,321 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:43,730 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:10:44,220 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:44,684 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:45,673 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:46,749 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:46,784 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:10:47,141 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:47,448 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:49,013 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:49,165 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:50,581 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:50,741 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:50,959 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:10:51,460 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:51,738 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:10:52,568 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:53,637 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:54,152 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:54,487 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:55,161 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:10:55,589 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:10:55,932 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:55,975 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:10:55,990 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:56,561 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:10:57,898 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:10:58,358 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:10:58,900 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:10:59,719 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:11:00,162 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:11:00,413 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:00,529 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:01,220 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:11:01,924 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:02,184 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:02,917 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:03,322 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:11:03,864 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:04,709 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:11:04,874 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:05,207 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:05,840 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:07,128 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:07,232 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:08,543 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:11:08,661 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:09,083 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:09,506 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:11:09,613 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:10,217 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:11,379 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:11:11,483 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:12,751 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:13,227 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:13,336 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:11:13,435 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:11:13,736 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:14,548 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:15,701 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:15,994 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:16,515 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:17,442 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:11:17,503 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:11:17,784 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:17,953 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:18,977 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:11:19,413 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:19,730 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:20,329 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:20,953 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:21,262 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:11:22,109 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:11:22,256 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:22,631 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:11:22,637 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:23,470 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:24,193 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:24,572 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:25,727 INFO i.m.a.Database [Thread-8] Historical completed for contract 5
+2019-12-08 05:11:25,882 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:26,644 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:11:26,649 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:11:26,650 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:27,484 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:28,812 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:28,931 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:30,287 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:30,329 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:11:30,814 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:30,852 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:11:31,387 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:31,904 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:33,409 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:33,658 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:34,347 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:11:34,356 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:11:34,698 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:35,212 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:35,342 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:11:35,785 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:36,911 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:37,893 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:38,615 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:38,752 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:39,123 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:11:40,221 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:40,301 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:41,755 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:11:41,929 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:42,583 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:42,782 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:11:43,316 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:43,400 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:11:43,579 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:11:44,601 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:44,652 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:45,807 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:46,192 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:46,943 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:47,540 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:11:47,648 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:48,113 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:11:48,840 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:49,327 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:49,569 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:50,901 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:51,186 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:51,443 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:11:52,063 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:11:52,750 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:52,984 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:54,613 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:55,387 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:56,704 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:11:56,748 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:11:56,922 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:11:57,629 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:11:57,958 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:11:58,171 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:11:59,239 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:00,104 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:00,267 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:12:01,253 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:01,435 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:12:01,518 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:02,002 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:02,042 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:12:03,036 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:03,370 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:12:03,660 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:04,816 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:05,330 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:06,083 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:12:06,089 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:06,420 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:08,099 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:08,135 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:09,222 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:09,630 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:12:09,666 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:12:09,875 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:10,079 INFO i.m.a.Database [Thread-8] Historical completed for contract 5
+2019-12-08 05:12:10,417 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:12:10,480 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:11,439 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:13,170 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:13,832 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:14,280 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:14,797 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:12:16,012 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:12:16,833 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:17,549 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:18,618 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:19,024 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:19,393 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:19,930 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:12:20,436 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:12:20,681 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:21,465 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:22,586 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:22,600 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:23,967 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:23,998 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:24,759 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:12:24,852 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:12:25,824 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:26,064 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:26,664 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:27,445 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:28,282 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:28,837 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:12:29,002 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:29,214 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:12:29,767 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:30,366 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:12:30,626 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:32,142 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:32,616 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:32,658 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:12:33,162 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:12:33,464 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:33,617 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:33,675 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:12:34,888 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:34,926 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:36,520 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:36,900 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:37,063 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:12:37,452 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:38,176 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:12:38,182 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:39,476 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:40,036 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:40,725 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:12:40,967 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:41,400 INFO i.m.a.Database [Thread-4] Historical completed for contract 1
+2019-12-08 05:12:41,529 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:41,866 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:42,276 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:12:43,209 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:43,936 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:44,876 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:44,903 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:45,649 INFO i.m.a.Database [Thread-6] Historical completed for contract 3
+2019-12-08 05:12:45,979 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:12:46,316 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:46,489 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:12:48,158 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:48,488 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:48,979 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:49,634 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:50,746 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:12:50,992 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:12:51,152 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:51,265 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:52,662 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:53,060 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:53,687 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:54,501 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:54,648 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:12:55,708 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:55,741 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:12:55,897 INFO i.m.a.Database [Thread-8] Historical completed for contract 5
+2019-12-08 05:12:56,285 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:56,646 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:12:57,970 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:58,055 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:12:59,426 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:12:59,637 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:12:59,846 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:13:00,293 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:13:00,888 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:13:01,533 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:13:02,236 INFO i.m.a.Database [Thread-7] Historical completed for contract 4
+2019-12-08 05:13:03,044 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:13:04,274 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:13:04,357 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:13:04,455 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:13:04,490 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:13:05,387 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:13:06,006 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:13:07,412 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:13:07,620 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:13:08,343 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:13:09,303 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:13:09,486 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:13:09,712 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:13:09,830 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:13:11,003 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:13:11,294 INFO i.m.a.SaverController [Thread-8] Regular batch candles saving (5001)
+2019-12-08 05:13:11,709 INFO i.m.a.Database [Thread-5] Historical completed for contract 2
+2019-12-08 05:13:12,327 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:13:12,846 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
+2019-12-08 05:13:13,201 INFO i.m.a.SaverController [Thread-4] Regular batch candles saving (5001)
+2019-12-08 05:13:13,771 INFO i.m.a.SaverController [Thread-6] Regular batch candles saving (5001)
+2019-12-08 05:13:14,360 INFO i.m.a.SaverController [Thread-5] Regular batch candles saving (5001)
+2019-12-08 05:13:14,682 INFO i.m.a.SaverController [Thread-7] Regular batch candles saving (5001)
