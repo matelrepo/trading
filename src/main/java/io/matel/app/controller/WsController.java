@@ -20,7 +20,7 @@ public class WsController {
         if (candle != null) {
             String path = ("/get/candle-live/" + candle.getIdcontract() +"/" +candle.getFreq());
              template.convertAndSend(path, candle);
-             System.out.println(candle.toString());
+//             System.out.println(candle.toString());
         }
     }
 

@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +68,7 @@ public class Generator implements IbClient {
 
     public void initDatabase(){
 //        LOGGER.info("init. database for contract " + contract.getIdcontract());
-        database = appController.createDatabase("matel", "5432", "matel");
+        database = appController.createDatabase("matel", Global.port, "matel");
     }
 
     public void connectMarketData() throws ExecutionException, InterruptedException {
@@ -206,7 +207,7 @@ public class Generator implements IbClient {
             double newPrice = reformatPrice(price, field);
             if (newPrice > 0 && newPrice != generatorState.getLastPrice()) {
 //                generatorState.setColor(newPrice > generatorState.getLastPrice() ? 1 : -1);
-                Tick tick = new Tick(global.getIdTick(true),contract.getIdcontract(), generatorState.getTimestamp(), newPrice);
+                Tick tick = new Tick(global.getIdTick(true),contract.getIdcontract(), ZonedDateTime.now(), newPrice);
 //                generatorState.setIdtick(tick.getId());
 //                if (price > generatorState.getHigh())
 //                    generatorState.setHigh(Utils.round(price, contract.getRounding()));

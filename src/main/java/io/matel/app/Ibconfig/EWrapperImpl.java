@@ -89,7 +89,6 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void nextValidId(int orderId) {
-
         if (!hasConnectedAlready) {
             appLauncher.startLive();
         } else {

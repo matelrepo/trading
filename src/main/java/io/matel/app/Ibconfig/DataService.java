@@ -22,7 +22,7 @@ public class DataService {
 
     private int numMktDataLines = 0;
     private String host = "127.0.0.1";
-    private int port = 7496;
+    private int port = 7496; //7496
 
     @Autowired
     EWrapperImpl eWrapper;

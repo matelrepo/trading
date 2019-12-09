@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -185,5 +186,10 @@ public class AppController {
 
     public void setTickerCrawl(List<MacroDAO> tickerCrawl) {
         this.tickerCrawl = tickerCrawl;
+    }
+
+    @PreDestroy
+    public void savingOnClose(){
+      database.getSaverController().saveBatchTicks();
     }
 }

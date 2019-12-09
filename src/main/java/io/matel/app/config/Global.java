@@ -6,13 +6,13 @@ import java.time.ZoneId;
 
 @Configuration
 public class Global {
-    public static final boolean ONLINE = false;
+    public static final boolean ONLINE = true;
     public static final boolean RANDOM = false;
-    public static final boolean READ_ONLY_TICKS = true;
-    public static final boolean READ_ONLY_CANDLES = false;
+    public static final boolean READ_ONLY_TICKS = false;
+    public static final boolean READ_ONLY_CANDLES = true;
     public static final boolean READ_ONLY_LOG_PROCESSOR = true;
-    public static final boolean UPDATE_MACRO = false;
-    public static final boolean COMPUTE_DEEP_HISTORICAL = true;
+    public static final boolean UPDATE_MACRO = true;
+    public static final boolean COMPUTE_DEEP_HISTORICAL = false;
 
 
     public static final String SECRET = "SomeSecretForJWTGeneration";
@@ -23,7 +23,7 @@ public class Global {
     public static final int STARTING_PRICE = 10000;
     public static final int MAX_LENGTH_TICKS = 10;
     public static final int MAX_LENGTH_FLOW = 25;
-    public static final int MAX_TICKS_SIZE_SAVING = 2500;
+    public static final int MAX_TICKS_SIZE_SAVING = 100;
     public static final int MAX_CANDLES_SIZE_SAVING = 5000;
     public static final int[] FREQUENCIES = {0, 1, 5, 15, 30, 60, 240, 1380, 6900,35000,100000, 300000};
 //    public static final int[] FREQUENCIES = {0, 1, 2, 3, 4, 5, 6, 7, 8,9,10, 11};

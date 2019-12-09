@@ -1,5 +1,6 @@
 package io.matel.app;
 
+import io.matel.app.Ibconfig.DataService;
 import io.matel.app.config.Global;
 import io.matel.app.controller.WsController;
 import io.matel.app.domain.ContractBasic;
@@ -30,6 +31,9 @@ public class AppLauncher implements CommandLineRunner {
     @Autowired
     MacroWriter macroWriter;
 
+    @Autowired
+    DataService dataService;
+
     public AppLauncher(AppController appController, WsController wsController) {
         this.appController = appController;
         this.wsController = wsController;
@@ -39,116 +43,104 @@ public class AppLauncher implements CommandLineRunner {
     public void run(String... args) {
 
         LOGGER.info("Starting with " + Global.EXECUTOR_THREADS + " cores");
-
-//        new Thread(() -> {
-//            try {
-//                if (Global.UPDATE_MACRO)
-//                    macroWriter.start();
-//                else
-//                    LOGGER.info(">>> MACRO_UPDATE is switched off");
-////                dbb.init("matel", "5432", "matel");
-////                dbb.getMacroItemsByCountry("United States");
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }).start();
-
-        startLive();
+        dataService.connect();
+    //    startLive();
     }
 
 
     public void startLive() {
-        Database database = appController.createDatabase("matel", "5432", "matel");
-        appController.setContractsLive(appController.contractRepository.findTop100ByActiveAndType(true, "LIVE"));
-        LOGGER.info(appController.getContractsLive().size() + " contracts found");
+        try {
+            Database database = appController.createDatabase("matel", Global.port, "matel");
+            appController.setContractsLive(appController.contractRepository.findTop100ByActiveAndType(true, "LIVE"));
+            LOGGER.info(appController.getContractsLive().size() + " contracts found");
 //        try {
             Long idTick = database.findTopIdTickOrderByIdDesc();
-            if(idTick == null) idTick =0L;
+            if (idTick == null) idTick = 0L;
             Global.startIdTick = idTick;
             Long idCandle = database.findTopIdCandleOrderByIdDesc();
-            if(idCandle == null) idCandle =0L;
+            if (idCandle == null) idCandle = 0L;
             Global.startIdCandle = idCandle;
 
-        global.setIdTick(idTick);
+            global.setIdTick(idTick);
             global.setIdCandle(idCandle);
 //        } catch (NullPointerException e) {
 //            e.printStackTrace();
 //        }
-        LOGGER.info("Setting up last id tick: " + global.getIdTick(false));
-        LOGGER.info("Setting up last id candle: " + global.getIdCandle(false));
-        database.close();
+            LOGGER.info("Setting up last id tick: " + global.getIdTick(false));
+            LOGGER.info("Setting up last id candle: " + global.getIdCandle(false));
+            database.close();
 
-        if (Global.READ_ONLY_TICKS)
-            LOGGER.warn(">>> Read only lock! <<<");
+            if (Global.READ_ONLY_TICKS)
+                LOGGER.warn(">>> Read only lock! <<<");
 
-        for (ContractBasic contract : appController.getContractsLive()) {
-                createGenerator(contract);
-                createProcessor(contract, 0);
-        }
+            for (ContractBasic contract : appController.getContractsLive()) {
+                    createGenerator(contract);
+                    createProcessor(contract, 0);
+            }
 
-        LOGGER.info("Loading historical candles...");
-        appController.getGenerators().forEach((id, generator) -> {
-            try {
-                semaphore.acquire();
-                new Thread(() -> {
-                    generator.initDatabase();
+            LOGGER.info("Loading historical candles...");
+            appController.getGenerators().forEach((id, generator) -> {
+                try {
+                    semaphore.acquire();
+                    new Thread(() -> {
+                        generator.initDatabase();
 
-                    LoadingErrorHandler error = new LoadingErrorHandler();
-                    this.errors.put(generator.getContract().getIdcontract(), error);
-                    error.idcontract = generator.getContract().getIdcontract();
-                    error.numTicksBreaking = generator.getDatabase().countIdTickBreaks(error.idcontract);
-                    error.lastCandleId = generator.getDatabase().findTopIdCandleByIdcontractOrderByIdDesc(error.idcontract);
+                        LoadingErrorHandler error = new LoadingErrorHandler();
+                        this.errors.put(generator.getContract().getIdcontract(), error);
+                        error.idcontract = generator.getContract().getIdcontract();
+                        error.numTicksBreaking = generator.getDatabase().countIdTickBreaks(error.idcontract);
+                        error.lastCandleId = generator.getDatabase().findTopIdCandleByIdcontractOrderByIdDesc(error.idcontract);
 
-                    if (error.numTicksBreaking > 1) {
-                        error.errorDetected = true;
-                        error.minTickIdBreaking = generator.getDatabase().getSmallestIdTickBreak(error.idcontract);
-                    }
-
-                    if (error.errorDetected)
-                        LOGGER.warn("Error: " + error.toString());
-
-
-                    if (Global.COMPUTE_DEEP_HISTORICAL) {
-                        Database tickDatabase = appController.createDatabase("cleanm", Global.port, "atmuser");
-                        long minIdTick = 0;
-                        int count =0;
-
-                        while(minIdTick >=0) {
-                            System.out.println(count + " round(s) with tick " + minIdTick);
-                            count++;
-                            minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data18", minIdTick);
+                        if (error.numTicksBreaking > 1) {
+                            error.errorDetected = true;
+                            error.minTickIdBreaking = generator.getDatabase().getSmallestIdTickBreak(error.idcontract);
                         }
-                        minIdTick =0;
-                        count =0;
-                        while(minIdTick >=0) {
-                            System.out.println(count + " round(s) with tick " + minIdTick);
-                            count++;
-                            minIdTick =tickDatabase.getTicksByTable(error.idcontract, false, "trading.data19", minIdTick);
+
+                        if (error.errorDetected)
+                            LOGGER.warn("Error: " + error.toString());
+
+
+                        if (Global.COMPUTE_DEEP_HISTORICAL) {
+                            Database tickDatabase = appController.createDatabase("cleanm", Global.port, "atmuser");
+                            long minIdTick = 0;
+                            int count = 0;
+
+                            while (minIdTick >= 0) {
+                                System.out.println(count + " round(s) with tick " + minIdTick);
+                                count++;
+                                minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data18", minIdTick);
+                            }
+                            minIdTick = 0;
+                            count = 0;
+                            while (minIdTick >= 0) {
+                                System.out.println(count + " round(s) with tick " + minIdTick);
+                                count++;
+                                minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data19", minIdTick);
+                            }
+                            tickDatabase.close();
+                            generator.getDatabase().getSaverController().saveNow(generator, true);
+
                         }
-                        tickDatabase.close();
-                        generator.getDatabase().getSaverController().saveNow(generator, true);
 
-                    }
+                        if (!Global.COMPUTE_DEEP_HISTORICAL && !error.errorDetected) {
+                            appController.loadHistoricalCandlesFromDbb(generator.getContract().getIdcontract(), false);
+                            LOGGER.info("Computing ticks...");
+                            generator.getDatabase().getTicksByTable(error.idcontract, false, "public.tick", error.lastCandleId);
+                            generator.getDatabase().getSaverController().saveNow(generator, true);
+                        }
 
-                    if(!Global.COMPUTE_DEEP_HISTORICAL && !error.errorDetected){
-                        appController.loadHistoricalCandlesFromDbb(generator.getContract().getIdcontract(), false);
-                        LOGGER.info("Computing ticks...");
-                        generator.getDatabase().getTicksByTable(error.idcontract, false, "public.tick", error.lastCandleId);
-                        generator.getDatabase().getSaverController().saveNow(generator, true);
-                    }
-
-                    generator.getDatabase().close();
-                    semaphore.release();
+                        generator.getDatabase().close();
+                        semaphore.release();
 
 
-                    LOGGER.info("Connecting market data for all contracts...");
-                    try {
-                        generator.setDatabase(appController.getDatabase());
-                        appController.connectMarketData(generator.getContract());
-                    } catch (ExecutionException | InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    LOGGER.info(">>> Finished contract " + generator.getContract().getIdcontract());
+                        LOGGER.info("Connecting market data for all contracts...");
+                        try {
+                            generator.setDatabase(appController.getDatabase());
+                            appController.connectMarketData(generator.getContract());
+                        } catch (ExecutionException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        LOGGER.info(">>> Finished contract " + generator.getContract().getIdcontract());
 
 //                    appController.getGenerators().forEach((idcon, gen) -> {
                         generator.saveGeneratorState();
@@ -157,14 +149,16 @@ public class AppLauncher implements CommandLineRunner {
                         });
 //                    });
 
-                }).start();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
+                    }).start();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
 
-        LOGGER.info("All completed");
-
+            LOGGER.info("All completed");
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -198,6 +192,22 @@ public class AppLauncher implements CommandLineRunner {
     @Scheduled(fixedRate = 5000)
     public void clock() {
         this.wsController.sendPrices(appController.getGeneratorsState());
+    }
+
+    @Scheduled(cron = "0 0 4 * * ?")
+    public void macroUpdate(){
+                new Thread(() -> {
+            try {
+                if (Global.UPDATE_MACRO)
+                    macroWriter.start();
+                else
+                    LOGGER.info(">>> MACRO_UPDATE is switched off");
+//                dbb.init("matel", "5432", "matel");
+//                dbb.getMacroItemsByCountry("United States");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
 
