@@ -51,7 +51,7 @@ public class AppLauncher implements CommandLineRunner {
     public void startLive() {
         try {
             Database database = appController.createDatabase("matel", Global.port, "matel");
-            appController.setContractsLive(appController.contractRepository.findTop100ByActiveAndType(true, "LIVE"));
+            appController.setContractsLive(appController.contractRepository.findTop100ByActiveAndTypeByOrderByIdcontract(true, "LIVE"));
             LOGGER.info(appController.getContractsLive().size() + " contracts found");
 //        try {
             Long idTick = database.findTopIdTickOrderByIdDesc();

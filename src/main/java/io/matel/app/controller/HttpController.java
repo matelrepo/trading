@@ -26,18 +26,8 @@ import java.util.concurrent.ExecutionException;
 public class HttpController {
 
     private static final Logger LOGGER = LogManager.getLogger(ActiveUserEvent.class);
-
-
-//    private UserRepository userRepository;
-//    private PasswordEncoder passwordEncoder;
     private WsController wsController;
     private AppController appController;
-
-//    @Autowired
-//    CandleRepository candleRepository;
-
-//    @Autowired
-//    TickRepository tickRepository;
 
     @Autowired
     ContractRepository contractRepository;
@@ -51,8 +41,6 @@ public class HttpController {
                           WsController wsController,
                           AppController appController,
                           AppLauncher appLauncher) {
-//        this.userRepository = userRepository;
-//        this.passwordEncoder = passwordEncoder;
         this.wsController = wsController;
         this.appController = appController;
     }
@@ -63,7 +51,7 @@ public class HttpController {
         if(appController.getContractsLive().size()>0){
             contracts = appController.getContractsLive();
         }else {
-            contracts = contractRepository.findTop100ByActiveAndType(true, type);
+            contracts = contractRepository.findTop100ByActiveAndTypeByOrderByIdcontract(true, type);
         }
         LOGGER.info("Sending (" + contracts.size() + ") contracts " + type );
         return contracts;
@@ -78,11 +66,6 @@ public class HttpController {
     public List<Candle> getHistoricalCandles(@PathVariable String id, @PathVariable String frequency){
         long idcontract = Long.valueOf(id);
         int freq = Integer.valueOf(frequency);
-////        if (freq == 1 )
-////            saverController.saveNow(idcontract);
-//        List<Candle> candles = new ArrayList<>();
-//        candles = candleRepository.findTop100ByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
-////        System.out.println(freq + " " + candles.size());
         return appController.getCandlesByIdContractByFreq(idcontract, freq);
     }
 
@@ -140,8 +123,8 @@ public class HttpController {
             LOGGER.info("Connect data for contract " + idcontract);
             appController.getGenerators().get(idcontract).connectMarketData();
         }else{
-//            LOGGER.info("Disconnect data for contract " + idcontract);
-//            appController.getGenerators().get(idcontract).disconnectMarketData(true);
+            LOGGER.info("Disconnect data for contract " + idcontract);
+            appController.getGenerators().get(idcontract).disconnectMarketData(true);
         }
         return appController.getGeneratorsState();
     }

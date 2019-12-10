@@ -76,7 +76,7 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void error(int id, int errorCode, String errorMsg) {
-        if (errorCode == 2104 || errorCode == 2103 || errorCode == 2106 || errorCode == 10167) {
+        if (errorCode == 2104 || errorCode == 2103 || errorCode == 2106 || errorCode == 10167 || errorCode == 300) {
         } else {
             LOGGER.warn(">>> ERROR >>> " + id + " " + errorCode + " " + errorMsg);
         }

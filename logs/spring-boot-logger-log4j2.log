@@ -1,43 +1,43 @@
-2019-12-09 11:34:40,564 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplicationTests on Lenovo-PC with PID 10532 (started by Matel in C:\Users\user\IdeaProjects\server-jwt)
-2019-12-09 11:34:40,652 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
-2019-12-09 11:34:43,263 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
-2019-12-09 11:34:43,662 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 373ms. Found 11 repository interfaces.
-2019-12-09 11:34:44,763 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$50b4e47c] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2019-12-09 11:34:45,164 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
-2019-12-09 11:34:45,367 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
-2019-12-09 11:34:45,753 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
+2019-12-09 23:36:12,778 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplicationTests on Lenovo-PC with PID 9344 (started by Matel in C:\Users\user\IdeaProjects\server-jwt)
+2019-12-09 23:36:12,869 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
+2019-12-09 23:36:15,548 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-12-09 23:36:16,057 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 481ms. Found 11 repository interfaces.
+2019-12-09 23:36:18,044 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$50b4e47c] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-12-09 23:36:18,727 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2019-12-09 23:36:19,019 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2019-12-09 23:36:19,298 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
 	name: default
 	...]
-2019-12-09 11:34:46,192 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
-2019-12-09 11:34:46,205 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
-2019-12-09 11:34:46,900 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
-2019-12-09 11:34:48,649 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2019-12-09 11:34:49,008 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
-2019-12-09 11:34:49,029 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@2e8b24a1
-2019-12-09 11:34:50,633 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
-2019-12-09 11:34:51,802 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
-2019-12-09 11:34:53,103 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2019-12-09 11:34:55,755 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
-2019-12-09 11:34:55,802 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
-2019-12-09 11:34:58,181 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@93c66ef, org.springframework.security.web.context.SecurityContextPersistenceFilter@4fce655d, org.springframework.security.web.header.HeaderWriterFilter@69efdfd9, org.springframework.web.filter.CorsFilter@7e916dc2, org.springframework.security.web.authentication.logout.LogoutFilter@434a2a10, io.matel.app.connection.security.JwtAuthenticationFilter@1a18e68a, io.matel.app.connection.security.JwtAuthorizationFilter@258291de, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1aba8978, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1f3f0d25, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4f63909f, org.springframework.security.web.session.SessionManagementFilter@4a5c6b30, org.springframework.security.web.access.ExceptionTranslationFilter@7be85f15, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@3c7787a7]
-2019-12-09 11:34:58,310 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
-2019-12-09 11:34:58,417 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
-2019-12-09 11:34:59,814 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2019-12-09 11:35:00,809 INFO o.s.c.l.CompositeLog [main] Starting...
-2019-12-09 11:35:00,813 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2019-12-09 11:35:00,816 INFO o.s.c.l.CompositeLog [main] Started.
-2019-12-09 11:35:00,876 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplicationTests in 21.808 seconds (JVM running for 26.465)
-2019-12-09 11:35:00,897 INFO i.m.a.AppLauncher [main] Starting with 8 cores
-2019-12-09 11:35:00,956 INFO i.m.a.I.EWrapperImpl [main] >>> IB CONNECTED
-2019-12-09 11:35:01,315 INFO o.h.h.i.QueryTranslatorFactoryInitiator [Thread-5] HHH000397: Using ASTQueryTranslatorFactory
-2019-12-09 11:35:01,592 INFO o.s.c.l.CompositeLog [Thread-2] Stopping...
-2019-12-09 11:35:01,594 INFO o.s.c.l.CompositeLog [Thread-2] BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2019-12-09 11:35:01,596 INFO o.s.c.l.CompositeLog [Thread-2] Stopped.
-2019-12-09 11:35:01,605 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-2] Shutting down ExecutorService 'brokerChannelExecutor'
-2019-12-09 11:35:01,610 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-2] Shutting down ExecutorService 'messageBrokerTaskScheduler'
-2019-12-09 11:35:01,618 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-2] Shutting down ExecutorService 'clientOutboundChannelExecutor'
-2019-12-09 11:35:01,621 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-2] Shutting down ExecutorService 'clientInboundChannelExecutor'
-2019-12-09 11:35:01,629 WARN o.s.b.f.a.InitDestroyAnnotationBeanPostProcessor [Thread-2] Destroy method on bean with name 'appController' threw an exception: java.lang.NullPointerException
-2019-12-09 11:35:01,647 INFO o.s.o.j.AbstractEntityManagerFactoryBean [Thread-2] Closing JPA EntityManagerFactory for persistence unit 'default'
-2019-12-09 11:35:01,703 INFO c.z.h.HikariDataSource [Thread-2] HikariPool-1 - Shutdown initiated...
-2019-12-09 11:35:01,753 INFO c.z.h.HikariDataSource [Thread-2] HikariPool-1 - Shutdown completed.
+2019-12-09 23:36:19,726 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
+2019-12-09 23:36:19,735 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
+2019-12-09 23:36:20,442 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2019-12-09 23:36:21,940 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2019-12-09 23:36:22,279 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
+2019-12-09 23:36:22,299 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@2e8b24a1
+2019-12-09 23:36:23,774 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
+2019-12-09 23:36:25,178 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
+2019-12-09 23:36:26,515 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2019-12-09 23:36:29,228 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
+2019-12-09 23:36:29,264 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
+2019-12-09 23:36:31,598 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@75c45c4b, org.springframework.security.web.context.SecurityContextPersistenceFilter@4ef0bc5b, org.springframework.security.web.header.HeaderWriterFilter@261b27db, org.springframework.web.filter.CorsFilter@7202009e, org.springframework.security.web.authentication.logout.LogoutFilter@258ac1e6, io.matel.app.connection.security.JwtAuthenticationFilter@133d0471, io.matel.app.connection.security.JwtAuthorizationFilter@33cec966, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@32029cd, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@45e68fac, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@643fed50, org.springframework.security.web.session.SessionManagementFilter@2c1a0f82, org.springframework.security.web.access.ExceptionTranslationFilter@5b01b3f8, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@4f63909f]
+2019-12-09 23:36:31,741 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
+2019-12-09 23:36:31,858 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
+2019-12-09 23:36:33,344 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2019-12-09 23:36:34,829 INFO o.s.c.l.CompositeLog [main] Starting...
+2019-12-09 23:36:34,832 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+2019-12-09 23:36:34,835 INFO o.s.c.l.CompositeLog [main] Started.
+2019-12-09 23:36:34,884 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplicationTests in 23.68 seconds (JVM running for 35.699)
+2019-12-09 23:36:34,901 INFO i.m.a.AppLauncher [main] Starting with 8 cores
+2019-12-09 23:36:34,963 INFO i.m.a.I.EWrapperImpl [main] >>> IB CONNECTED
+2019-12-09 23:36:35,287 INFO o.h.h.i.QueryTranslatorFactoryInitiator [Thread-5] HHH000397: Using ASTQueryTranslatorFactory
+2019-12-09 23:36:35,549 INFO o.s.c.l.CompositeLog [Thread-2] Stopping...
+2019-12-09 23:36:35,550 INFO o.s.c.l.CompositeLog [Thread-2] BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+2019-12-09 23:36:35,552 INFO o.s.c.l.CompositeLog [Thread-2] Stopped.
+2019-12-09 23:36:35,562 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-2] Shutting down ExecutorService 'brokerChannelExecutor'
+2019-12-09 23:36:35,567 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-2] Shutting down ExecutorService 'messageBrokerTaskScheduler'
+2019-12-09 23:36:35,575 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-2] Shutting down ExecutorService 'clientOutboundChannelExecutor'
+2019-12-09 23:36:35,577 INFO o.s.s.c.ExecutorConfigurationSupport [Thread-2] Shutting down ExecutorService 'clientInboundChannelExecutor'
+2019-12-09 23:36:35,581 WARN o.s.b.f.a.InitDestroyAnnotationBeanPostProcessor [Thread-2] Destroy method on bean with name 'appController' threw an exception: java.lang.NullPointerException
+2019-12-09 23:36:35,596 INFO o.s.o.j.AbstractEntityManagerFactoryBean [Thread-2] Closing JPA EntityManagerFactory for persistence unit 'default'
+2019-12-09 23:36:35,656 INFO c.z.h.HikariDataSource [Thread-2] HikariPool-1 - Shutdown initiated...
+2019-12-09 23:36:35,743 INFO c.z.h.HikariDataSource [Thread-2] HikariPool-1 - Shutdown completed.

@@ -127,7 +127,7 @@ public class Candle {
 
     }
 
-    public Candle(long id, long idcontract, int freq, long idtick, ZonedDateTime timestamp,
+    public Candle(long id, ContractBasic contract, int freq, long idtick, ZonedDateTime timestamp,
                   double open, double high, double low, double close,
                   int color, boolean newCandle, int progress,
                   int triggerDown, int triggerUp,
@@ -135,14 +135,14 @@ public class Candle {
                   ZonedDateTime createdOn, ZonedDateTime updatedOn, int volume){
 
         this.id = id;
-        this.idcontract = idcontract;
+        this.idcontract = contract.getIdcontract();
         this.freq = freq;
         this.idtick = idtick;
         this.timestamp = timestamp;
-        this.open = open;
-        this.high = high;
-        this.low = low ;
-        this.close = close;
+        this.open = Utils.round(open,contract.getRounding());
+        this.high = Utils.round(high, contract.getRounding());
+        this.low = Utils.round(low, contract.getRounding()) ;
+        this.close = Utils.round(close, contract.getRounding());
         this.color = color;
         this.newCandle = newCandle;
         this.progress = progress;

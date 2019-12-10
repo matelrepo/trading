@@ -46,7 +46,6 @@ public class Generator implements IbClient {
 
     private ContractBasic contract;
     private List<Tick> flowLive = new ArrayList<>();
-//    private List<Tick> flowDelayed = new ArrayList<>();
     private Map<Integer, Processor> processors = new ConcurrentHashMap<>();
     private GeneratorState generatorState;
     private Database database;
@@ -63,31 +62,25 @@ public class Generator implements IbClient {
     public Generator(ContractBasic contract, boolean random) {
         this.contract = contract;
         generatorState = new GeneratorState(contract.getIdcontract(), random, 3000);
-
     }
 
     public void initDatabase(){
-//        LOGGER.info("init. database for contract " + contract.getIdcontract());
         database = appController.createDatabase("matel", Global.port, "matel");
     }
 
     public void connectMarketData() throws ExecutionException, InterruptedException {
-
         Random rand = new Random();
-//        if (this.generatorState.isConnected())
-//            disconnectMarketData(false);
+        if (this.generatorState.isConnected())
+            disconnectMarketData(false);
 
         Double close = database.findTopCloseByIdContractOrderByTimeStampDesc(contract.getIdcontract());
 
         if (Global.RANDOM) {
             generatorState.setRandomGenerator(true);
-//            Tick tick = tickRepository.findTopByIdcontractOrderByTimestampDesc(contract.getIdcontract());
-            if (close != null) {
-//            LOGGER.info("Connecting market data contract " + contract.getIdcontract() + " -> " + close);
+            if (close != null)
                 generatorState.setLastPrice(close);
-            } else {
+             else
                 generatorState.setLastPrice(Global.STARTING_PRICE);
-            }
         }
 
         this.generatorState.setConnected(true);
@@ -101,8 +94,7 @@ public class Generator implements IbClient {
                     } else {
                         price = generatorState.getLastPrice() - contract.getTickSize();
                     }
-//                    generatorState.setAsk(Utils.round(price,contract.getRounding()));
-//                    generatorState.setBid(Utils.round(price,contract.getRounding()));
+
                     runPrice(contract.getIdcontract(), 4, price, null);
                     int volume = rand.nextInt(1000);
                     runSize(contract.getIdcontract(), 5, volume);
@@ -127,7 +119,6 @@ public class Generator implements IbClient {
         t.setName(contract.getSymbol() + "." + contract.getCurrency() + "." + contract.getIdcontract());
         t.start();
 
-//        Tick tick = tickRepository.findTopByIdcontractOrderByTimestampDesc(contract.getIdcontract());
         if (close != null) {
             if (generatorState.getLastPrice() < 0) {
                 Double price = close;
@@ -206,15 +197,7 @@ public class Generator implements IbClient {
         || ((field == 1 || field == 2) && contract.getFlowType().equals("MID"))) {
             double newPrice = reformatPrice(price, field);
             if (newPrice > 0 && newPrice != generatorState.getLastPrice()) {
-//                generatorState.setColor(newPrice > generatorState.getLastPrice() ? 1 : -1);
-                Tick tick = new Tick(global.getIdTick(true),contract.getIdcontract(), ZonedDateTime.now(), newPrice);
-//                generatorState.setIdtick(tick.getId());
-//                if (price > generatorState.getHigh())
-//                    generatorState.setHigh(Utils.round(price, contract.getRounding()));
-//
-//                if (price < generatorState.getLow())
-//                    generatorState.setLow(Utils.round(price, contract.getRounding()));
-
+                Tick tick = new Tick(global.getIdTick(true),contract.getIdcontract(), ZonedDateTime.now().withZoneSameInstant(Global.ZONE_ID), newPrice);
                 processPrice(tick, true, true);
                 wsController.sendLiveGeneratorState(generatorState);
             }
@@ -235,8 +218,6 @@ public class Generator implements IbClient {
             processor.process(candle.getTimestamp(), candle.getId(), candle.getOpen(),
                     candle.getHigh(), candle.getLow(), candle.getClose(), true);
         });
-//        Thread.sleep(1000);
-//        System.out.println(candle.toString());
     }
 
     public void processPrice(Tick tick, boolean countConsecutiveUpDown, boolean savingTick)  {
@@ -259,13 +240,11 @@ public class Generator implements IbClient {
         }
     }
 
-
     private double reformatPrice(double price, int field) {
         double newPrice = -1;
         if (contract.getFlowType().equals("TRADES")) {
             newPrice = Utils.round(price, contract.getRounding());
         } else if (contract.getFlowType().equals("MID")) {
-
             if(field == 66 || field == 1){  //bid
                 generatorState.setBid(price);
                 if (generatorState.getAsk() < 0)
@@ -302,49 +281,21 @@ public class Generator implements IbClient {
         flowLive.set(0, tick);
     }
 
-    private void savingTick() {
-//        if (flowLive.size() > 2) {
-//            if (!flowLive.get(2).isDiscarded()
-//                    && ((flowLive.get(2).getTriggerDown() == 1 && flowLive.get(2).getTriggerUp() == 0 && flowLive.get(1).getTriggerDown() == 0
-//                    && flowLive.get(1).getTriggerUp() == 1 && flowLive.get(0).getTriggerDown() == 1 && flowLive.get(0).getTriggerUp() == 0)
-//                    || (flowLive.get(2).getTriggerDown() == 0 && flowLive.get(2).getTriggerUp() == 1 && flowLive.get(1).getTriggerDown() == 1
-//                    && flowLive.get(1).getTriggerUp() == 0 && flowLive.get(0).getTriggerDown() == 0 && flowLive.get(0).getTriggerUp() == 1))) {
-//                flowLive.get(2).setDiscarded(true);
-//                flowLive.get(1).setDiscarded(true);
-//            } else {
-//                if (!flowLive.get(2).isDiscarded()) {
-//                    flowDelayed.add(0, flowLive.get(2));
-////                    saverController.saveBatchTicks(flowDelayed.get(0));
-//                    if (flowDelayed.size() > Global.MAX_LENGTH_TICKS)
-//                        flowDelayed.remove(Global.MAX_LENGTH_TICKS);
-//                }
-//            }
-//        }
-        int count = database.getSaverController().saveBatchTicks(flowLive.get(0));
-        if (count > 0 )
-            appController.getGeneratorsState().forEach((id, state)->{
-                generatorStateRepo.save(state);
-        });
+    public void disconnectMarketData(boolean save) {
+        LOGGER.info("Disconnecting market data for contract " + contract.getIdcontract());
+        if (this.generatorState.isConnected()) {
+            this.generatorState.setConnected(false);
+            if (Global.RANDOM)
+                generatorState.setRandomGenerator(false);
+            if (save) {
+                database.getSaverController().saveBatchTicks();
+            }
+        }
     }
+
     public void saveGeneratorState(){
         generatorStateRepo.save(generatorState);
     }
-
-//    public void disconnectMarketData(boolean save) {
-//        LOGGER.info("Disconnecting market data for contract " + contract.getIdcontract());
-//        if (this.generatorState.isConnected()) {
-//            this.generatorState.setConnected(false);
-//                generatorState.setRandomGenerator(false);
-//            if(Global.ONLINE){
-//                dataService.cancelMktData(contract, true);
-//            }
-//            if (save) {
-//                saverController.saveBatchTicks();
-//                saverController.saveBatchCandles();
-//            }
-//
-//        }
-//    }
 
     public GeneratorState getGeneratorState() {
         return generatorState;
@@ -357,10 +308,6 @@ public class Generator implements IbClient {
     public ContractBasic getContract() {
         return contract;
     }
-
-//    public GeneratorStateRepo getGeneratorStateRepo() {
-//        return generatorStateRepo;
-//    }
 
     public void setGeneratorState() {
         GeneratorState generatorState = generatorStateRepo.findByIdcontract(contract.getIdcontract());
