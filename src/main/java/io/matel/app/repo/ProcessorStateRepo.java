@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ProcessorStateRepository extends JpaRepository<ProcessorState, ProcessorStateKey> {
+public interface ProcessorStateRepo extends JpaRepository<ProcessorState, ProcessorStateKey> {
     List<ProcessorState> findByIdcontract(long idcontract);
+
 }

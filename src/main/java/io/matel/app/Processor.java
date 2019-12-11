@@ -5,10 +5,11 @@ import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.EventType;
-import io.matel.app.repo.ProcessorStateRepository;
+import io.matel.app.repo.ProcessorStateRepo;
 import io.matel.app.state.LogProcessorState;
 import io.matel.app.state.ProcessorState;
 import io.matel.app.tools.DoubleStatistics;
+import io.matel.app.tools.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.ZonedDateTime;
@@ -18,7 +19,8 @@ import java.util.stream.Collector;
 public class Processor extends FlowMerger {
 
     @Autowired
-    ProcessorStateRepository processorStateRepository;
+    ProcessorStateRepo processorStateRepo;
+
 //    Double closingAverage;
 //    DoubleStatistics statsOnHeight;
 
@@ -150,7 +152,7 @@ public class Processor extends FlowMerger {
         }
 
 
-         flow.get(0).setCloseAverage(flow.stream().mapToDouble(x -> x.getClose()).summaryStatistics().getAverage());
+         flow.get(0).setCloseAverage(Utils.round(flow.stream().mapToDouble(x -> x.getClose()).summaryStatistics().getAverage(),contract.getRounding()));
         logData.closeAverage = flow.get(0).getCloseAverage();
         flow.get(0).setAbnormalHeightLevel(flow.stream().map(x -> (x.getHigh() - x.getLow()))
                 .collect(Collector.of(
@@ -171,8 +173,10 @@ public class Processor extends FlowMerger {
         flow.get(0).setColor(processorState.getColor());
         logData.color0 = processorState.getColor();
 
-//        if (isCandleComputed || (flow.get(0).getClose() == flow.get(0).getHigh() || flow.get(0).getClose() == flow.get(0).getLow()))
-//            saverController.saveBatchLogProcessor(logData);
+        if(!Global.COMPUTE_DEEP_HISTORICAL)
+        if (isCandleComputed || (flow.get(0).getClose() == flow.get(0).getHigh() || flow.get(0).getClose() == flow.get(0).getLow()))
+            appController.getGenerators().get(contract.getIdcontract())
+                    .getDatabase().getSaverController().saveBatchLogProcessor(logData);
 
 
     }
@@ -222,12 +226,12 @@ public class Processor extends FlowMerger {
     private void recordEvent(EventType type) {
         processorState.setType(type);
         if (freq > 0 && !Global.READ_ONLY_CANDLES && Global.hasCompletedLoading)
-            processorStateRepository.save(processorState);
+            processorStateRepo.save(processorState);
     }
 
     public void saveProcessorState(){
         if(!Global.READ_ONLY_CANDLES)
-        processorStateRepository.save(processorState);
+        processorStateRepo.save(processorState);
     }
 
     private boolean isMaxDetect() {

@@ -31,7 +31,7 @@ public class AppController {
     ContractRepository contractRepository;
 
     @Autowired
-    ProcessorStateRepository processorStateRepository;
+    ProcessorStateRepo processorStateRepo;
 
     @Autowired
     BeanFactory beanFactory;
@@ -81,14 +81,16 @@ public class AppController {
     }
 
     public List<Candle> getCandlesByIdContractByFreq(long idcontract, int freq) {
-        List<Candle> candles;
-        if (generators.get(idcontract).getProcessors().get(freq).getFlow().size() > 0) {
-            candles = generators.get(idcontract).getProcessors().get(freq).getFlow();
-        } else {
-            candles = generators.get(idcontract).getDatabase().findTop100ByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
-            if (candles.size() > 0)
-                generators.get(idcontract).getProcessors().get(freq).setFlow(candles);
-        }
+        List<Candle> candles=null;
+        try {
+            if (generators.get(idcontract).getProcessors().get(freq).getFlow().size() > 0) {
+                candles = generators.get(idcontract).getProcessors().get(freq).getFlow();
+            } else {
+                candles = generators.get(idcontract).getDatabase().findTop100ByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
+                if (candles.size() > 0)
+                    generators.get(idcontract).getProcessors().get(freq).setFlow(candles);
+            }
+        }catch(NullPointerException e){ }
         return candles;
     }
 
@@ -107,7 +109,7 @@ public class AppController {
 
     public void createProcessors(ContractBasic contract, int minFreq) {
         Map<Integer, ProcessorState> procData = new HashMap<>();
-        processorStateRepository.findByIdcontract(contract.getIdcontract()).forEach(data -> {
+        processorStateRepo.findByIdcontract(contract.getIdcontract()).forEach(data -> {
             procData.put(data.getFreq(), data);
         });
 

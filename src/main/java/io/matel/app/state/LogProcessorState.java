@@ -93,4 +93,64 @@ public class LogProcessorState {
     public boolean isLow3GreaterThanOrEqualLow2;
     public boolean isLow4GreaterThanOrEqualLow2;
 
+    @Override
+    public String toString() {
+        return "LogProcessorState{" +
+                "id=" + id +
+                ", idTick=" + idTick +
+                ", freq=" + freq +
+                ", idcontract=" + idcontract +
+                ", offset_=" + offset_ +
+                ", timestamp=" + timestamp +
+                ", isNewCandle0=" + isNewCandle0 +
+                ", smallCandleNoiseRemoval=" + smallCandleNoiseRemoval +
+                ", flowSizeGreaterThan4=" + flowSizeGreaterThan4 +
+                ", isMaxDetect=" + isMaxDetect +
+                ", isEventTypeMaxDetect=" + isEventTypeMaxDetect +
+                ", isMinDetect=" + isMinDetect +
+                ", isEventTypeMinDetect=" + isEventTypeMinDetect +
+                ", isEventTypeMinDetectCancel=" + isEventTypeMinDetectCancel +
+                ", isEventTypeMaxDetectCancel=" + isEventTypeMaxDetectCancel +
+                ", isEventTypeMaxConfirm=" + isEventTypeMaxConfirm +
+                ", isEventTypeMinConfirm=" + isEventTypeMinConfirm +
+                ", low0=" + low0 +
+                ", high0=" + high0 +
+                ", low1=" + low1 +
+                ", high1=" + high1 +
+                ", low2=" + low2 +
+                ", high2=" + high2 +
+                ", low3=" + low3 +
+                ", high3=" + high3 +
+                ", low4=" + low4 +
+                ", high4=" + high4 +
+                ", high0MinusLow0=" + high0MinusLow0 +
+                ", abnormalHeightLevel=" + abnormalHeightLevel +
+                ", closeAverage=" + closeAverage +
+                ", isLow2GreatherThanMin=" + isLow2GreatherThanMin +
+                ", isHigh2LessThanMax=" + isHigh2LessThanMax +
+                ", low0LessThanMaxValid=" + low0LessThanMaxValid +
+                ", low0LessThanMinValue=" + low0LessThanMinValue +
+                ", high0GreaterThanMaxValue=" + high0GreaterThanMaxValue +
+                ", high0GreatherThanMinValid=" + high0GreatherThanMinValid +
+                ", maxValue=" + maxValue +
+                ", maxValid=" + maxValid +
+                ", maxTrend=" + maxTrend +
+                ", minValue=" + minValue +
+                ", minValid=" + minValid +
+                ", minTrend=" + minTrend +
+                ", colorGreaterThanMinus1=" + colorGreaterThanMinus1 +
+                ", colorLessThan1=" + colorLessThan1 +
+                ", max=" + max +
+                ", min=" + min +
+                ", getColorMax=" + getColorMax +
+                ", getColorMin=" + getColorMin +
+                ", color0=" + color0 +
+                ", isHigh1LessThanOrEqualHigh2=" + isHigh1LessThanOrEqualHigh2 +
+                ", isHigh3LessThanOrEqualHigh2=" + isHigh3LessThanOrEqualHigh2 +
+                ", isHigh4LessThanOrEqualHigh2=" + isHigh4LessThanOrEqualHigh2 +
+                ", isLow1GreaterThanOrEqualLow2=" + isLow1GreaterThanOrEqualLow2 +
+                ", isLow3GreaterThanOrEqualLow2=" + isLow3GreaterThanOrEqualLow2 +
+                ", isLow4GreaterThanOrEqualLow2=" + isLow4GreaterThanOrEqualLow2 +
+                '}';
+    }
 }

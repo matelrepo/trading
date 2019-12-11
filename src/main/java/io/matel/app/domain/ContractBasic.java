@@ -49,6 +49,8 @@ public class ContractBasic {
     private int fusion;
 
     private String type;
+    private String ZoneId;
+    private String category;
 
     public ContractBasic(){}
 
@@ -208,6 +210,22 @@ public class ContractBasic {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getZoneId() {
+        return ZoneId;
+    }
+
+    public void setZoneId(String zoneId) {
+        ZoneId = zoneId;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
 

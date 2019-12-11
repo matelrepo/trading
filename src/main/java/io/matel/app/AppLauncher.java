@@ -12,6 +12,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 
 
@@ -43,15 +45,23 @@ public class AppLauncher implements CommandLineRunner {
     public void run(String... args) {
 
         LOGGER.info("Starting with " + Global.EXECUTOR_THREADS + " cores");
-        dataService.connect();
-    //    startLive();
+
+        if(Global.ONLINE){
+            dataService.connect();
+        }else{
+            startLive();
+        }
     }
 
 
     public void startLive() {
         try {
             Database database = appController.createDatabase("matel", Global.port, "matel");
-            appController.setContractsLive(appController.contractRepository.findTop100ByActiveAndTypeByOrderByIdcontract(true, "LIVE"));
+//            appController.setContractsLive(appController.contractRepository.findTop100ByActiveAndTypeOrderByIdcontract(true, "LIVE"));
+           List<ContractBasic> list = new ArrayList<>();
+           list.add(appController.contractRepository.findByIdcontract(5));
+            appController.setContractsLive(list);
+
             LOGGER.info(appController.getContractsLive().size() + " contracts found");
 //        try {
             Long idTick = database.findTopIdTickOrderByIdDesc();
@@ -74,8 +84,10 @@ public class AppLauncher implements CommandLineRunner {
                 LOGGER.warn(">>> Read only lock! <<<");
 
             for (ContractBasic contract : appController.getContractsLive()) {
+                if(contract.getIdcontract()==5) {
                     createGenerator(contract);
                     createProcessor(contract, 0);
+                }
             }
 
             LOGGER.info("Loading historical candles...");
@@ -155,7 +167,7 @@ public class AppLauncher implements CommandLineRunner {
                 }
             });
 
-            LOGGER.info("All completed");
+//            LOGGER.info("All completed");
         }catch(NullPointerException e){
             e.printStackTrace();
         }

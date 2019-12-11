@@ -3,15 +3,19 @@ package io.matel.app;
 import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.Tick;
+import io.matel.app.state.LogProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SaverController {
     private static final Logger LOGGER = LogManager.getLogger(SaverController.class);
     private List<Tick> ticksBuffer = new ArrayList<>();
+    private List<LogProcessorState> logProcessorBuffer = new ArrayList<>();
+
     private List<Candle> insertCandlesBuffer = new ArrayList<>();
     private List<Candle> updateCandlesBuffer = new ArrayList<>();
     private Database database;
@@ -35,7 +39,7 @@ public class SaverController {
             int numCandles = saveBatchCandles();
             LOGGER.info("Saving now " + numCandles + " candles for contract " + idcontract);
             updateCurrentCandle(gen);
-//            saveBatchLogProcessor();
+            saveBatchLogProcessor(null);
 //            saveProcessorStates();
         } else {
             LOGGER.warn("Cannot save candles because ticks were not saved!");
@@ -56,9 +60,26 @@ public class SaverController {
                 this.ticksBuffer.add(tick);
 
             if (ticksBuffer.size() > 0 && (ticksBuffer.size() > Global.MAX_TICKS_SIZE_SAVING || tick == null)) {
-                LOGGER.info("Regular batch ticks saving (" + ticksBuffer.size() + ")");
+                LOGGER.info(ZonedDateTime.now() + "- Regular batch ticks saving (" + ticksBuffer.size() + ")");
                 count = database.saveTicks(this.ticksBuffer);
                 ticksBuffer.clear();
+            }
+        }
+        return count;
+    }
+
+    public synchronized int saveBatchLogProcessor(LogProcessorState logProcessorState) {
+        int count =0;
+        if (!Global.READ_ONLY_LOG_PROCESSOR) {
+            if (logProcessorState != null)
+                this.logProcessorBuffer.add(logProcessorState);
+
+            if (logProcessorBuffer.size() > 0 && (logProcessorBuffer.size() > Global.MAX_CANDLES_SIZE_SAVING || logProcessorState == null)) {
+                LOGGER.info(ZonedDateTime.now() + "- Regular batch logProcessor saving (" + logProcessorBuffer.size() + ")");
+                List<LogProcessorState> list = null;
+                list = database.logProcessorStateRepo.saveAll(this.logProcessorBuffer);
+                count = list.size();
+                logProcessorBuffer.clear();
             }
         }
         return count;

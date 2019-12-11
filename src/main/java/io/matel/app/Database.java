@@ -5,6 +5,7 @@ import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.Tick;
 import io.matel.app.macro.domain.MacroDAO;
+import io.matel.app.repo.LogProcessorStateRepo;
 import io.matel.app.tools.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +21,10 @@ public class Database {
 
     @Autowired
     AppController appController;
+
+    @Autowired
+    LogProcessorStateRepo logProcessorStateRepo;
+
     private static final Logger LOGGER = LogManager.getLogger(Database.class);
     private SaverController saverController;
     private String databaseName;
@@ -233,7 +238,7 @@ public class Database {
                     "FROM public.candle WHERE idcontract =" + idcontract + " and freq =" + freq + " order by timestamp desc limit 100;";
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
-                candles.add(new Candle(rs.getLong(1), rs.getLong(2), rs.getInt(3), rs.getLong(4),
+                candles.add(new Candle(rs.getLong(1), appController.getGenerators().get(rs.getLong(2)).getContract(), rs.getInt(3), rs.getLong(4),
                         rs.getTimestamp(5).toLocalDateTime().atZone(Global.ZONE_ID),
                         rs.getDouble(6), rs.getDouble(7), rs.getDouble(8), rs.getDouble(9),
                         rs.getInt(10), rs.getBoolean(11), rs.getInt(12),

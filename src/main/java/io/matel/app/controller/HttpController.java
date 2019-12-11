@@ -10,7 +10,9 @@ import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.macro.domain.MacroDAO;
 import io.matel.app.repo.ContractRepository;
+import io.matel.app.repo.LogProcessorStateRepo;
 import io.matel.app.state.GeneratorState;
+import io.matel.app.state.LogProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class HttpController {
     ContractRepository contractRepository;
 
     @Autowired
+    LogProcessorStateRepo logProcessorStateRepo;
+
+    @Autowired
     Global global;
 
 
@@ -51,7 +56,7 @@ public class HttpController {
         if(appController.getContractsLive().size()>0){
             contracts = appController.getContractsLive();
         }else {
-            contracts = contractRepository.findTop100ByActiveAndTypeByOrderByIdcontract(true, type);
+            contracts = contractRepository.findTop100ByActiveAndTypeOrderByIdcontract(true, type);
         }
         LOGGER.info("Sending (" + contracts.size() + ") contracts " + type );
         return contracts;
@@ -67,6 +72,19 @@ public class HttpController {
         long idcontract = Long.valueOf(id);
         int freq = Integer.valueOf(frequency);
         return appController.getCandlesByIdContractByFreq(idcontract, freq);
+    }
+
+    @GetMapping("/quote-histo/{id}")
+    public GeneratorState getGeneratorState(@PathVariable String id){
+        long idcontract = Long.valueOf(id);
+        return appController.getGenerators().get(idcontract).getGeneratorState();
+    }
+
+    @GetMapping("/log-processor/{id}/{frequency}")
+    public List<LogProcessorState> getLogProcessorState(@PathVariable String id, @PathVariable String frequency){
+        long idcontract = Long.valueOf(id);
+        int freq = Integer.valueOf(frequency);
+        return logProcessorStateRepo.findByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
     }
 
     @PostMapping("/contract/{id}/{factor}")
