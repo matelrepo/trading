@@ -1,6 +1,7 @@
 package io.matel.app.Ibconfig;
 
 import com.ib.client.*;
+import io.matel.app.AppController;
 import io.matel.app.AppLauncher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +24,9 @@ public class EWrapperImpl implements EWrapper {
 
     @Autowired
     AppLauncher appLauncher;
+
+    @Autowired
+    AppController appController;
 
     private boolean hasConnectedAlready = false;
 
@@ -79,6 +83,9 @@ public class EWrapperImpl implements EWrapper {
         if (errorCode == 2104 || errorCode == 2103 || errorCode == 2106 || errorCode == 10167 || errorCode == 300) {
         } else {
             LOGGER.warn(">>> ERROR >>> " + id + " " + errorCode + " " + errorMsg);
+            if(errorCode ==200){
+                appController.getGenerators().get(id).getGeneratorState().setMarketDataErrorCode(200);
+            }
         }
 
         if (errorCode == 507 || errorCode == 502) {
