@@ -16,6 +16,7 @@ import io.matel.app.tools.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -90,6 +91,7 @@ public class Generator implements IbClient {
         }
 
         this.generatorState.setConnected(true);
+
 
         Thread t = new Thread(() -> {
             if (Global.RANDOM) {
@@ -321,6 +323,16 @@ public class Generator implements IbClient {
             generatorState.setConnected(false);
             generatorState.setConnected(false);
                 this.generatorState = generatorState;
+        }
+    }
+
+    @Scheduled(fixedRate = 300000)
+    public void clock() {
+        if(ZonedDateTime.now().minusMinutes(5).isAfter(generatorState.getTimestamp())){
+            generatorState.setInactive(true);
+        }else{
+            generatorState.setInactive(false);
+
         }
     }
 }

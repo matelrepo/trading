@@ -57,23 +57,8 @@ public class GeneratorState {
     private double high=Double.MIN_VALUE; //ok
     private double low=Double.MAX_VALUE; //ok
     private int marketDataErrorCode = 0;
+    private boolean inactive = true;
 
-    public int getMarketDataErrorCode() {
-        return marketDataErrorCode;
-    }
-
-    public void setMarketDataErrorCode(int marketDataErrorCode) {
-        this.marketDataErrorCode = marketDataErrorCode;
-    }
-
-
-    public ZonedDateTime getUpdatedOn() {
-        return updatedOn;
-    }
-
-    public void setUpdatedOn(ZonedDateTime updatedOn) {
-        this.updatedOn = updatedOn;
-    }
 
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
@@ -312,6 +297,31 @@ public class GeneratorState {
 
     public void setPreviousVolume(int previousVolume) {
         this.previousVolume = previousVolume;
+    }
+
+    public int getMarketDataErrorCode() {
+        return marketDataErrorCode;
+    }
+
+    public void setMarketDataErrorCode(int marketDataErrorCode) {
+        this.marketDataErrorCode = marketDataErrorCode;
+    }
+
+    public boolean isInactive() {
+        return inactive;
+    }
+
+    public void setInactive(boolean inactive) {
+        this.inactive = inactive;
+    }
+
+
+    public ZonedDateTime getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public void setUpdatedOn(ZonedDateTime updatedOn) {
+        this.updatedOn = updatedOn;
     }
 
 }
