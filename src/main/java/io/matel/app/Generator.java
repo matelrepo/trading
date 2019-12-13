@@ -9,6 +9,7 @@ import io.matel.app.controller.WsController;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.Tick;
+import io.matel.app.repo.ContractRepository;
 import io.matel.app.repo.GeneratorStateRepo;
 import io.matel.app.state.GeneratorState;
 import io.matel.app.tools.Utils;
@@ -43,6 +44,9 @@ public class Generator implements IbClient {
     @Autowired
     DataService dataService;
 
+    @Autowired
+    ContractRepository contractRepo;
+
 
     private ContractBasic contract;
     private List<Tick> flowLive = new ArrayList<>();
@@ -70,6 +74,8 @@ public class Generator implements IbClient {
 
     public void connectMarketData() throws ExecutionException, InterruptedException {
         Random rand = new Random();
+        contract = contractRepo.findByIdcontract(contract.getIdcontract());
+        appController.setContractsLive(appController.contractRepository.findTop100ByActiveAndTypeOrderByIdcontract(true, "LIVE"));
         if (this.generatorState.isConnected())
             disconnectMarketData(false);
 
@@ -232,7 +238,7 @@ public class Generator implements IbClient {
         });
 
         if(savingTick) {
-            int count = database.getSaverController().saveBatchTicks(flowLive.get(0));
+            int count = database.getSaverController().saveBatchTicks(flowLive.get(0), false);
             if (count > 0)
                 appController.getGeneratorsState().forEach((id, state) -> {
                     generatorStateRepo.save(state);
@@ -288,7 +294,7 @@ public class Generator implements IbClient {
             if (Global.RANDOM)
                 generatorState.setRandomGenerator(false);
             if (save) {
-                database.getSaverController().saveBatchTicks();
+                database.getSaverController().saveBatchTicks(true);
             }this.dataService.cancelMktData(contract, true );
         }
     }

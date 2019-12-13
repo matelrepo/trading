@@ -192,6 +192,6 @@ public class AppController {
 
     @PreDestroy
     public void savingOnClose(){
-      database.getSaverController().saveBatchTicks();
+      database.getSaverController().saveBatchTicks(true);
     }
 }

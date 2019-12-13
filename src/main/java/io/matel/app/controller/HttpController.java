@@ -136,7 +136,7 @@ public class HttpController {
     @PostMapping("/connect/{id}")
     public Map<Long, GeneratorState> connectMarketData(@PathVariable String id, @RequestBody String connect) throws ExecutionException, InterruptedException {
         long idcontract = Long.valueOf(id);
-        appController.getDatabase().getSaverController().saveBatchTicks();
+        appController.getDatabase().getSaverController().saveBatchTicks(true);
         if(Boolean.valueOf(connect)) {
             LOGGER.info("Connect data for contract " + idcontract);
             appController.getGenerators().get(idcontract).connectMarketData();

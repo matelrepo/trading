@@ -56,6 +56,7 @@ public class GeneratorState {
     private int dailyVolume =0; //ok
     private double high=Double.MIN_VALUE; //ok
     private double low=Double.MAX_VALUE; //ok
+    private int marketDataErrorCode = 0;
 
     public int getMarketDataErrorCode() {
         return marketDataErrorCode;
@@ -65,6 +66,7 @@ public class GeneratorState {
         this.marketDataErrorCode = marketDataErrorCode;
     }
 
+
     public ZonedDateTime getUpdatedOn() {
         return updatedOn;
     }
@@ -72,8 +74,6 @@ public class GeneratorState {
     public void setUpdatedOn(ZonedDateTime updatedOn) {
         this.updatedOn = updatedOn;
     }
-
-    private int marketDataErrorCode = 0;
 
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")

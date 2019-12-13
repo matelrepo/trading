@@ -33,7 +33,7 @@ public class SaverController {
         Long idcontract = null;
         if (gen != null) idcontract = gen.getContract().getIdcontract();
 
-        int numTicks = saveBatchTicks();
+        int numTicks = saveBatchTicks(saveNow);
         LOGGER.info("Saving now " + numTicks + " ticks for contract " + idcontract);
         if (numTicks > 0 || saveNow) {
             int numCandles = saveBatchCandles();
@@ -49,17 +49,17 @@ public class SaverController {
     }
 
 
-    public synchronized int saveBatchTicks() {
-        return saveBatchTicks(null);
+    public synchronized int saveBatchTicks(boolean saveNow) {
+        return saveBatchTicks(null, saveNow);
     }
 
-    public synchronized int saveBatchTicks(Tick tick) {
+    public synchronized int saveBatchTicks(Tick tick, boolean save) {
         int count = 0;
         if (!Global.READ_ONLY_TICKS) {
             if (tick != null)
                 this.ticksBuffer.add(tick);
 
-            if (ticksBuffer.size() > 0 && (ticksBuffer.size() > Global.MAX_TICKS_SIZE_SAVING || tick == null)) {
+            if (ticksBuffer.size() > 0 && (ticksBuffer.size() > Global.MAX_TICKS_SIZE_SAVING || tick == null || save)) {
                 LOGGER.info(ZonedDateTime.now() + "- Regular batch ticks saving (" + ticksBuffer.size() + ")");
                 count = database.saveTicks(this.ticksBuffer);
                 ticksBuffer.clear();
