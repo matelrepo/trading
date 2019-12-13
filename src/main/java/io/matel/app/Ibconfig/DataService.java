@@ -44,6 +44,7 @@ public class DataService {
     }
 
     public void reconnectAllMktData(){
+        LOGGER.info(repoIB.size() + " market data found");
         repoIB.forEach((id, gen)->{
             cancelMktData(appController.getGenerators().get(id).getContract(), false);
             try {

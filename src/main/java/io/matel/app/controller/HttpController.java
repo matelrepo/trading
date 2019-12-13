@@ -64,7 +64,7 @@ public class HttpController {
 
     @GetMapping("/ticker-crawl")
     public List<MacroDAO> getTickerCrawl(){
-        return appController.getTickerCrawl();
+        return Global.ticker_crawl;
     }
 
     @GetMapping("/histo-candles/{id}/{frequency}")

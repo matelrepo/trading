@@ -57,6 +57,8 @@ public class GeneratorState {
     private double high=Double.MIN_VALUE; //ok
     private double low=Double.MAX_VALUE; //ok
 
+    private boolean marketDataError = false;
+
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
     private ZonedDateTime updatedOn;

@@ -92,7 +92,10 @@ public class EWrapperImpl implements EWrapper {
         if (!hasConnectedAlready) {
             appLauncher.startLive();
         } else {
-            if(client.isConnected())
+            while(!client.isConnected()){
+                LOGGER.warn("Trying to reconnect market data but client is not connected");
+            }
+            LOGGER.info("Reconnecting market data");
             dataService.reconnectAllMktData();
         }
         hasConnectedAlready = true;

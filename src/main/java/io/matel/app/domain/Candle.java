@@ -300,6 +300,7 @@ public class Candle {
 //        this.childTimestamp = childTimestamp;
 //    }
 
+
     @Override
     public String toString() {
         return "Candle{" +
@@ -312,14 +313,17 @@ public class Candle {
                 ", close=" + close +
                 ", idcontract=" + idcontract +
                 ", freq=" + freq +
-//                ", childTimestamp=" + childTimestamp +
                 ", color=" + color +
                 ", triggerUp=" + triggerUp +
                 ", triggerDown=" + triggerDown +
-//                ", discarded=" + discarded +
                 ", newCandle=" + newCandle +
-//                ", speed=" + speed +
                 ", progress=" + progress +
+                ", closeAverage=" + closeAverage +
+                ", abnormalHeightLevel=" + abnormalHeightLevel +
+                ", bigCandle=" + bigCandle +
+                ", volume=" + volume +
+                ", createdOn=" + createdOn +
+                ", updatedOn=" + updatedOn +
                 '}';
     }
 

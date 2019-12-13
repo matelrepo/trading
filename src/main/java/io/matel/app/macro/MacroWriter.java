@@ -14,6 +14,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -86,8 +87,13 @@ public class MacroWriter {
     }
 
     public List<MacroUpdate> readCsvLineByLine() throws Exception {
-        Reader reader = Files.newBufferedReader(Paths.get(
-                ClassLoader.getSystemResource("SGE_metadata.csv").toURI()));
+ //       String path = "/home/matel/Documents/script/sge/SGE_metadata.csv";
+//        String str = "C:/tmp/SGE_metadata.csv";
+        Path path = Paths.get("c:\\tmp\\SGE_metadata.csv");
+ //       Path path = Paths.get(
+  //              ClassLoader.getSystemResource(str).toURI());
+        Reader reader = Files.newBufferedReader(path);
+
         return oneByOne(reader);
     }
 

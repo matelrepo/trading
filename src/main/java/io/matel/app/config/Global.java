@@ -1,8 +1,11 @@
 package io.matel.app.config;
 
+import io.matel.app.macro.domain.MacroDAO;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 public class Global {
@@ -10,8 +13,8 @@ public class Global {
     public static final boolean RANDOM = false;
     public static final boolean READ_ONLY_TICKS = true;
     public static final boolean READ_ONLY_CANDLES = true;
-    public static final boolean READ_ONLY_LOG_PROCESSOR = false;
-    public static final boolean UPDATE_MACRO = false;
+    public static final boolean READ_ONLY_LOG_PROCESSOR = true;
+    public static final boolean UPDATE_MACRO = true;
     public static final boolean COMPUTE_DEEP_HISTORICAL = false;
 
     public static final String databaseName = "matel";
@@ -26,21 +29,18 @@ public class Global {
     public static final int EXECUTOR_THREADS = Runtime.getRuntime().availableProcessors();
     public static final int STARTING_PRICE = 10000;
     public static final int MAX_LENGTH_TICKS = 10;
-    public static final int MAX_LENGTH_FLOW = 25;
+    public static final int MAX_LENGTH_CANDLE = 100;
     public static final int MAX_TICKS_SIZE_SAVING = 500;
     public static final int MAX_CANDLES_SIZE_SAVING = 5000;
-    public static final int[] FREQUENCIES = {300000};
-
-    //    public static final int[] FREQUENCIES = {0, 1, 5, 15, 30, 60, 240, 1380, 6900,35000,100000, 300000};
-//    public static final int[] FREQUENCIES = {0, 1, 2, 3, 4, 5, 6, 7, 8,9,10, 11};
+    public static final int[] FREQUENCIES = {0, 1, 5, 15, 30, 60, 240, 1380, 6900, 35000, 100000, 300000};
+  //      public static final int[] FREQUENCIES = {1380};
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Paris");
-
-
 
 
     public static long startIdCandle = 0;
     public static long startIdTick = 0;
     public static boolean hasCompletedLoading = false;
+    public static List<MacroDAO> ticker_crawl = new ArrayList<>();
 
     private long idTick;
     private long idCandle;
@@ -56,7 +56,7 @@ public class Global {
     }
 
     public void setIdTick(long idTick) {
-            this.idTick = idTick;
+        this.idTick = idTick;
     }
 
     public synchronized long getIdCandle(boolean increment) {

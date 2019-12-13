@@ -69,7 +69,7 @@ public class FlowMerger {
             }
 
             flow.add(0, candle);
-            if (flow.size() > Global.MAX_LENGTH_FLOW) {
+            if (flow.size() > Global.MAX_LENGTH_CANDLE) {
                 flow.remove(flow.size() - 1);
             }
 

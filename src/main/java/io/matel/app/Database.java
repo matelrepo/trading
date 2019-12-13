@@ -111,7 +111,7 @@ public class Database {
                         rs.getTimestamp(7).toLocalDateTime().atZone(Global.ZONE_ID), rs.getTimestamp(8).toLocalDateTime().atZone(Global.ZONE_ID));
                 list.add(item);
             }
-            appController.setTickerCrawl(list);
+            Global.ticker_crawl = list;
             connection.commit();
 
         } catch (SQLException e) {
@@ -225,7 +225,7 @@ public class Database {
         return idTick;
     }
 
-    public List<Candle> findTop100ByIdcontractAndFreqOrderByTimestampDesc(Long idcontract, int freq) {
+    public List<Candle> findTopByIdcontractAndFreqOrderByTimestampDesc(Long idcontract, int freq) {
         List<Candle> candles = new ArrayList<>();
         try {
             String sql = "SELECT \n" +
@@ -235,7 +235,7 @@ public class Database {
                     "trigger_down, trigger_up,\n" +
                     "abnormal_height_level, big_candle, close_average,\n" +
                     "created_on, updated_on, volume \n" +
-                    "FROM public.candle WHERE idcontract =" + idcontract + " and freq =" + freq + " order by timestamp desc limit 100;";
+                    "FROM public.candle WHERE idcontract =" + idcontract + " and freq =" + freq + " order by timestamp desc limit " + Global.MAX_LENGTH_CANDLE;
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 candles.add(new Candle(rs.getLong(1), appController.getGenerators().get(rs.getLong(2)).getContract(), rs.getInt(3), rs.getLong(4),
@@ -258,7 +258,7 @@ public class Database {
         try {
             String sql ="";
             if(table.equals("public.tick")){
-                sql = "SELECT id, close, created_on, idcontract, timestamp, trigger_down, trigger_up, updated_on FROM " + table + " WHERE idcontract =" + idcontract + " and id>" + idTick + " order by timestamp LIMIT 250000";
+                sql = "SELECT id, close, created_on, idcontract, timestamp, trigger_down, trigger_up, updated_on FROM " + table + " WHERE idcontract =" + idcontract + " and id>" + idTick + " order by timestamp";
 
             }else{
                  sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM " + table + " WHERE contract =" + idcontract + " and id>" + idTick + " order by date LIMIT 250000";

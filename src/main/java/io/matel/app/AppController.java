@@ -86,7 +86,7 @@ public class AppController {
             if (generators.get(idcontract).getProcessors().get(freq).getFlow().size() > 0) {
                 candles = generators.get(idcontract).getProcessors().get(freq).getFlow();
             } else {
-                candles = generators.get(idcontract).getDatabase().findTop100ByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
+                candles = generators.get(idcontract).getDatabase().findTopByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
                 if (candles.size() > 0)
                     generators.get(idcontract).getProcessors().get(freq).setFlow(candles);
             }

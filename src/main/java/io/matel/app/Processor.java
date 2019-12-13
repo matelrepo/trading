@@ -151,8 +151,14 @@ public class Processor extends FlowMerger {
             logData.isEventTypeMinDetectCancel = true;
         }
 
+//        double total = 0;
+//        for (Candle candle : flow) {
+//            total = total + candle.getClose();
+//        }
+//
+//        double avg = total / flow.size();
 
-         flow.get(0).setCloseAverage(Utils.round(flow.stream().mapToDouble(x -> x.getClose()).summaryStatistics().getAverage(),contract.getRounding()));
+         flow.get(0).setCloseAverage(flow.stream().mapToDouble(x -> x.getClose()).summaryStatistics().getAverage());
         logData.closeAverage = flow.get(0).getCloseAverage();
         flow.get(0).setAbnormalHeightLevel(flow.stream().map(x -> (x.getHigh() - x.getLow()))
                 .collect(Collector.of(

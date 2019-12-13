@@ -45,7 +45,7 @@ public class AppLauncher implements CommandLineRunner {
     public void run(String... args) {
 
         LOGGER.info("Starting with " + Global.EXECUTOR_THREADS + " cores");
-
+        macroUpdate();
         if(Global.ONLINE){
             dataService.connect();
         }else{
@@ -57,10 +57,10 @@ public class AppLauncher implements CommandLineRunner {
     public void startLive() {
         try {
             Database database = appController.createDatabase("matel", Global.port, "matel");
-//            appController.setContractsLive(appController.contractRepository.findTop100ByActiveAndTypeOrderByIdcontract(true, "LIVE"));
-           List<ContractBasic> list = new ArrayList<>();
-           list.add(appController.contractRepository.findByIdcontract(5));
-            appController.setContractsLive(list);
+            appController.setContractsLive(appController.contractRepository.findTop100ByActiveAndTypeOrderByIdcontract(true, "LIVE"));
+//           List<ContractBasic> list = new ArrayList<>();
+ //          list.add(appController.contractRepository.findByIdcontract(5));
+  //          appController.setContractsLive(list);
 
             LOGGER.info(appController.getContractsLive().size() + " contracts found");
 //        try {
@@ -84,10 +84,10 @@ public class AppLauncher implements CommandLineRunner {
                 LOGGER.warn(">>> Read only lock! <<<");
 
             for (ContractBasic contract : appController.getContractsLive()) {
-                if(contract.getIdcontract()==5) {
+             //   if(contract.getIdcontract()==5) {
                     createGenerator(contract);
                     createProcessor(contract, 0);
-                }
+             //  }
             }
 
             LOGGER.info("Loading historical candles...");
@@ -214,12 +214,11 @@ public class AppLauncher implements CommandLineRunner {
                     macroWriter.start();
                 else
                     LOGGER.info(">>> MACRO_UPDATE is switched off");
-//                dbb.init("matel", "5432", "matel");
-//                dbb.getMacroItemsByCountry("United States");
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }).start();
+                    appController.getDatabase().getMacroItemsByCountry("United States");
+                }).start();
     }
 
 
