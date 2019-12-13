@@ -289,7 +289,7 @@ public class Generator implements IbClient {
                 generatorState.setRandomGenerator(false);
             if (save) {
                 database.getSaverController().saveBatchTicks();
-            }
+            }this.dataService.cancelMktData(contract, true );
         }
     }
 

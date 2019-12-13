@@ -1,778 +1,103 @@
-2019-12-13 08:14:57,528 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Lenovo-PC with PID 5824 (C:\Users\user\IdeaProjects\server-jwt\target\classes started by Matel in C:\Users\user\IdeaProjects\server-jwt)
-2019-12-13 08:14:57,598 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
-2019-12-13 08:14:59,489 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
-2019-12-13 08:14:59,859 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 349ms. Found 11 repository interfaces.
-2019-12-13 08:15:01,155 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$9edc1122] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2019-12-13 08:15:01,910 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
-2019-12-13 08:15:01,957 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
-2019-12-13 08:15:01,999 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
-2019-12-13 08:15:02,001 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
-2019-12-13 08:15:02,526 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
-2019-12-13 08:15:02,527 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 4814 ms
-2019-12-13 08:15:03,018 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
-2019-12-13 08:15:03,338 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
-2019-12-13 08:15:03,522 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
+2019-12-13 08:34:00,524 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Lenovo-PC with PID 4384 (C:\Users\user\IdeaProjects\server-jwt\target\classes started by Matel in C:\Users\user\IdeaProjects\server-jwt)
+2019-12-13 08:34:00,589 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
+2019-12-13 08:34:02,782 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-12-13 08:34:03,217 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 411ms. Found 11 repository interfaces.
+2019-12-13 08:34:04,522 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$793f272c] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-12-13 08:34:05,302 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
+2019-12-13 08:34:05,352 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2019-12-13 08:34:05,392 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2019-12-13 08:34:05,395 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
+2019-12-13 08:34:05,821 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2019-12-13 08:34:05,822 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 5119 ms
+2019-12-13 08:34:06,380 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2019-12-13 08:34:06,704 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2019-12-13 08:34:06,911 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
 	name: default
 	...]
-2019-12-13 08:15:03,743 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
-2019-12-13 08:15:03,748 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
-2019-12-13 08:15:04,157 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
-2019-12-13 08:15:04,804 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2019-12-13 08:15:05,160 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
-2019-12-13 08:15:05,178 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@46c662f2
-2019-12-13 08:15:06,207 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
-2019-12-13 08:15:07,113 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
-2019-12-13 08:15:08,018 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2019-12-13 08:15:09,709 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
-2019-12-13 08:15:09,721 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
-2019-12-13 08:15:11,150 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7621c3f7, org.springframework.security.web.context.SecurityContextPersistenceFilter@1ee126de, org.springframework.security.web.header.HeaderWriterFilter@24890021, org.springframework.web.filter.CorsFilter@519a81dd, org.springframework.security.web.authentication.logout.LogoutFilter@7af7c9aa, io.matel.app.connection.security.JwtAuthenticationFilter@5608e254, io.matel.app.connection.security.JwtAuthorizationFilter@3d8b9dee, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@14b4b25e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@74070994, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@45cddfd3, org.springframework.security.web.session.SessionManagementFilter@27422187, org.springframework.security.web.access.ExceptionTranslationFilter@4dc16fc9, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@224e7aa5]
-2019-12-13 08:15:11,198 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
-2019-12-13 08:15:11,274 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
-2019-12-13 08:15:11,774 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2019-12-13 08:15:12,306 INFO o.s.c.l.CompositeLog [main] Starting...
-2019-12-13 08:15:12,308 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2019-12-13 08:15:12,311 INFO o.s.c.l.CompositeLog [main] Started.
-2019-12-13 08:15:12,349 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
-2019-12-13 08:15:12,387 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
-2019-12-13 08:15:12,394 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplication in 16.348 seconds (JVM running for 20.165)
-2019-12-13 08:15:12,402 INFO i.m.a.AppLauncher [main] Starting with 8 cores
-2019-12-13 08:15:12,430 INFO i.m.a.I.EWrapperImpl [main] >>> IB CONNECTED
-2019-12-13 08:15:12,478 INFO o.h.h.i.QueryTranslatorFactoryInitiator [Thread-4] HHH000397: Using ASTQueryTranslatorFactory
-2019-12-13 08:15:13,045 INFO i.m.a.AppLauncher [Thread-7] 86 contracts found
-2019-12-13 08:15:13,093 INFO i.m.a.AppLauncher [Thread-7] Setting up last id tick: 110564306
-2019-12-13 08:15:13,095 INFO i.m.a.AppLauncher [Thread-7] Setting up last id candle: 121081546
-2019-12-13 08:15:13,097 WARN i.m.a.AppLauncher [Thread-7] >>> Read only lock! <<<
-2019-12-13 08:15:13,619 INFO i.m.a.m.MacroWriter [Thread-4] Most recent refreshed date is 2019-12-13T00:39:28
-2019-12-13 08:15:14,595 INFO i.m.a.AppLauncher [Thread-7] Loading historical candles...
-2019-12-13 08:15:15,595 INFO i.m.a.AppLauncher [Thread-9] Computing ticks...
-2019-12-13 08:15:15,701 INFO i.m.a.AppLauncher [Thread-10] Computing ticks...
-2019-12-13 08:15:15,736 INFO i.m.a.AppLauncher [Thread-8] Computing ticks...
-2019-12-13 08:15:15,985 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2019-12-13 08:15:15,986 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
-2019-12-13 08:15:16,009 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 22 ms
-2019-12-13 08:15:16,529 INFO i.m.a.c.a.ActiveUserEvent [http-nio-8080-exec-2] UserActivityEvent{type='login', username='trader', eventSessionId='7a67f225-6c04-845c-4078-68038a7c985a', timestamp=2019-12-13T08:15:16.496468500Z[Europe/London]}
-2019-12-13 08:15:16,779 INFO i.m.a.AppLauncher [Thread-14] Computing ticks...
-2019-12-13 08:15:17,158 INFO i.m.a.AppLauncher [Thread-11] Computing ticks...
-2019-12-13 08:15:18,631 INFO i.m.a.AppLauncher [Thread-12] Computing ticks...
-2019-12-13 08:15:18,849 INFO i.m.a.AppLauncher [Thread-15] Computing ticks...
-2019-12-13 08:15:18,994 INFO i.m.a.AppLauncher [Thread-13] Computing ticks...
-2019-12-13 08:15:22,670 INFO i.m.a.Database [Thread-9] Historical completed for contract 2
-2019-12-13 08:15:22,672 INFO i.m.a.SaverController [Thread-9] Saving now 0 ticks for contract 2
-2019-12-13 08:15:22,673 INFO i.m.a.SaverController [Thread-9] Saving now 0 candles for contract 2
-2019-12-13 08:15:22,673 INFO i.m.a.SaverController [Thread-9] Saving completed
-2019-12-13 08:15:22,674 INFO i.m.a.AppLauncher [Thread-9] Connecting market data for all contracts...
-2019-12-13 08:15:24,833 INFO i.m.a.Database [Thread-11] Historical completed for contract 4
-2019-12-13 08:15:24,834 INFO i.m.a.SaverController [Thread-11] Saving now 0 ticks for contract 4
-2019-12-13 08:15:24,834 INFO i.m.a.SaverController [Thread-11] Saving now 0 candles for contract 4
-2019-12-13 08:15:24,835 INFO i.m.a.SaverController [Thread-11] Saving completed
-2019-12-13 08:15:24,835 INFO i.m.a.AppLauncher [Thread-11] Connecting market data for all contracts...
-2019-12-13 08:15:25,870 INFO i.m.a.AppLauncher [Thread-17] Computing ticks...
-2019-12-13 08:15:27,822 INFO i.m.a.AppLauncher [Thread-18] Computing ticks...
-2019-12-13 08:15:29,618 INFO i.m.a.AppLauncher [Thread-11] >>> Finished contract 4
-2019-12-13 08:15:29,628 INFO i.m.a.I.DataService [VIX.USD.4] Requesting market data for contract 4
-2019-12-13 08:15:31,205 INFO i.m.a.AppLauncher [Thread-9] >>> Finished contract 2
-2019-12-13 08:15:31,207 INFO i.m.a.I.DataService [SX7E.EUR.2] Requesting market data for contract 2
-2019-12-13 08:15:35,558 WARN o.s.w.s.m.SubProtocolWebSocketHandler [clientOutboundChannel-14] Terminating 'StandardWebSocketSession[id=7a67f225-6c04-845c-4078-68038a7c985a, uri=ws://localhost:8080/api]': Buffer size 1576583 bytes for session '7a67f225-6c04-845c-4078-68038a7c985a' exceeds the allowed limit 1572864
-2019-12-13 08:15:35,559 INFO i.m.a.c.a.ActiveUserEvent [clientOutboundChannel-14] UserActivityEvent{type='logout', username='trader', eventSessionId='7a67f225-6c04-845c-4078-68038a7c985a', timestamp=2019-12-13T08:15:35.559467Z[Europe/London]}
-2019-12-13 08:15:44,697 INFO i.m.a.Database [Thread-8] Historical completed for contract 1
-2019-12-13 08:15:44,698 INFO i.m.a.SaverController [Thread-8] Saving now 0 ticks for contract 1
-2019-12-13 08:15:44,699 INFO i.m.a.SaverController [Thread-8] Saving now 0 candles for contract 1
-2019-12-13 08:15:44,699 INFO i.m.a.SaverController [Thread-8] Saving completed
-2019-12-13 08:15:44,699 INFO i.m.a.AppLauncher [Thread-8] Connecting market data for all contracts...
-2019-12-13 08:15:45,448 INFO i.m.a.Database [Thread-10] Historical completed for contract 3
-2019-12-13 08:15:45,450 INFO i.m.a.SaverController [Thread-10] Saving now 0 ticks for contract 3
-2019-12-13 08:15:45,450 INFO i.m.a.SaverController [Thread-10] Saving now 0 candles for contract 3
-2019-12-13 08:15:45,451 INFO i.m.a.SaverController [Thread-10] Saving completed
-2019-12-13 08:15:45,451 INFO i.m.a.AppLauncher [Thread-10] Connecting market data for all contracts...
-2019-12-13 08:15:45,659 INFO i.m.a.AppLauncher [Thread-8] >>> Finished contract 1
-2019-12-13 08:15:45,704 INFO i.m.a.I.DataService [GBX.EUR.1] Requesting market data for contract 1
-2019-12-13 08:15:46,587 INFO i.m.a.Database [Thread-14] Historical completed for contract 7
-2019-12-13 08:15:46,589 INFO i.m.a.SaverController [Thread-14] Saving now 0 ticks for contract 7
-2019-12-13 08:15:46,589 INFO i.m.a.SaverController [Thread-14] Saving now 0 candles for contract 7
-2019-12-13 08:15:46,589 INFO i.m.a.SaverController [Thread-14] Saving completed
-2019-12-13 08:15:46,590 INFO i.m.a.AppLauncher [Thread-14] Connecting market data for all contracts...
-2019-12-13 08:15:46,618 INFO i.m.a.AppLauncher [Thread-10] >>> Finished contract 3
-2019-12-13 08:15:46,649 INFO i.m.a.I.DataService [GBL.EUR.3] Requesting market data for contract 3
-2019-12-13 08:15:46,749 INFO i.m.a.AppLauncher [Thread-21] Computing ticks...
-2019-12-13 08:15:46,899 INFO i.m.a.AppLauncher [Thread-22] Computing ticks...
-2019-12-13 08:15:47,761 INFO i.m.a.AppLauncher [Thread-24] Computing ticks...
-2019-12-13 08:15:47,875 INFO i.m.a.AppLauncher [Thread-14] >>> Finished contract 7
-2019-12-13 08:15:47,880 INFO i.m.a.I.DataService [ZN.USD.7] Requesting market data for contract 7
-2019-12-13 08:15:48,614 INFO i.m.a.Database [Thread-22] Historical completed for contract 12
-2019-12-13 08:15:48,615 INFO i.m.a.SaverController [Thread-22] Saving now 0 ticks for contract 12
-2019-12-13 08:15:48,616 INFO i.m.a.SaverController [Thread-22] Saving now 0 candles for contract 12
-2019-12-13 08:15:48,616 INFO i.m.a.SaverController [Thread-22] Saving completed
-2019-12-13 08:15:48,616 INFO i.m.a.AppLauncher [Thread-22] Connecting market data for all contracts...
-2019-12-13 08:15:49,932 INFO i.m.a.AppLauncher [Thread-22] >>> Finished contract 12
-2019-12-13 08:15:49,967 INFO i.m.a.I.DataService [3188.HKD.12] Requesting market data for contract 12
-2019-12-13 08:15:50,081 INFO i.m.a.AppLauncher [Thread-27] Computing ticks...
-2019-12-13 08:15:50,842 WARN o.s.w.s.h.ExceptionWebSocketHandlerDecorator [clientOutboundChannel-14] Unhandled exception after connection closed for ExceptionWebSocketHandlerDecorator [delegate=LoggingWebSocketHandlerDecorator [delegate=SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]]]
-org.springframework.messaging.MessageDeliveryException: Failed to send message to ExecutorSubscribableChannel[clientInboundChannel]; nested exception is org.springframework.security.access.AccessDeniedException: Access is denied
-	at org.springframework.messaging.support.AbstractMessageChannel.send(AbstractMessageChannel.java:146) ~[spring-messaging-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.springframework.messaging.support.AbstractMessageChannel.send(AbstractMessageChannel.java:122) ~[spring-messaging-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.springframework.web.socket.messaging.StompSubProtocolHandler.afterSessionEnded(StompSubProtocolHandler.java:619) ~[spring-websocket-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.springframework.web.socket.messaging.SubProtocolWebSocketHandler.clearSession(SubProtocolWebSocketHandler.java:519) ~[spring-websocket-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.springframework.web.socket.messaging.SubProtocolWebSocketHandler.afterConnectionClosed(SubProtocolWebSocketHandler.java:388) ~[spring-websocket-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.springframework.web.socket.handler.WebSocketHandlerDecorator.afterConnectionClosed(WebSocketHandlerDecorator.java:85) ~[spring-websocket-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.springframework.web.socket.handler.LoggingWebSocketHandlerDecorator.afterConnectionClosed(LoggingWebSocketHandlerDecorator.java:72) ~[spring-websocket-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.springframework.web.socket.handler.ExceptionWebSocketHandlerDecorator.afterConnectionClosed(ExceptionWebSocketHandlerDecorator.java:78) [spring-websocket-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.onClose(StandardWebSocketHandlerAdapter.java:145) [spring-websocket-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.apache.tomcat.websocket.WsSession.fireEndpointOnClose(WsSession.java:555) [tomcat-embed-websocket-9.0.26.jar:9.0.26]
-	at org.apache.tomcat.websocket.WsSession.doClose(WsSession.java:501) [tomcat-embed-websocket-9.0.26.jar:9.0.26]
-	at org.apache.tomcat.websocket.WsSession.doClose(WsSession.java:459) [tomcat-embed-websocket-9.0.26.jar:9.0.26]
-	at org.apache.tomcat.websocket.WsSession.close(WsSession.java:446) [tomcat-embed-websocket-9.0.26.jar:9.0.26]
-	at org.springframework.web.socket.adapter.standard.StandardWebSocketSession.closeInternal(StandardWebSocketSession.java:234) [spring-websocket-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.springframework.web.socket.adapter.AbstractWebSocketSession.close(AbstractWebSocketSession.java:142) [spring-websocket-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.springframework.web.socket.handler.WebSocketSessionDecorator.close(WebSocketSessionDecorator.java:160) [spring-websocket-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.springframework.web.socket.handler.ConcurrentWebSocketSessionDecorator.close(ConcurrentWebSocketSessionDecorator.java:252) [spring-websocket-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.springframework.web.socket.messaging.SubProtocolWebSocketHandler.handleMessage(SubProtocolWebSocketHandler.java:367) [spring-websocket-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.springframework.messaging.support.ExecutorSubscribableChannel$SendTask.run(ExecutorSubscribableChannel.java:144) [spring-messaging-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) [?:?]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) [?:?]
-	at java.lang.Thread.run(Thread.java:834) [?:?]
-Caused by: org.springframework.security.access.AccessDeniedException: Access is denied
-	at org.springframework.security.access.vote.AffirmativeBased.decide(AffirmativeBased.java:84) ~[spring-security-core-5.1.6.RELEASE.jar:5.1.6.RELEASE]
-	at org.springframework.security.access.intercept.AbstractSecurityInterceptor.beforeInvocation(AbstractSecurityInterceptor.java:233) ~[spring-security-core-5.1.6.RELEASE.jar:5.1.6.RELEASE]
-	at org.springframework.security.messaging.access.intercept.ChannelSecurityInterceptor.preSend(ChannelSecurityInterceptor.java:69) ~[spring-security-messaging-5.1.6.RELEASE.jar:5.1.6.RELEASE]
-	at org.springframework.messaging.support.AbstractMessageChannel$ChannelInterceptorChain.applyPreSend(AbstractMessageChannel.java:178) ~[spring-messaging-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	at org.springframework.messaging.support.AbstractMessageChannel.send(AbstractMessageChannel.java:132) ~[spring-messaging-5.1.10.RELEASE.jar:5.1.10.RELEASE]
-	... 21 more
-2019-12-13 08:15:55,676 INFO i.m.a.Database [Thread-24] Historical completed for contract 13
-2019-12-13 08:15:55,677 INFO i.m.a.SaverController [Thread-24] Saving now 0 ticks for contract 13
-2019-12-13 08:15:55,677 INFO i.m.a.SaverController [Thread-24] Saving now 0 candles for contract 13
-2019-12-13 08:15:55,678 INFO i.m.a.SaverController [Thread-24] Saving completed
-2019-12-13 08:15:55,678 INFO i.m.a.AppLauncher [Thread-24] Connecting market data for all contracts...
-2019-12-13 08:15:56,935 INFO i.m.a.AppLauncher [Thread-24] >>> Finished contract 13
-2019-12-13 08:15:56,947 INFO i.m.a.I.DataService [CC.USD.13] Requesting market data for contract 13
-2019-12-13 08:15:57,357 INFO i.m.a.AppLauncher [Thread-29] Computing ticks...
-2019-12-13 08:16:02,664 INFO i.m.a.Database [Thread-27] Historical completed for contract 14
-2019-12-13 08:16:02,667 INFO i.m.a.SaverController [Thread-27] Saving now 0 ticks for contract 14
-2019-12-13 08:16:02,668 INFO i.m.a.SaverController [Thread-27] Saving now 0 candles for contract 14
-2019-12-13 08:16:02,668 INFO i.m.a.SaverController [Thread-27] Saving completed
-2019-12-13 08:16:02,668 INFO i.m.a.AppLauncher [Thread-27] Connecting market data for all contracts...
-2019-12-13 08:16:03,520 INFO i.m.a.AppLauncher [Thread-27] >>> Finished contract 14
-2019-12-13 08:16:03,563 INFO i.m.a.I.DataService [CT.USD.14] Requesting market data for contract 14
-2019-12-13 08:16:03,849 INFO i.m.a.AppLauncher [Thread-31] Computing ticks...
-2019-12-13 08:16:05,395 INFO i.m.a.Database [Thread-31] Historical completed for contract 16
-2019-12-13 08:16:05,396 INFO i.m.a.SaverController [Thread-31] Saving now 0 ticks for contract 16
-2019-12-13 08:16:05,396 INFO i.m.a.SaverController [Thread-31] Saving now 0 candles for contract 16
-2019-12-13 08:16:05,397 INFO i.m.a.SaverController [Thread-31] Saving completed
-2019-12-13 08:16:05,397 INFO i.m.a.AppLauncher [Thread-31] Connecting market data for all contracts...
-2019-12-13 08:16:06,016 INFO i.m.a.AppLauncher [Thread-33] Computing ticks...
-2019-12-13 08:16:06,246 INFO i.m.a.Database [Thread-29] Historical completed for contract 15
-2019-12-13 08:16:06,247 INFO i.m.a.SaverController [Thread-29] Saving now 0 ticks for contract 15
-2019-12-13 08:16:06,248 INFO i.m.a.SaverController [Thread-29] Saving now 0 candles for contract 15
-2019-12-13 08:16:06,248 INFO i.m.a.SaverController [Thread-29] Saving completed
-2019-12-13 08:16:06,248 INFO i.m.a.AppLauncher [Thread-29] Connecting market data for all contracts...
-2019-12-13 08:16:06,394 INFO i.m.a.AppLauncher [Thread-31] >>> Finished contract 16
-2019-12-13 08:16:06,411 INFO i.m.a.I.DataService [EBM.EUR.16] Requesting market data for contract 16
-2019-12-13 08:16:06,808 INFO i.m.a.AppLauncher [Thread-34] Computing ticks...
-2019-12-13 08:16:07,617 INFO i.m.a.AppLauncher [Thread-29] >>> Finished contract 15
-2019-12-13 08:16:07,653 INFO i.m.a.I.DataService [DX.USD.15] Requesting market data for contract 15
-2019-12-13 08:16:07,720 INFO i.m.a.Database [Thread-17] Historical completed for contract 9
-2019-12-13 08:16:07,724 INFO i.m.a.SaverController [Thread-17] Saving now 0 ticks for contract 9
-2019-12-13 08:16:07,725 INFO i.m.a.SaverController [Thread-17] Saving now 0 candles for contract 9
-2019-12-13 08:16:07,725 INFO i.m.a.SaverController [Thread-17] Saving completed
-2019-12-13 08:16:07,725 INFO i.m.a.AppLauncher [Thread-17] Connecting market data for all contracts...
-2019-12-13 08:16:08,953 INFO i.m.a.AppLauncher [Thread-17] >>> Finished contract 9
-2019-12-13 08:16:08,965 INFO i.m.a.I.DataService [GC.USD.9] Requesting market data for contract 9
-2019-12-13 08:16:09,202 INFO i.m.a.Database [Thread-33] Historical completed for contract 17
-2019-12-13 08:16:09,203 INFO i.m.a.SaverController [Thread-33] Saving now 0 ticks for contract 17
-2019-12-13 08:16:09,204 INFO i.m.a.SaverController [Thread-33] Saving now 0 candles for contract 17
-2019-12-13 08:16:09,204 INFO i.m.a.SaverController [Thread-33] Saving completed
-2019-12-13 08:16:09,204 INFO i.m.a.AppLauncher [Thread-33] Connecting market data for all contracts...
-2019-12-13 08:16:09,545 INFO i.m.a.AppLauncher [Thread-37] Computing ticks...
-2019-12-13 08:16:10,466 INFO i.m.a.AppLauncher [Thread-33] >>> Finished contract 17
-2019-12-13 08:16:10,515 INFO i.m.a.I.DataService [ECO.EUR.17] Requesting market data for contract 17
-2019-12-13 08:16:10,973 INFO i.m.a.AppLauncher [Thread-39] Computing ticks...
-2019-12-13 08:16:15,845 INFO i.m.a.Database [Thread-18] Historical completed for contract 10
-2019-12-13 08:16:15,849 INFO i.m.a.SaverController [Thread-18] Saving now 0 ticks for contract 10
-2019-12-13 08:16:15,850 INFO i.m.a.SaverController [Thread-18] Saving now 0 candles for contract 10
-2019-12-13 08:16:15,850 INFO i.m.a.SaverController [Thread-18] Saving completed
-2019-12-13 08:16:15,851 INFO i.m.a.AppLauncher [Thread-18] Connecting market data for all contracts...
-2019-12-13 08:16:16,927 INFO i.m.a.AppLauncher [Thread-18] >>> Finished contract 10
-2019-12-13 08:16:16,939 INFO i.m.a.AppLauncher [Thread-41] Computing ticks...
-2019-12-13 08:16:16,952 INFO i.m.a.I.DataService [NG.USD.10] Requesting market data for contract 10
-2019-12-13 08:16:22,466 INFO i.m.a.Database [Thread-34] Historical completed for contract 18
-2019-12-13 08:16:22,468 INFO i.m.a.SaverController [Thread-34] Saving now 0 ticks for contract 18
-2019-12-13 08:16:22,468 INFO i.m.a.SaverController [Thread-34] Saving now 0 candles for contract 18
-2019-12-13 08:16:22,468 INFO i.m.a.SaverController [Thread-34] Saving completed
-2019-12-13 08:16:22,469 INFO i.m.a.AppLauncher [Thread-34] Connecting market data for all contracts...
-2019-12-13 08:16:23,036 INFO i.m.a.AppLauncher [Thread-43] Computing ticks...
-2019-12-13 08:16:23,245 INFO i.m.a.Database [Thread-37] Historical completed for contract 19
-2019-12-13 08:16:23,247 INFO i.m.a.SaverController [Thread-37] Saving now 0 ticks for contract 19
-2019-12-13 08:16:23,247 INFO i.m.a.SaverController [Thread-37] Saving now 0 candles for contract 19
-2019-12-13 08:16:23,247 INFO i.m.a.SaverController [Thread-37] Saving completed
-2019-12-13 08:16:23,248 INFO i.m.a.AppLauncher [Thread-37] Connecting market data for all contracts...
-2019-12-13 08:16:23,412 INFO i.m.a.AppLauncher [Thread-34] >>> Finished contract 18
-2019-12-13 08:16:23,741 INFO i.m.a.AppLauncher [Thread-44] Computing ticks...
-2019-12-13 08:16:23,997 INFO i.m.a.I.DataService [HE.USD.18] Requesting market data for contract 18
-2019-12-13 08:16:24,926 INFO i.m.a.AppLauncher [Thread-37] >>> Finished contract 19
-2019-12-13 08:16:24,931 INFO i.m.a.I.DataService [HG.USD.19] Requesting market data for contract 19
-2019-12-13 08:16:26,687 INFO i.m.a.Database [Thread-44] Historical completed for contract 23
-2019-12-13 08:16:26,688 INFO i.m.a.SaverController [Thread-44] Saving now 0 ticks for contract 23
-2019-12-13 08:16:26,688 INFO i.m.a.SaverController [Thread-44] Saving now 0 candles for contract 23
-2019-12-13 08:16:26,688 INFO i.m.a.SaverController [Thread-44] Saving completed
-2019-12-13 08:16:26,688 INFO i.m.a.AppLauncher [Thread-44] Connecting market data for all contracts...
-2019-12-13 08:16:27,603 INFO i.m.a.AppLauncher [Thread-44] >>> Finished contract 23
-2019-12-13 08:16:27,617 INFO i.m.a.I.DataService [OJ.USD.23] Requesting market data for contract 23
-2019-12-13 08:16:28,028 INFO i.m.a.AppLauncher [Thread-47] Computing ticks...
-2019-12-13 08:16:31,409 INFO i.m.a.Database [Thread-41] Historical completed for contract 21
-2019-12-13 08:16:31,410 INFO i.m.a.SaverController [Thread-41] Saving now 0 ticks for contract 21
-2019-12-13 08:16:31,411 INFO i.m.a.SaverController [Thread-41] Saving now 0 candles for contract 21
-2019-12-13 08:16:31,411 INFO i.m.a.SaverController [Thread-41] Saving completed
-2019-12-13 08:16:31,411 INFO i.m.a.AppLauncher [Thread-41] Connecting market data for all contracts...
-2019-12-13 08:16:31,894 INFO i.m.a.Database [Thread-47] Historical completed for contract 24
-2019-12-13 08:16:31,895 INFO i.m.a.SaverController [Thread-47] Saving now 0 ticks for contract 24
-2019-12-13 08:16:31,896 INFO i.m.a.SaverController [Thread-47] Saving now 0 candles for contract 24
-2019-12-13 08:16:31,896 INFO i.m.a.SaverController [Thread-47] Saving completed
-2019-12-13 08:16:31,897 INFO i.m.a.AppLauncher [Thread-47] Connecting market data for all contracts...
-2019-12-13 08:16:32,027 INFO i.m.a.AppLauncher [Thread-49] Computing ticks...
-2019-12-13 08:16:32,551 INFO i.m.a.AppLauncher [Thread-41] >>> Finished contract 21
-2019-12-13 08:16:32,582 INFO i.m.a.I.DataService [KC.USD.21] Requesting market data for contract 21
-2019-12-13 08:16:32,834 INFO i.m.a.AppLauncher [Thread-50] Computing ticks...
-2019-12-13 08:16:33,956 INFO i.m.a.Database [Thread-43] Historical completed for contract 22
-2019-12-13 08:16:33,965 INFO i.m.a.SaverController [Thread-43] Saving now 0 ticks for contract 22
-2019-12-13 08:16:33,965 INFO i.m.a.SaverController [Thread-43] Saving now 0 candles for contract 22
-2019-12-13 08:16:33,966 INFO i.m.a.SaverController [Thread-43] Saving completed
-2019-12-13 08:16:33,966 INFO i.m.a.AppLauncher [Thread-43] Connecting market data for all contracts...
-2019-12-13 08:16:34,001 INFO i.m.a.AppLauncher [Thread-47] >>> Finished contract 24
-2019-12-13 08:16:34,060 INFO i.m.a.I.DataService [RBOB.USD.24] Requesting market data for contract 24
-2019-12-13 08:16:35,345 INFO i.m.a.AppLauncher [Thread-43] >>> Finished contract 22
-2019-12-13 08:16:35,352 INFO i.m.a.I.DataService [LE.USD.22] Requesting market data for contract 22
-2019-12-13 08:16:35,449 INFO i.m.a.AppLauncher [Thread-52] Computing ticks...
-2019-12-13 08:16:36,034 INFO i.m.a.Database [Thread-50] Historical completed for contract 26
-2019-12-13 08:16:36,035 INFO i.m.a.SaverController [Thread-50] Saving now 0 ticks for contract 26
-2019-12-13 08:16:36,036 INFO i.m.a.SaverController [Thread-50] Saving now 0 candles for contract 26
-2019-12-13 08:16:36,036 INFO i.m.a.SaverController [Thread-50] Saving completed
-2019-12-13 08:16:36,036 INFO i.m.a.AppLauncher [Thread-50] Connecting market data for all contracts...
-2019-12-13 08:16:37,006 INFO i.m.a.AppLauncher [Thread-55] Computing ticks...
-2019-12-13 08:16:37,077 INFO i.m.a.Database [Thread-52] Historical completed for contract 27
-2019-12-13 08:16:37,078 INFO i.m.a.SaverController [Thread-52] Saving now 0 ticks for contract 27
-2019-12-13 08:16:37,079 INFO i.m.a.SaverController [Thread-52] Saving now 0 candles for contract 27
-2019-12-13 08:16:37,079 INFO i.m.a.SaverController [Thread-52] Saving completed
-2019-12-13 08:16:37,079 INFO i.m.a.AppLauncher [Thread-52] Connecting market data for all contracts...
-2019-12-13 08:16:37,294 INFO i.m.a.AppLauncher [Thread-50] >>> Finished contract 26
-2019-12-13 08:16:37,356 INFO i.m.a.I.DataService [SCI.USD.26] Requesting market data for contract 26
-2019-12-13 08:16:37,769 INFO i.m.a.Database [Thread-49] Historical completed for contract 25
-2019-12-13 08:16:37,771 INFO i.m.a.SaverController [Thread-49] Saving now 0 ticks for contract 25
-2019-12-13 08:16:37,771 INFO i.m.a.SaverController [Thread-49] Saving now 0 candles for contract 25
-2019-12-13 08:16:37,771 INFO i.m.a.SaverController [Thread-49] Saving completed
-2019-12-13 08:16:37,772 INFO i.m.a.AppLauncher [Thread-49] Connecting market data for all contracts...
-2019-12-13 08:16:38,158 INFO i.m.a.AppLauncher [Thread-56] Computing ticks...
-2019-12-13 08:16:38,585 INFO i.m.a.AppLauncher [Thread-58] Computing ticks...
-2019-12-13 08:16:38,744 INFO i.m.a.AppLauncher [Thread-52] >>> Finished contract 27
-2019-12-13 08:16:38,747 INFO i.m.a.I.DataService [TSR20.USD.27] Requesting market data for contract 27
-2019-12-13 08:16:40,068 INFO i.m.a.AppLauncher [Thread-49] >>> Finished contract 25
-2019-12-13 08:16:40,090 INFO i.m.a.I.DataService [SB.USD.25] Requesting market data for contract 25
-2019-12-13 08:16:43,599 INFO i.m.a.Database [Thread-58] Historical completed for contract 30
-2019-12-13 08:16:43,601 INFO i.m.a.SaverController [Thread-58] Saving now 0 ticks for contract 30
-2019-12-13 08:16:43,602 INFO i.m.a.SaverController [Thread-58] Saving now 0 candles for contract 30
-2019-12-13 08:16:43,602 INFO i.m.a.SaverController [Thread-58] Saving completed
-2019-12-13 08:16:43,602 INFO i.m.a.AppLauncher [Thread-58] Connecting market data for all contracts...
-2019-12-13 08:16:44,385 INFO i.m.a.Database [Thread-55] Historical completed for contract 28
-2019-12-13 08:16:44,412 INFO i.m.a.SaverController [Thread-55] Saving now 0 ticks for contract 28
-2019-12-13 08:16:44,413 INFO i.m.a.SaverController [Thread-55] Saving now 0 candles for contract 28
-2019-12-13 08:16:44,413 INFO i.m.a.SaverController [Thread-55] Saving completed
-2019-12-13 08:16:44,413 INFO i.m.a.AppLauncher [Thread-55] Connecting market data for all contracts...
-2019-12-13 08:16:44,584 INFO i.m.a.AppLauncher [Thread-58] >>> Finished contract 30
-2019-12-13 08:16:44,604 INFO i.m.a.I.DataService [ZW.USD.30] Requesting market data for contract 30
-2019-12-13 08:16:44,748 INFO i.m.a.AppLauncher [Thread-61] Computing ticks...
-2019-12-13 08:16:45,402 INFO i.m.a.AppLauncher [Thread-62] Computing ticks...
-2019-12-13 08:16:45,906 INFO i.m.a.AppLauncher [Thread-55] >>> Finished contract 28
-2019-12-13 08:16:45,919 INFO i.m.a.I.DataService [ZC.USD.28] Requesting market data for contract 28
-2019-12-13 08:16:50,441 INFO i.m.a.Database [Thread-56] Historical completed for contract 29
-2019-12-13 08:16:50,443 INFO i.m.a.SaverController [Thread-56] Saving now 0 ticks for contract 29
-2019-12-13 08:16:50,443 INFO i.m.a.SaverController [Thread-56] Saving now 0 candles for contract 29
-2019-12-13 08:16:50,443 INFO i.m.a.SaverController [Thread-56] Saving completed
-2019-12-13 08:16:50,444 INFO i.m.a.AppLauncher [Thread-56] Connecting market data for all contracts...
-2019-12-13 08:16:51,395 INFO i.m.a.AppLauncher [Thread-56] >>> Finished contract 29
-2019-12-13 08:16:51,415 INFO i.m.a.I.DataService [ZS.USD.29] Requesting market data for contract 29
-2019-12-13 08:16:51,748 INFO i.m.a.AppLauncher [Thread-65] Computing ticks...
-2019-12-13 08:17:00,809 INFO i.m.a.Database [Thread-62] Historical completed for contract 32
-2019-12-13 08:17:00,821 INFO i.m.a.SaverController [Thread-62] Saving now 0 ticks for contract 32
-2019-12-13 08:17:00,821 INFO i.m.a.SaverController [Thread-62] Saving now 0 candles for contract 32
-2019-12-13 08:17:00,821 INFO i.m.a.SaverController [Thread-62] Saving completed
-2019-12-13 08:17:00,821 INFO i.m.a.AppLauncher [Thread-62] Connecting market data for all contracts...
-2019-12-13 08:17:01,708 INFO i.m.a.AppLauncher [Thread-62] >>> Finished contract 32
-2019-12-13 08:17:01,713 INFO i.m.a.I.DataService [XLF.USD.32] Requesting market data for contract 32
-2019-12-13 08:17:02,132 INFO i.m.a.AppLauncher [Thread-67] Computing ticks...
-2019-12-13 08:17:08,396 INFO i.m.a.Database [Thread-12] Historical completed for contract 5
-2019-12-13 08:17:08,400 INFO i.m.a.SaverController [Thread-12] Saving now 0 ticks for contract 5
-2019-12-13 08:17:08,400 INFO i.m.a.SaverController [Thread-12] Saving now 0 candles for contract 5
-2019-12-13 08:17:08,401 INFO i.m.a.SaverController [Thread-12] Saving completed
-2019-12-13 08:17:08,401 INFO i.m.a.AppLauncher [Thread-12] Connecting market data for all contracts...
-2019-12-13 08:17:09,316 INFO i.m.a.AppLauncher [Thread-12] >>> Finished contract 5
-2019-12-13 08:17:09,328 INFO i.m.a.I.DataService [ES.USD.5] Requesting market data for contract 5
-2019-12-13 08:17:09,455 INFO i.m.a.Database [Thread-61] Historical completed for contract 31
-2019-12-13 08:17:09,457 INFO i.m.a.SaverController [Thread-61] Saving now 0 ticks for contract 31
-2019-12-13 08:17:09,457 INFO i.m.a.SaverController [Thread-61] Saving now 0 candles for contract 31
-2019-12-13 08:17:09,457 INFO i.m.a.SaverController [Thread-61] Saving completed
-2019-12-13 08:17:09,458 INFO i.m.a.AppLauncher [Thread-61] Connecting market data for all contracts...
-2019-12-13 08:17:09,674 INFO i.m.a.AppLauncher [Thread-69] Computing ticks...
-2019-12-13 08:17:10,495 INFO i.m.a.AppLauncher [Thread-71] Computing ticks...
-2019-12-13 08:17:10,772 INFO i.m.a.AppLauncher [Thread-61] >>> Finished contract 31
-2019-12-13 08:17:10,780 INFO i.m.a.I.DataService [XLK.USD.31] Requesting market data for contract 31
-2019-12-13 08:17:14,402 INFO i.m.a.Database [Thread-65] Historical completed for contract 33
-2019-12-13 08:17:14,404 INFO i.m.a.SaverController [Thread-65] Saving now 0 ticks for contract 33
-2019-12-13 08:17:14,405 INFO i.m.a.SaverController [Thread-65] Saving now 0 candles for contract 33
-2019-12-13 08:17:14,405 INFO i.m.a.SaverController [Thread-65] Saving completed
-2019-12-13 08:17:14,406 INFO i.m.a.AppLauncher [Thread-65] Connecting market data for all contracts...
-2019-12-13 08:17:15,245 INFO i.m.a.AppLauncher [Thread-65] >>> Finished contract 33
-2019-12-13 08:17:15,263 INFO i.m.a.I.DataService [XLV.USD.33] Requesting market data for contract 33
-2019-12-13 08:17:15,688 INFO i.m.a.AppLauncher [Thread-73] Computing ticks...
-2019-12-13 08:17:20,181 INFO i.m.a.Database [Thread-67] Historical completed for contract 34
-2019-12-13 08:17:20,184 INFO i.m.a.SaverController [Thread-67] Saving now 0 ticks for contract 34
-2019-12-13 08:17:20,184 INFO i.m.a.SaverController [Thread-67] Saving now 0 candles for contract 34
-2019-12-13 08:17:20,184 INFO i.m.a.SaverController [Thread-67] Saving completed
-2019-12-13 08:17:20,185 INFO i.m.a.AppLauncher [Thread-67] Connecting market data for all contracts...
-2019-12-13 08:17:21,026 INFO i.m.a.AppLauncher [Thread-75] Computing ticks...
-2019-12-13 08:17:21,138 INFO i.m.a.AppLauncher [Thread-67] >>> Finished contract 34
-2019-12-13 08:17:21,180 INFO i.m.a.I.DataService [XLY.USD.34] Requesting market data for contract 34
-2019-12-13 08:17:24,788 INFO i.m.a.Database [Thread-71] Historical completed for contract 36
-2019-12-13 08:17:24,790 INFO i.m.a.SaverController [Thread-71] Saving now 0 ticks for contract 36
-2019-12-13 08:17:24,790 INFO i.m.a.SaverController [Thread-71] Saving now 0 candles for contract 36
-2019-12-13 08:17:24,790 INFO i.m.a.SaverController [Thread-71] Saving completed
-2019-12-13 08:17:24,791 INFO i.m.a.AppLauncher [Thread-71] Connecting market data for all contracts...
-2019-12-13 08:17:25,573 INFO i.m.a.AppLauncher [Thread-77] Computing ticks...
-2019-12-13 08:17:25,748 INFO i.m.a.AppLauncher [Thread-71] >>> Finished contract 36
-2019-12-13 08:17:25,776 INFO i.m.a.I.DataService [XLP.USD.36] Requesting market data for contract 36
-2019-12-13 08:17:26,256 INFO i.m.a.Database [Thread-15] Historical completed for contract 8
-2019-12-13 08:17:26,262 INFO i.m.a.SaverController [Thread-15] Saving now 0 ticks for contract 8
-2019-12-13 08:17:26,262 INFO i.m.a.SaverController [Thread-15] Saving now 0 candles for contract 8
-2019-12-13 08:17:26,262 INFO i.m.a.SaverController [Thread-15] Saving completed
-2019-12-13 08:17:26,263 INFO i.m.a.AppLauncher [Thread-15] Connecting market data for all contracts...
-2019-12-13 08:17:27,152 INFO i.m.a.AppLauncher [Thread-79] Computing ticks...
-2019-12-13 08:17:27,476 INFO i.m.a.AppLauncher [Thread-15] >>> Finished contract 8
-2019-12-13 08:17:27,505 INFO i.m.a.I.DataService [CL.USD.8] Requesting market data for contract 8
-2019-12-13 08:17:29,770 INFO i.m.a.Database [Thread-69] Historical completed for contract 35
-2019-12-13 08:17:29,771 INFO i.m.a.SaverController [Thread-69] Saving now 0 ticks for contract 35
-2019-12-13 08:17:29,772 INFO i.m.a.SaverController [Thread-69] Saving now 0 candles for contract 35
-2019-12-13 08:17:29,772 INFO i.m.a.SaverController [Thread-69] Saving completed
-2019-12-13 08:17:29,772 INFO i.m.a.AppLauncher [Thread-69] Connecting market data for all contracts...
-2019-12-13 08:17:30,735 INFO i.m.a.AppLauncher [Thread-81] Computing ticks...
-2019-12-13 08:17:31,031 INFO i.m.a.AppLauncher [Thread-69] >>> Finished contract 35
-2019-12-13 08:17:31,057 INFO i.m.a.I.DataService [XLI.USD.35] Requesting market data for contract 35
-2019-12-13 08:17:32,332 INFO i.m.a.Database [Thread-77] Historical completed for contract 39
-2019-12-13 08:17:32,333 INFO i.m.a.SaverController [Thread-77] Saving now 0 ticks for contract 39
-2019-12-13 08:17:32,334 INFO i.m.a.SaverController [Thread-77] Saving now 0 candles for contract 39
-2019-12-13 08:17:32,334 INFO i.m.a.SaverController [Thread-77] Saving completed
-2019-12-13 08:17:32,334 INFO i.m.a.AppLauncher [Thread-77] Connecting market data for all contracts...
-2019-12-13 08:17:32,884 INFO i.m.a.AppLauncher [Thread-83] Computing ticks...
-2019-12-13 08:17:33,270 INFO i.m.a.Database [Thread-39] Historical completed for contract 20
-2019-12-13 08:17:33,275 INFO i.m.a.SaverController [Thread-39] Saving now 0 ticks for contract 20
-2019-12-13 08:17:33,275 INFO i.m.a.SaverController [Thread-39] Saving now 0 candles for contract 20
-2019-12-13 08:17:33,275 INFO i.m.a.SaverController [Thread-39] Saving completed
-2019-12-13 08:17:33,276 INFO i.m.a.AppLauncher [Thread-39] Connecting market data for all contracts...
-2019-12-13 08:17:33,547 INFO i.m.a.AppLauncher [Thread-77] >>> Finished contract 39
-2019-12-13 08:17:33,563 INFO i.m.a.I.DataService [XLRE.USD.39] Requesting market data for contract 39
-2019-12-13 08:17:33,930 INFO i.m.a.AppLauncher [Thread-84] Computing ticks...
-2019-12-13 08:17:35,016 INFO i.m.a.AppLauncher [Thread-39] >>> Finished contract 20
-2019-12-13 08:17:35,033 INFO i.m.a.I.DataService [HO.USD.20] Requesting market data for contract 20
-2019-12-13 08:17:38,917 INFO i.m.a.Database [Thread-75] Historical completed for contract 38
-2019-12-13 08:17:38,919 INFO i.m.a.SaverController [Thread-75] Saving now 0 ticks for contract 38
-2019-12-13 08:17:38,919 INFO i.m.a.SaverController [Thread-75] Saving now 0 candles for contract 38
-2019-12-13 08:17:38,919 INFO i.m.a.SaverController [Thread-75] Saving completed
-2019-12-13 08:17:38,920 INFO i.m.a.AppLauncher [Thread-75] Connecting market data for all contracts...
-2019-12-13 08:17:39,526 INFO i.m.a.AppLauncher [Thread-87] Computing ticks...
-2019-12-13 08:17:39,810 INFO i.m.a.AppLauncher [Thread-75] >>> Finished contract 38
-2019-12-13 08:17:39,821 INFO i.m.a.I.DataService [XLU.USD.38] Requesting market data for contract 38
-2019-12-13 08:17:40,000 INFO i.m.a.Database [Thread-79] Historical completed for contract 40
-2019-12-13 08:17:40,001 INFO i.m.a.SaverController [Thread-79] Saving now 0 ticks for contract 40
-2019-12-13 08:17:40,001 INFO i.m.a.SaverController [Thread-79] Saving now 0 candles for contract 40
-2019-12-13 08:17:40,001 INFO i.m.a.SaverController [Thread-79] Saving completed
-2019-12-13 08:17:40,002 INFO i.m.a.AppLauncher [Thread-79] Connecting market data for all contracts...
-2019-12-13 08:17:40,905 INFO i.m.a.AppLauncher [Thread-89] Computing ticks...
-2019-12-13 08:17:41,329 INFO i.m.a.AppLauncher [Thread-79] >>> Finished contract 40
-2019-12-13 08:17:41,354 INFO i.m.a.I.DataService [XLB.USD.40] Requesting market data for contract 40
-2019-12-13 08:17:41,628 INFO i.m.a.Database [Thread-73] Historical completed for contract 37
-2019-12-13 08:17:41,633 INFO i.m.a.SaverController [Thread-73] Saving now 0 ticks for contract 37
-2019-12-13 08:17:41,633 INFO i.m.a.SaverController [Thread-73] Saving now 0 candles for contract 37
-2019-12-13 08:17:41,634 INFO i.m.a.SaverController [Thread-73] Saving completed
-2019-12-13 08:17:41,634 INFO i.m.a.AppLauncher [Thread-73] Connecting market data for all contracts...
-2019-12-13 08:17:42,026 INFO i.m.a.AppLauncher [Thread-91] Computing ticks...
-2019-12-13 08:17:42,450 INFO i.m.a.Database [Thread-83] Historical completed for contract 42
-2019-12-13 08:17:42,451 INFO i.m.a.SaverController [Thread-83] Saving now 0 ticks for contract 42
-2019-12-13 08:17:42,451 INFO i.m.a.SaverController [Thread-83] Saving now 0 candles for contract 42
-2019-12-13 08:17:42,451 INFO i.m.a.SaverController [Thread-83] Saving completed
-2019-12-13 08:17:42,452 INFO i.m.a.AppLauncher [Thread-83] Connecting market data for all contracts...
-2019-12-13 08:17:42,946 INFO i.m.a.AppLauncher [Thread-92] Computing ticks...
-2019-12-13 08:17:43,114 INFO i.m.a.AppLauncher [Thread-73] >>> Finished contract 37
-2019-12-13 08:17:43,123 INFO i.m.a.I.DataService [XLE.USD.37] Requesting market data for contract 37
-2019-12-13 08:17:44,601 INFO i.m.a.AppLauncher [Thread-83] >>> Finished contract 42
-2019-12-13 08:17:44,615 INFO i.m.a.I.DataService [XME.USD.42] Requesting market data for contract 42
-2019-12-13 08:17:46,001 INFO i.m.a.Database [Thread-87] Historical completed for contract 44
-2019-12-13 08:17:46,002 INFO i.m.a.SaverController [Thread-87] Saving now 0 ticks for contract 44
-2019-12-13 08:17:46,002 INFO i.m.a.SaverController [Thread-87] Saving now 0 candles for contract 44
-2019-12-13 08:17:46,002 INFO i.m.a.SaverController [Thread-87] Saving completed
-2019-12-13 08:17:46,003 INFO i.m.a.AppLauncher [Thread-87] Connecting market data for all contracts...
-2019-12-13 08:17:46,366 INFO i.m.a.AppLauncher [Thread-95] Computing ticks...
-2019-12-13 08:17:47,167 INFO i.m.a.AppLauncher [Thread-87] >>> Finished contract 44
-2019-12-13 08:17:47,187 INFO i.m.a.I.DataService [VT.USD.44] Requesting market data for contract 44
-2019-12-13 08:17:47,661 INFO i.m.a.Database [Thread-92] Historical completed for contract 47
-2019-12-13 08:17:47,662 INFO i.m.a.SaverController [Thread-92] Saving now 0 ticks for contract 47
-2019-12-13 08:17:47,663 INFO i.m.a.SaverController [Thread-92] Saving now 0 candles for contract 47
-2019-12-13 08:17:47,663 INFO i.m.a.SaverController [Thread-92] Saving completed
-2019-12-13 08:17:47,663 INFO i.m.a.AppLauncher [Thread-92] Connecting market data for all contracts...
-2019-12-13 08:17:48,671 INFO i.m.a.Database [Thread-91] Historical completed for contract 46
-2019-12-13 08:17:48,672 INFO i.m.a.SaverController [Thread-91] Saving now 0 ticks for contract 46
-2019-12-13 08:17:48,672 INFO i.m.a.SaverController [Thread-91] Saving now 0 candles for contract 46
-2019-12-13 08:17:48,673 INFO i.m.a.SaverController [Thread-91] Saving completed
-2019-12-13 08:17:48,673 INFO i.m.a.AppLauncher [Thread-91] Connecting market data for all contracts...
-2019-12-13 08:17:49,003 INFO i.m.a.AppLauncher [Thread-92] >>> Finished contract 47
-2019-12-13 08:17:49,026 INFO i.m.a.I.DataService [THD.USD.47] Requesting market data for contract 47
-2019-12-13 08:17:49,657 INFO i.m.a.Database [Thread-95] Historical completed for contract 51
-2019-12-13 08:17:49,658 INFO i.m.a.SaverController [Thread-95] Saving now 0 ticks for contract 51
-2019-12-13 08:17:49,658 INFO i.m.a.SaverController [Thread-95] Saving now 0 candles for contract 51
-2019-12-13 08:17:49,658 INFO i.m.a.SaverController [Thread-95] Saving completed
-2019-12-13 08:17:49,658 INFO i.m.a.AppLauncher [Thread-95] Connecting market data for all contracts...
-2019-12-13 08:17:49,670 INFO i.m.a.AppLauncher [Thread-98] Computing ticks...
-2019-12-13 08:17:49,764 INFO i.m.a.AppLauncher [Thread-97] Computing ticks...
-2019-12-13 08:17:50,148 INFO i.m.a.AppLauncher [Thread-91] >>> Finished contract 46
-2019-12-13 08:17:50,171 INFO i.m.a.I.DataService [JNK.USD.46] Requesting market data for contract 46
-2019-12-13 08:17:50,540 INFO i.m.a.AppLauncher [Thread-100] Computing ticks...
-2019-12-13 08:17:51,322 INFO i.m.a.AppLauncher [Thread-95] >>> Finished contract 51
-2019-12-13 08:17:51,333 INFO i.m.a.I.DataService [GE.USD.51] Requesting market data for contract 51
-2019-12-13 08:17:56,667 INFO i.m.a.Database [Thread-98] Historical completed for contract 64
-2019-12-13 08:17:56,668 INFO i.m.a.SaverController [Thread-98] Saving now 0 ticks for contract 64
-2019-12-13 08:17:56,668 INFO i.m.a.SaverController [Thread-98] Saving now 0 candles for contract 64
-2019-12-13 08:17:56,668 INFO i.m.a.SaverController [Thread-98] Saving completed
-2019-12-13 08:17:56,669 INFO i.m.a.AppLauncher [Thread-98] Connecting market data for all contracts...
-2019-12-13 08:17:56,833 INFO i.m.a.Database [Thread-81] Historical completed for contract 41
-2019-12-13 08:17:56,837 INFO i.m.a.SaverController [Thread-81] Saving now 0 ticks for contract 41
-2019-12-13 08:17:56,837 INFO i.m.a.SaverController [Thread-81] Saving now 0 candles for contract 41
-2019-12-13 08:17:56,837 INFO i.m.a.SaverController [Thread-81] Saving completed
-2019-12-13 08:17:56,838 INFO i.m.a.AppLauncher [Thread-81] Connecting market data for all contracts...
-2019-12-13 08:17:57,609 INFO i.m.a.AppLauncher [Thread-98] >>> Finished contract 64
-2019-12-13 08:17:57,685 INFO i.m.a.I.DataService [DJ600.EUR.64] Requesting market data for contract 64
-2019-12-13 08:17:58,088 INFO i.m.a.Database [Thread-89] Historical completed for contract 45
-2019-12-13 08:17:58,090 INFO i.m.a.SaverController [Thread-89] Saving now 0 ticks for contract 45
-2019-12-13 08:17:58,090 INFO i.m.a.SaverController [Thread-89] Saving now 0 candles for contract 45
-2019-12-13 08:17:58,090 INFO i.m.a.SaverController [Thread-89] Saving completed
-2019-12-13 08:17:58,091 INFO i.m.a.AppLauncher [Thread-89] Connecting market data for all contracts...
-2019-12-13 08:17:58,463 INFO i.m.a.AppLauncher [Thread-81] >>> Finished contract 41
-2019-12-13 08:17:58,488 INFO i.m.a.I.DataService [SMH.USD.41] Requesting market data for contract 41
-2019-12-13 08:17:59,335 INFO i.m.a.AppLauncher [Thread-89] >>> Finished contract 45
-2019-12-13 08:17:59,359 INFO i.m.a.I.DataService [EEM.USD.45] Requesting market data for contract 45
-2019-12-13 08:17:59,437 INFO i.m.a.AppLauncher [Thread-104] Computing ticks...
-2019-12-13 08:17:59,587 INFO i.m.a.AppLauncher [Thread-106] Computing ticks...
-2019-12-13 08:18:00,405 INFO i.m.a.AppLauncher [Thread-103] Computing ticks...
-2019-12-13 08:18:03,150 INFO i.m.a.Database [Thread-106] Historical completed for contract 68
-2019-12-13 08:18:03,152 INFO i.m.a.SaverController [Thread-106] Saving now 0 ticks for contract 68
-2019-12-13 08:18:03,152 INFO i.m.a.SaverController [Thread-106] Saving now 0 candles for contract 68
-2019-12-13 08:18:03,152 INFO i.m.a.SaverController [Thread-106] Saving completed
-2019-12-13 08:18:03,152 INFO i.m.a.AppLauncher [Thread-106] Connecting market data for all contracts...
-2019-12-13 08:18:04,031 INFO i.m.a.AppLauncher [Thread-106] >>> Finished contract 68
-2019-12-13 08:18:04,055 INFO i.m.a.I.DataService [N225.JPY.68] Requesting market data for contract 68
-2019-12-13 08:18:05,188 INFO i.m.a.Database [Thread-84] Historical completed for contract 43
-2019-12-13 08:18:05,192 INFO i.m.a.SaverController [Thread-84] Saving now 0 ticks for contract 43
-2019-12-13 08:18:05,192 INFO i.m.a.SaverController [Thread-84] Saving now 0 candles for contract 43
-2019-12-13 08:18:05,192 INFO i.m.a.SaverController [Thread-84] Saving completed
-2019-12-13 08:18:05,192 INFO i.m.a.AppLauncher [Thread-84] Connecting market data for all contracts...
-2019-12-13 08:18:06,197 INFO i.m.a.AppLauncher [Thread-84] >>> Finished contract 43
-2019-12-13 08:18:06,213 INFO i.m.a.I.DataService [XBI.USD.43] Requesting market data for contract 43
-2019-12-13 08:18:06,840 INFO i.m.a.AppLauncher [Thread-109] Computing ticks...
-2019-12-13 08:18:07,092 INFO i.m.a.AppLauncher [Thread-111] Computing ticks...
-2019-12-13 08:18:07,306 INFO i.m.a.Database [Thread-104] Historical completed for contract 67
-2019-12-13 08:18:07,308 INFO i.m.a.SaverController [Thread-104] Saving now 0 ticks for contract 67
-2019-12-13 08:18:07,308 INFO i.m.a.SaverController [Thread-104] Saving now 0 candles for contract 67
-2019-12-13 08:18:07,309 INFO i.m.a.SaverController [Thread-104] Saving completed
-2019-12-13 08:18:07,309 INFO i.m.a.AppLauncher [Thread-104] Connecting market data for all contracts...
-2019-12-13 08:18:08,738 INFO i.m.a.AppLauncher [Thread-104] >>> Finished contract 67
-2019-12-13 08:18:08,751 INFO i.m.a.I.DataService [K200.KRW.67] Requesting market data for contract 67
-2019-12-13 08:18:09,113 INFO i.m.a.AppLauncher [Thread-113] Computing ticks...
-2019-12-13 08:18:14,901 INFO i.m.a.Database [Thread-100] Historical completed for contract 65
-2019-12-13 08:18:14,903 INFO i.m.a.SaverController [Thread-100] Saving now 0 ticks for contract 65
-2019-12-13 08:18:14,903 INFO i.m.a.SaverController [Thread-100] Saving now 0 candles for contract 65
-2019-12-13 08:18:14,903 INFO i.m.a.SaverController [Thread-100] Saving completed
-2019-12-13 08:18:14,904 INFO i.m.a.AppLauncher [Thread-100] Connecting market data for all contracts...
-2019-12-13 08:18:15,680 INFO i.m.a.AppLauncher [Thread-115] Computing ticks...
-2019-12-13 08:18:15,964 INFO i.m.a.AppLauncher [Thread-100] >>> Finished contract 65
-2019-12-13 08:18:15,967 INFO i.m.a.I.DataService [ESTX50.EUR.65] Requesting market data for contract 65
-2019-12-13 08:18:16,398 INFO i.m.a.Database [Thread-111] Historical completed for contract 70
-2019-12-13 08:18:16,400 INFO i.m.a.SaverController [Thread-111] Saving now 0 ticks for contract 70
-2019-12-13 08:18:16,400 INFO i.m.a.SaverController [Thread-111] Saving now 0 candles for contract 70
-2019-12-13 08:18:16,400 INFO i.m.a.SaverController [Thread-111] Saving completed
-2019-12-13 08:18:16,400 INFO i.m.a.AppLauncher [Thread-111] Connecting market data for all contracts...
-2019-12-13 08:18:17,607 INFO i.m.a.AppLauncher [Thread-111] >>> Finished contract 70
-2019-12-13 08:18:17,621 INFO i.m.a.I.DataService [SPI.AUD.70] Requesting market data for contract 70
-2019-12-13 08:18:17,995 INFO i.m.a.Database [Thread-115] Historical completed for contract 72
-2019-12-13 08:18:17,996 INFO i.m.a.SaverController [Thread-115] Saving now 0 ticks for contract 72
-2019-12-13 08:18:17,997 INFO i.m.a.SaverController [Thread-115] Saving now 0 candles for contract 72
-2019-12-13 08:18:17,997 INFO i.m.a.SaverController [Thread-115] Saving completed
-2019-12-13 08:18:17,997 INFO i.m.a.AppLauncher [Thread-115] Connecting market data for all contracts...
-2019-12-13 08:18:18,076 INFO i.m.a.AppLauncher [Thread-117] Computing ticks...
-2019-12-13 08:18:18,773 INFO i.m.a.AppLauncher [Thread-119] Computing ticks...
-2019-12-13 08:18:19,493 INFO i.m.a.AppLauncher [Thread-115] >>> Finished contract 72
-2019-12-13 08:18:19,537 INFO i.m.a.I.DataService [SI.USD.72] Requesting market data for contract 72
-2019-12-13 08:18:22,008 INFO i.m.a.Database [Thread-103] Historical completed for contract 66
-2019-12-13 08:18:22,012 INFO i.m.a.SaverController [Thread-103] Saving now 0 ticks for contract 66
-2019-12-13 08:18:22,013 INFO i.m.a.SaverController [Thread-103] Saving now 0 candles for contract 66
-2019-12-13 08:18:22,013 INFO i.m.a.SaverController [Thread-103] Saving completed
-2019-12-13 08:18:22,013 INFO i.m.a.AppLauncher [Thread-103] Connecting market data for all contracts...
-2019-12-13 08:18:22,879 INFO i.m.a.AppLauncher [Thread-121] Computing ticks...
-2019-12-13 08:18:22,961 INFO i.m.a.AppLauncher [Thread-103] >>> Finished contract 66
-2019-12-13 08:18:22,982 INFO i.m.a.I.DataService [HSI.HKD.66] Requesting market data for contract 66
-2019-12-13 08:18:25,114 INFO i.m.a.Database [Thread-109] Historical completed for contract 69
-2019-12-13 08:18:25,137 INFO i.m.a.SaverController [Thread-109] Saving now 0 ticks for contract 69
-2019-12-13 08:18:25,137 INFO i.m.a.SaverController [Thread-109] Saving now 0 candles for contract 69
-2019-12-13 08:18:25,137 INFO i.m.a.SaverController [Thread-109] Saving completed
-2019-12-13 08:18:25,137 INFO i.m.a.AppLauncher [Thread-109] Connecting market data for all contracts...
-2019-12-13 08:18:26,023 INFO i.m.a.Database [Thread-121] Historical completed for contract 76
-2019-12-13 08:18:26,024 INFO i.m.a.SaverController [Thread-121] Saving now 0 ticks for contract 76
-2019-12-13 08:18:26,024 INFO i.m.a.SaverController [Thread-121] Saving now 0 candles for contract 76
-2019-12-13 08:18:26,024 INFO i.m.a.SaverController [Thread-121] Saving completed
-2019-12-13 08:18:26,024 INFO i.m.a.AppLauncher [Thread-121] Connecting market data for all contracts...
-2019-12-13 08:18:26,100 INFO i.m.a.AppLauncher [Thread-109] >>> Finished contract 69
-2019-12-13 08:18:26,136 INFO i.m.a.I.DataService [NIFTY.USD.69] Requesting market data for contract 69
-2019-12-13 08:18:26,419 INFO i.m.a.AppLauncher [Thread-124] Computing ticks...
-2019-12-13 08:18:26,691 INFO i.m.a.AppLauncher [Thread-123] Computing ticks...
-2019-12-13 08:18:27,331 INFO i.m.a.AppLauncher [Thread-121] >>> Finished contract 76
-2019-12-13 08:18:27,343 INFO i.m.a.I.DataService [V2TX.EUR.76] Requesting market data for contract 76
-2019-12-13 08:18:27,349 INFO i.m.a.Database [Thread-119] Historical completed for contract 75
-2019-12-13 08:18:27,350 INFO i.m.a.SaverController [Thread-119] Saving now 0 ticks for contract 75
-2019-12-13 08:18:27,351 INFO i.m.a.SaverController [Thread-119] Saving now 0 candles for contract 75
-2019-12-13 08:18:27,351 INFO i.m.a.SaverController [Thread-119] Saving completed
-2019-12-13 08:18:27,351 INFO i.m.a.AppLauncher [Thread-119] Connecting market data for all contracts...
-2019-12-13 08:18:27,619 INFO i.m.a.AppLauncher [Thread-127] Computing ticks...
-2019-12-13 08:18:28,866 INFO i.m.a.AppLauncher [Thread-119] >>> Finished contract 75
-2019-12-13 08:18:28,873 INFO i.m.a.I.DataService [BRR.USD.75] Requesting market data for contract 75
-2019-12-13 08:18:28,943 INFO i.m.a.Database [Thread-21] Historical completed for contract 11
-2019-12-13 08:18:28,949 INFO i.m.a.SaverController [Thread-21] Saving now 0 ticks for contract 11
-2019-12-13 08:18:28,949 INFO i.m.a.SaverController [Thread-21] Saving now 0 candles for contract 11
-2019-12-13 08:18:28,949 INFO i.m.a.SaverController [Thread-21] Saving completed
-2019-12-13 08:18:28,949 INFO i.m.a.AppLauncher [Thread-21] Connecting market data for all contracts...
-2019-12-13 08:18:29,199 INFO i.m.a.AppLauncher [Thread-129] Computing ticks...
-2019-12-13 08:18:30,264 INFO i.m.a.AppLauncher [Thread-21] >>> Finished contract 11
-2019-12-13 08:18:30,272 INFO i.m.a.I.DataService [DAX.EUR.11] Requesting market data for contract 11
-2019-12-13 08:18:34,187 INFO i.m.a.Database [Thread-124] Historical completed for contract 86
-2019-12-13 08:18:34,188 INFO i.m.a.SaverController [Thread-124] Saving now 0 ticks for contract 86
-2019-12-13 08:18:34,188 INFO i.m.a.SaverController [Thread-124] Saving now 0 candles for contract 86
-2019-12-13 08:18:34,188 INFO i.m.a.SaverController [Thread-124] Saving completed
-2019-12-13 08:18:34,188 INFO i.m.a.AppLauncher [Thread-124] Connecting market data for all contracts...
-2019-12-13 08:18:34,526 INFO i.m.a.AppLauncher [Thread-131] Computing ticks...
-2019-12-13 08:18:35,807 INFO i.m.a.AppLauncher [Thread-124] >>> Finished contract 86
-2019-12-13 08:18:35,851 INFO i.m.a.I.DataService [AGG.USD.86] Requesting market data for contract 86
-2019-12-13 08:18:36,240 INFO i.m.a.Database [Thread-129] Historical completed for contract 88
-2019-12-13 08:18:36,241 INFO i.m.a.SaverController [Thread-129] Saving now 0 ticks for contract 88
-2019-12-13 08:18:36,241 INFO i.m.a.SaverController [Thread-129] Saving now 0 candles for contract 88
-2019-12-13 08:18:36,241 INFO i.m.a.SaverController [Thread-129] Saving completed
-2019-12-13 08:18:36,241 INFO i.m.a.AppLauncher [Thread-129] Connecting market data for all contracts...
-2019-12-13 08:18:36,553 INFO i.m.a.AppLauncher [Thread-133] Computing ticks...
-2019-12-13 08:18:36,821 INFO i.m.a.Database [Thread-127] Historical completed for contract 87
-2019-12-13 08:18:36,823 INFO i.m.a.SaverController [Thread-127] Saving now 0 ticks for contract 87
-2019-12-13 08:18:36,823 INFO i.m.a.SaverController [Thread-127] Saving now 0 candles for contract 87
-2019-12-13 08:18:36,823 INFO i.m.a.SaverController [Thread-127] Saving completed
-2019-12-13 08:18:36,824 INFO i.m.a.AppLauncher [Thread-127] Connecting market data for all contracts...
-2019-12-13 08:18:37,161 INFO i.m.a.AppLauncher [Thread-134] Computing ticks...
-2019-12-13 08:18:37,483 INFO i.m.a.AppLauncher [Thread-129] >>> Finished contract 88
-2019-12-13 08:18:37,499 INFO i.m.a.I.DataService [BND.USD.88] Requesting market data for contract 88
-2019-12-13 08:18:38,757 INFO i.m.a.AppLauncher [Thread-127] >>> Finished contract 87
-2019-12-13 08:18:38,763 INFO i.m.a.I.DataService [XLC.USD.87] Requesting market data for contract 87
-2019-12-13 08:18:42,386 INFO i.m.a.Database [Thread-133] Historical completed for contract 90
-2019-12-13 08:18:42,387 INFO i.m.a.SaverController [Thread-133] Saving now 0 ticks for contract 90
-2019-12-13 08:18:42,387 INFO i.m.a.SaverController [Thread-133] Saving now 0 candles for contract 90
-2019-12-13 08:18:42,387 INFO i.m.a.SaverController [Thread-133] Saving completed
-2019-12-13 08:18:42,387 INFO i.m.a.AppLauncher [Thread-133] Connecting market data for all contracts...
-2019-12-13 08:18:42,557 INFO i.m.a.AppLauncher [Thread-137] Computing ticks...
-2019-12-13 08:18:43,522 INFO i.m.a.Database [Thread-113] Historical completed for contract 71
-2019-12-13 08:18:43,525 INFO i.m.a.SaverController [Thread-113] Saving now 0 ticks for contract 71
-2019-12-13 08:18:43,525 INFO i.m.a.SaverController [Thread-113] Saving now 0 candles for contract 71
-2019-12-13 08:18:43,526 INFO i.m.a.SaverController [Thread-113] Saving completed
-2019-12-13 08:18:43,526 INFO i.m.a.AppLauncher [Thread-113] Connecting market data for all contracts...
-2019-12-13 08:18:43,568 INFO i.m.a.AppLauncher [Thread-133] >>> Finished contract 90
-2019-12-13 08:18:43,577 INFO i.m.a.I.DataService [TIP.USD.90] Requesting market data for contract 90
-2019-12-13 08:18:43,816 INFO i.m.a.AppLauncher [Thread-138] Computing ticks...
-2019-12-13 08:18:44,518 INFO i.m.a.Database [Thread-131] Historical completed for contract 89
-2019-12-13 08:18:44,519 INFO i.m.a.SaverController [Thread-131] Saving now 0 ticks for contract 89
-2019-12-13 08:18:44,520 INFO i.m.a.SaverController [Thread-131] Saving now 0 candles for contract 89
-2019-12-13 08:18:44,520 INFO i.m.a.SaverController [Thread-131] Saving completed
-2019-12-13 08:18:44,520 INFO i.m.a.AppLauncher [Thread-131] Connecting market data for all contracts...
-2019-12-13 08:18:44,580 INFO i.m.a.Database [Thread-134] Historical completed for contract 91
-2019-12-13 08:18:44,582 INFO i.m.a.SaverController [Thread-134] Saving now 0 ticks for contract 91
-2019-12-13 08:18:44,582 INFO i.m.a.SaverController [Thread-134] Saving now 0 candles for contract 91
-2019-12-13 08:18:44,582 INFO i.m.a.SaverController [Thread-134] Saving completed
-2019-12-13 08:18:44,582 INFO i.m.a.AppLauncher [Thread-134] Connecting market data for all contracts...
-2019-12-13 08:18:44,654 INFO i.m.a.Database [Thread-137] Historical completed for contract 92
-2019-12-13 08:18:44,654 INFO i.m.a.SaverController [Thread-137] Saving now 0 ticks for contract 92
-2019-12-13 08:18:44,655 INFO i.m.a.SaverController [Thread-137] Saving now 0 candles for contract 92
-2019-12-13 08:18:44,655 INFO i.m.a.SaverController [Thread-137] Saving completed
-2019-12-13 08:18:44,655 INFO i.m.a.AppLauncher [Thread-137] Connecting market data for all contracts...
-2019-12-13 08:18:44,893 INFO i.m.a.AppLauncher [Thread-140] Computing ticks...
-2019-12-13 08:18:44,919 INFO i.m.a.AppLauncher [Thread-141] Computing ticks...
-2019-12-13 08:18:45,048 INFO i.m.a.AppLauncher [Thread-113] >>> Finished contract 71
-2019-12-13 08:18:45,076 INFO i.m.a.I.DataService [Z.GBP.71] Requesting market data for contract 71
-2019-12-13 08:18:45,721 INFO i.m.a.AppLauncher [Thread-142] Computing ticks...
-2019-12-13 08:18:46,343 INFO i.m.a.AppLauncher [Thread-134] >>> Finished contract 91
-2019-12-13 08:18:46,352 INFO i.m.a.I.DataService [HYG.USD.91] Requesting market data for contract 91
-2019-12-13 08:18:47,432 INFO i.m.a.AppLauncher [Thread-137] >>> Finished contract 92
-2019-12-13 08:18:47,466 INFO i.m.a.I.DataService [MUNI.USD.92] Requesting market data for contract 92
-2019-12-13 08:18:48,305 INFO i.m.a.AppLauncher [Thread-131] >>> Finished contract 89
-2019-12-13 08:18:48,326 INFO i.m.a.I.DataService [LQD.USD.89] Requesting market data for contract 89
-2019-12-13 08:18:49,076 INFO i.m.a.Database [Thread-141] Historical completed for contract 97
-2019-12-13 08:18:49,077 INFO i.m.a.SaverController [Thread-141] Saving now 0 ticks for contract 97
-2019-12-13 08:18:49,077 INFO i.m.a.SaverController [Thread-141] Saving now 0 candles for contract 97
-2019-12-13 08:18:49,078 INFO i.m.a.SaverController [Thread-141] Saving completed
-2019-12-13 08:18:49,078 INFO i.m.a.AppLauncher [Thread-141] Connecting market data for all contracts...
-2019-12-13 08:18:49,960 INFO i.m.a.AppLauncher [Thread-141] >>> Finished contract 97
-2019-12-13 08:18:49,964 INFO i.m.a.I.DataService [ZT.USD.97] Requesting market data for contract 97
-2019-12-13 08:18:50,330 INFO i.m.a.AppLauncher [Thread-147] Computing ticks...
-2019-12-13 08:18:51,720 INFO i.m.a.Database [Thread-138] Historical completed for contract 93
-2019-12-13 08:18:51,721 INFO i.m.a.SaverController [Thread-138] Saving now 0 ticks for contract 93
-2019-12-13 08:18:51,721 INFO i.m.a.SaverController [Thread-138] Saving now 0 candles for contract 93
-2019-12-13 08:18:51,721 INFO i.m.a.SaverController [Thread-138] Saving completed
-2019-12-13 08:18:51,721 INFO i.m.a.AppLauncher [Thread-138] Connecting market data for all contracts...
-2019-12-13 08:18:52,197 INFO i.m.a.Database [Thread-117] Historical completed for contract 73
-2019-12-13 08:18:52,200 INFO i.m.a.SaverController [Thread-117] Saving now 0 ticks for contract 73
-2019-12-13 08:18:52,200 INFO i.m.a.SaverController [Thread-117] Saving now 0 candles for contract 73
-2019-12-13 08:18:52,201 INFO i.m.a.SaverController [Thread-117] Saving completed
-2019-12-13 08:18:52,201 INFO i.m.a.AppLauncher [Thread-117] Connecting market data for all contracts...
-2019-12-13 08:18:52,671 INFO i.m.a.AppLauncher [Thread-138] >>> Finished contract 93
-2019-12-13 08:18:52,736 INFO i.m.a.I.DataService [XHB.USD.93] Requesting market data for contract 93
-2019-12-13 08:18:53,574 INFO i.m.a.AppLauncher [Thread-117] >>> Finished contract 73
-2019-12-13 08:18:53,599 INFO i.m.a.I.DataService [PL.USD.73] Requesting market data for contract 73
-2019-12-13 08:18:53,771 INFO i.m.a.AppLauncher [Thread-150] Computing ticks...
-2019-12-13 08:18:53,895 INFO i.m.a.AppLauncher [Thread-149] Computing ticks...
-2019-12-13 08:18:59,729 INFO i.m.a.Database [Thread-123] Historical completed for contract 77
-2019-12-13 08:18:59,733 INFO i.m.a.SaverController [Thread-123] Saving now 0 ticks for contract 77
-2019-12-13 08:18:59,733 INFO i.m.a.SaverController [Thread-123] Saving now 0 candles for contract 77
-2019-12-13 08:18:59,733 INFO i.m.a.SaverController [Thread-123] Saving completed
-2019-12-13 08:18:59,734 INFO i.m.a.AppLauncher [Thread-123] Connecting market data for all contracts...
-2019-12-13 08:19:00,887 INFO i.m.a.AppLauncher [Thread-123] >>> Finished contract 77
-2019-12-13 08:19:00,916 INFO i.m.a.I.DataService [VXX.USD.77] Requesting market data for contract 77
-2019-12-13 08:19:01,035 INFO i.m.a.AppLauncher [Thread-153] Computing ticks...
-2019-12-13 08:19:08,432 INFO i.m.a.Database [Thread-142] Historical completed for contract 98
-2019-12-13 08:19:08,434 INFO i.m.a.SaverController [Thread-142] Saving now 0 ticks for contract 98
-2019-12-13 08:19:08,435 INFO i.m.a.SaverController [Thread-142] Saving now 0 candles for contract 98
-2019-12-13 08:19:08,435 INFO i.m.a.SaverController [Thread-142] Saving completed
-2019-12-13 08:19:08,435 INFO i.m.a.AppLauncher [Thread-142] Connecting market data for all contracts...
-2019-12-13 08:19:09,606 INFO i.m.a.AppLauncher [Thread-142] >>> Finished contract 98
-2019-12-13 08:19:09,631 INFO i.m.a.I.DataService [EUR.USD.98] Requesting market data for contract 98
-2019-12-13 08:19:10,405 INFO i.m.a.AppLauncher [Thread-155] Computing ticks...
-2019-12-13 08:19:15,336 INFO i.m.a.Database [Thread-97] Historical completed for contract 62
-2019-12-13 08:19:15,341 INFO i.m.a.SaverController [Thread-97] Saving now 0 ticks for contract 62
-2019-12-13 08:19:15,341 INFO i.m.a.SaverController [Thread-97] Saving now 0 candles for contract 62
-2019-12-13 08:19:15,341 INFO i.m.a.SaverController [Thread-97] Saving completed
-2019-12-13 08:19:15,342 INFO i.m.a.AppLauncher [Thread-97] Connecting market data for all contracts...
-2019-12-13 08:19:16,342 INFO i.m.a.AppLauncher [Thread-97] >>> Finished contract 62
-2019-12-13 08:19:16,365 INFO i.m.a.AppLauncher [Thread-157] Computing ticks...
-2019-12-13 08:19:16,369 INFO i.m.a.I.DataService [RTY.USD.62] Requesting market data for contract 62
-2019-12-13 08:19:16,851 INFO i.m.a.Database [Thread-149] Historical completed for contract 100
-2019-12-13 08:19:16,853 INFO i.m.a.SaverController [Thread-149] Saving now 0 ticks for contract 100
-2019-12-13 08:19:16,853 INFO i.m.a.SaverController [Thread-149] Saving now 0 candles for contract 100
-2019-12-13 08:19:16,854 INFO i.m.a.SaverController [Thread-149] Saving completed
-2019-12-13 08:19:16,854 INFO i.m.a.AppLauncher [Thread-149] Connecting market data for all contracts...
-2019-12-13 08:19:17,717 INFO i.m.a.AppLauncher [Thread-159] Computing ticks...
-2019-12-13 08:19:18,315 INFO i.m.a.AppLauncher [Thread-149] >>> Finished contract 100
-2019-12-13 08:19:18,355 INFO i.m.a.I.DataService [USD.CAD.100] Requesting market data for contract 100
-2019-12-13 08:19:18,830 INFO i.m.a.Database [Thread-153] Historical completed for contract 102
-2019-12-13 08:19:18,832 INFO i.m.a.SaverController [Thread-153] Saving now 0 ticks for contract 102
-2019-12-13 08:19:18,832 INFO i.m.a.SaverController [Thread-153] Saving now 0 candles for contract 102
-2019-12-13 08:19:18,832 INFO i.m.a.SaverController [Thread-153] Saving completed
-2019-12-13 08:19:18,832 INFO i.m.a.AppLauncher [Thread-153] Connecting market data for all contracts...
-2019-12-13 08:19:19,501 INFO i.m.a.Database [Thread-150] Historical completed for contract 101
-2019-12-13 08:19:19,505 INFO i.m.a.SaverController [Thread-150] Saving now 0 ticks for contract 101
-2019-12-13 08:19:19,505 INFO i.m.a.SaverController [Thread-150] Saving now 0 candles for contract 101
-2019-12-13 08:19:19,505 INFO i.m.a.SaverController [Thread-150] Saving completed
-2019-12-13 08:19:19,505 INFO i.m.a.AppLauncher [Thread-150] Connecting market data for all contracts...
-2019-12-13 08:19:19,944 INFO i.m.a.AppLauncher [Thread-161] Computing ticks...
-2019-12-13 08:19:19,998 INFO i.m.a.AppLauncher [Thread-153] >>> Finished contract 102
-2019-12-13 08:19:20,035 INFO i.m.a.I.DataService [AUD.USD.102] Requesting market data for contract 102
-2019-12-13 08:19:20,411 INFO i.m.a.AppLauncher [Thread-162] Computing ticks...
-2019-12-13 08:19:21,254 INFO i.m.a.AppLauncher [Thread-150] >>> Finished contract 101
-2019-12-13 08:19:21,289 INFO i.m.a.I.DataService [USD.JPY.101] Requesting market data for contract 101
-2019-12-13 08:19:28,312 INFO i.m.a.Database [Thread-159] Historical completed for contract 105
-2019-12-13 08:19:28,314 INFO i.m.a.SaverController [Thread-159] Saving now 0 ticks for contract 105
-2019-12-13 08:19:28,314 INFO i.m.a.SaverController [Thread-159] Saving now 0 candles for contract 105
-2019-12-13 08:19:28,314 INFO i.m.a.SaverController [Thread-159] Saving completed
-2019-12-13 08:19:28,314 INFO i.m.a.AppLauncher [Thread-159] Connecting market data for all contracts...
-2019-12-13 08:19:29,053 INFO i.m.a.AppLauncher [Thread-165] Computing ticks...
-2019-12-13 08:19:29,098 INFO i.m.a.AppLauncher [Thread-159] >>> Finished contract 105
-2019-12-13 08:19:29,117 INFO i.m.a.I.DataService [EUR.USD.105] Requesting market data for contract 105
-2019-12-13 08:19:29,829 INFO i.m.a.Database [Thread-140] Historical completed for contract 94
-2019-12-13 08:19:29,833 INFO i.m.a.SaverController [Thread-140] Saving now 0 ticks for contract 94
-2019-12-13 08:19:29,833 INFO i.m.a.SaverController [Thread-140] Saving now 0 candles for contract 94
-2019-12-13 08:19:29,833 INFO i.m.a.SaverController [Thread-140] Saving completed
-2019-12-13 08:19:29,834 INFO i.m.a.AppLauncher [Thread-140] Connecting market data for all contracts...
-2019-12-13 08:19:30,563 INFO i.m.a.AppLauncher [Thread-167] Computing ticks...
-2019-12-13 08:19:30,777 INFO i.m.a.Database [Thread-162] Historical completed for contract 107
-2019-12-13 08:19:30,778 INFO i.m.a.SaverController [Thread-162] Saving now 0 ticks for contract 107
-2019-12-13 08:19:30,778 INFO i.m.a.SaverController [Thread-162] Saving now 0 candles for contract 107
-2019-12-13 08:19:30,779 INFO i.m.a.SaverController [Thread-162] Saving completed
-2019-12-13 08:19:30,779 INFO i.m.a.AppLauncher [Thread-162] Connecting market data for all contracts...
-2019-12-13 08:19:31,272 INFO i.m.a.AppLauncher [Thread-140] >>> Finished contract 94
-2019-12-13 08:19:31,304 INFO i.m.a.I.DataService [AMZN.USD.94] Requesting market data for contract 94
-2019-12-13 08:19:31,402 INFO i.m.a.AppLauncher [Thread-168] Computing ticks...
-2019-12-13 08:19:32,371 INFO i.m.a.Database [Thread-155] Historical completed for contract 103
-2019-12-13 08:19:32,373 INFO i.m.a.SaverController [Thread-155] Saving now 0 ticks for contract 103
-2019-12-13 08:19:32,373 INFO i.m.a.SaverController [Thread-155] Saving now 0 candles for contract 103
-2019-12-13 08:19:32,373 INFO i.m.a.SaverController [Thread-155] Saving completed
-2019-12-13 08:19:32,373 INFO i.m.a.AppLauncher [Thread-155] Connecting market data for all contracts...
-2019-12-13 08:19:32,387 WARN i.m.a.I.EWrapperImpl [Thread-7] >>> ERROR >>> -1 2158 Sec-def data farm connection is OK:secdefhk
-2019-12-13 08:19:32,413 WARN i.m.a.I.EWrapperImpl [Thread-7] >>> ERROR >>> 1 200 No security definition has been found for the request
-2019-12-13 08:19:32,413 WARN i.m.a.I.EWrapperImpl [Thread-7] >>> ERROR >>> 3 200 No security definition has been found for the request
-2019-12-13 08:19:32,420 WARN i.m.a.I.EWrapperImpl [Thread-7] >>> ERROR >>> 16 200 No security definition has been found for the request
-2019-12-13 08:19:32,428 WARN i.m.a.I.EWrapperImpl [Thread-7] >>> ERROR >>> 24 200 No security definition has been found for the request
-2019-12-13 08:19:32,789 INFO i.m.a.AppLauncher [Thread-162] >>> Finished contract 107
-2019-12-13 08:19:32,794 INFO i.m.a.I.DataService [USD.CAD.107] Requesting market data for contract 107
-2019-12-13 08:19:32,912 INFO i.m.a.AppLauncher [Thread-170] Computing ticks...
-2019-12-13 08:19:34,240 INFO i.m.a.AppLauncher [Thread-155] >>> Finished contract 103
-2019-12-13 08:19:34,280 INFO i.m.a.I.DataService [NZD.USD.103] Requesting market data for contract 103
-2019-12-13 08:19:39,714 INFO i.m.a.Database [Thread-165] Historical completed for contract 108
-2019-12-13 08:19:39,716 INFO i.m.a.SaverController [Thread-165] Saving now 0 ticks for contract 108
-2019-12-13 08:19:39,716 INFO i.m.a.SaverController [Thread-165] Saving now 0 candles for contract 108
-2019-12-13 08:19:39,716 INFO i.m.a.SaverController [Thread-165] Saving completed
-2019-12-13 08:19:39,716 INFO i.m.a.AppLauncher [Thread-165] Connecting market data for all contracts...
-2019-12-13 08:19:40,334 INFO i.m.a.Database [Thread-167] Historical completed for contract 109
-2019-12-13 08:19:40,336 INFO i.m.a.SaverController [Thread-167] Saving now 0 ticks for contract 109
-2019-12-13 08:19:40,336 INFO i.m.a.SaverController [Thread-167] Saving now 0 candles for contract 109
-2019-12-13 08:19:40,337 INFO i.m.a.SaverController [Thread-167] Saving completed
-2019-12-13 08:19:40,337 INFO i.m.a.AppLauncher [Thread-167] Connecting market data for all contracts...
-2019-12-13 08:19:40,647 INFO i.m.a.AppLauncher [Thread-165] >>> Finished contract 108
-2019-12-13 08:19:40,665 INFO i.m.a.I.DataService [USD.JPY.108] Requesting market data for contract 108
-2019-12-13 08:19:41,460 INFO i.m.a.AppLauncher [Thread-167] >>> Finished contract 109
-2019-12-13 08:19:41,461 INFO i.m.a.I.DataService [AUD.USD.109] Requesting market data for contract 109
-2019-12-13 08:19:42,583 INFO i.m.a.Database [Thread-168] Historical completed for contract 110
-2019-12-13 08:19:42,584 INFO i.m.a.SaverController [Thread-168] Saving now 0 ticks for contract 110
-2019-12-13 08:19:42,585 INFO i.m.a.SaverController [Thread-168] Saving now 0 candles for contract 110
-2019-12-13 08:19:42,585 INFO i.m.a.SaverController [Thread-168] Saving completed
-2019-12-13 08:19:42,585 INFO i.m.a.AppLauncher [Thread-168] Connecting market data for all contracts...
-2019-12-13 08:19:43,310 INFO i.m.a.AppLauncher [Thread-168] >>> Finished contract 110
-2019-12-13 08:19:43,310 INFO i.m.a.I.DataService [NZD.USD.110] Requesting market data for contract 110
-2019-12-13 08:19:44,494 INFO i.m.a.Database [Thread-161] Historical completed for contract 106
-2019-12-13 08:19:44,498 INFO i.m.a.SaverController [Thread-161] Saving now 0 ticks for contract 106
-2019-12-13 08:19:44,499 INFO i.m.a.SaverController [Thread-161] Saving now 0 candles for contract 106
-2019-12-13 08:19:44,499 INFO i.m.a.SaverController [Thread-161] Saving completed
-2019-12-13 08:19:44,499 INFO i.m.a.AppLauncher [Thread-161] Connecting market data for all contracts...
-2019-12-13 08:19:45,157 INFO i.m.a.AppLauncher [Thread-161] >>> Finished contract 106
-2019-12-13 08:19:45,157 INFO i.m.a.I.DataService [GBP.USD.106] Requesting market data for contract 106
-2019-12-13 08:19:47,023 INFO i.m.a.Database [Thread-170] Historical completed for contract 111
-2019-12-13 08:19:47,024 INFO i.m.a.SaverController [Thread-170] Saving now 0 ticks for contract 111
-2019-12-13 08:19:47,024 INFO i.m.a.SaverController [Thread-170] Saving now 0 candles for contract 111
-2019-12-13 08:19:47,025 INFO i.m.a.SaverController [Thread-170] Saving completed
-2019-12-13 08:19:47,025 INFO i.m.a.AppLauncher [Thread-170] Connecting market data for all contracts...
-2019-12-13 08:19:47,573 INFO i.m.a.AppLauncher [Thread-170] >>> Finished contract 111
-2019-12-13 08:19:47,574 INFO i.m.a.I.DataService [EUR.GBP.111] Requesting market data for contract 111
-2019-12-13 08:19:47,949 INFO i.m.a.Database [Thread-157] Historical completed for contract 104
-2019-12-13 08:19:47,953 INFO i.m.a.SaverController [Thread-157] Saving now 0 ticks for contract 104
-2019-12-13 08:19:47,953 INFO i.m.a.SaverController [Thread-157] Saving now 0 candles for contract 104
-2019-12-13 08:19:47,953 INFO i.m.a.SaverController [Thread-157] Saving completed
-2019-12-13 08:19:47,954 INFO i.m.a.AppLauncher [Thread-157] Connecting market data for all contracts...
-2019-12-13 08:19:48,386 INFO i.m.a.AppLauncher [Thread-157] >>> Finished contract 104
-2019-12-13 08:19:48,387 INFO i.m.a.I.DataService [EUR.GBP.104] Requesting market data for contract 104
-2019-12-13 08:19:48,873 INFO i.m.a.Database [Thread-147] Historical completed for contract 99
-2019-12-13 08:19:48,876 INFO i.m.a.SaverController [Thread-147] Saving now 0 ticks for contract 99
-2019-12-13 08:19:48,877 INFO i.m.a.SaverController [Thread-147] Saving now 0 candles for contract 99
-2019-12-13 08:19:48,877 INFO i.m.a.SaverController [Thread-147] Saving completed
-2019-12-13 08:19:48,877 INFO i.m.a.AppLauncher [Thread-147] Connecting market data for all contracts...
-2019-12-13 08:19:50,245 INFO i.m.a.AppLauncher [Thread-147] >>> Finished contract 99
-2019-12-13 08:19:50,245 INFO i.m.a.I.DataService [GBP.USD.99] Requesting market data for contract 99
-2019-12-13 08:20:54,489 INFO i.m.a.c.HttpController [http-nio-8080-exec-8] Sending (86) contracts live
-2019-12-13 08:20:54,497 INFO i.m.a.c.a.ActiveUserEvent [http-nio-8080-exec-3] UserActivityEvent{type='login', username='trader', eventSessionId='cc96c7bc-1567-47ff-a510-7e2a02a36584', timestamp=2019-12-13T08:20:54.497858300Z[Europe/London]}
-2019-12-13 08:21:08,930 INFO i.m.a.Database [Thread-13] Historical completed for contract 6
-2019-12-13 08:21:08,948 INFO i.m.a.SaverController [Thread-13] Saving now 0 ticks for contract 6
-2019-12-13 08:21:08,948 INFO i.m.a.SaverController [Thread-13] Saving now 0 candles for contract 6
-2019-12-13 08:21:08,948 INFO i.m.a.SaverController [Thread-13] Saving completed
-2019-12-13 08:21:08,949 INFO i.m.a.AppLauncher [Thread-13] Connecting market data for all contracts...
-2019-12-13 08:21:10,466 INFO i.m.a.AppLauncher [Thread-13] >>> Finished contract 6
-2019-12-13 08:21:10,467 INFO i.m.a.I.DataService [NQ.USD.6] Requesting market data for contract 6
+2019-12-13 08:34:07,143 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
+2019-12-13 08:34:07,150 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
+2019-12-13 08:34:07,573 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2019-12-13 08:34:08,191 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2019-12-13 08:34:08,533 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
+2019-12-13 08:34:08,550 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@2913ca3e
+2019-12-13 08:34:09,563 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
+2019-12-13 08:34:10,496 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
+2019-12-13 08:34:11,222 WARN o.h.t.s.i.ExceptionHandlerLoggedImpl [main] GenerationTarget encountered exception accepting command : Error executing DDL "alter table generator_state add column market_data_error boolean not null" via JDBC Statement
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "alter table generator_state add column market_data_error boolean not null" via JDBC Statement
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:67) ~[hibernate-core-5.3.12.Final.jar:5.3.12.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlString(AbstractSchemaMigrator.java:559) ~[hibernate-core-5.3.12.Final.jar:5.3.12.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.applySqlStrings(AbstractSchemaMigrator.java:580) ~[hibernate-core-5.3.12.Final.jar:5.3.12.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.migrateTable(AbstractSchemaMigrator.java:297) ~[hibernate-core-5.3.12.Final.jar:5.3.12.Final]
+	at org.hibernate.tool.schema.internal.GroupedSchemaMigratorImpl.performTablesMigration(GroupedSchemaMigratorImpl.java:75) ~[hibernate-core-5.3.12.Final.jar:5.3.12.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.performMigration(AbstractSchemaMigrator.java:207) ~[hibernate-core-5.3.12.Final.jar:5.3.12.Final]
+	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:114) ~[hibernate-core-5.3.12.Final.jar:5.3.12.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:183) ~[hibernate-core-5.3.12.Final.jar:5.3.12.Final]
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:72) ~[hibernate-core-5.3.12.Final.jar:5.3.12.Final]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:310) ~[hibernate-core-5.3.12.Final.jar:5.3.12.Final]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:467) ~[hibernate-core-5.3.12.Final.jar:5.3.12.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:939) ~[hibernate-core-5.3.12.Final.jar:5.3.12.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58) ~[spring-orm-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365) ~[spring-orm-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:391) ~[spring-orm-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:378) ~[spring-orm-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:341) ~[spring-orm-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1837) ~[spring-beans-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1774) ~[spring-beans-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:593) ~[spring-beans-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515) ~[spring-beans-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320) ~[spring-beans-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222) [spring-beans-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318) [spring-beans-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199) [spring-beans-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1105) [spring-context-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867) [spring-context-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:549) [spring-context-5.1.10.RELEASE.jar:5.1.10.RELEASE]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:141) [spring-boot-2.1.9.RELEASE.jar:2.1.9.RELEASE]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:744) [spring-boot-2.1.9.RELEASE.jar:2.1.9.RELEASE]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:391) [spring-boot-2.1.9.RELEASE.jar:2.1.9.RELEASE]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:312) [spring-boot-2.1.9.RELEASE.jar:2.1.9.RELEASE]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1215) [spring-boot-2.1.9.RELEASE.jar:2.1.9.RELEASE]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1204) [spring-boot-2.1.9.RELEASE.jar:2.1.9.RELEASE]
+	at io.matel.SecurityApplication.main(SecurityApplication.java:12) [classes/:?]
+Caused by: org.postgresql.util.PSQLException: ERROR: column "market_data_error" contains null values
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2497) ~[postgresql-42.2.8.jar:42.2.8]
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2233) ~[postgresql-42.2.8.jar:42.2.8]
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:310) ~[postgresql-42.2.8.jar:42.2.8]
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:446) ~[postgresql-42.2.8.jar:42.2.8]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:370) ~[postgresql-42.2.8.jar:42.2.8]
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:311) ~[postgresql-42.2.8.jar:42.2.8]
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:297) ~[postgresql-42.2.8.jar:42.2.8]
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:274) ~[postgresql-42.2.8.jar:42.2.8]
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:269) ~[postgresql-42.2.8.jar:42.2.8]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95) ~[HikariCP-3.2.0.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-3.2.0.jar:?]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:54) ~[hibernate-core-5.3.12.Final.jar:5.3.12.Final]
+	... 34 more
+2019-12-13 08:34:11,596 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2019-12-13 08:34:13,294 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
+2019-12-13 08:34:13,308 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
+2019-12-13 08:34:14,771 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@288915a1, org.springframework.security.web.context.SecurityContextPersistenceFilter@30d2f9ea, org.springframework.security.web.header.HeaderWriterFilter@3d8b9dee, org.springframework.web.filter.CorsFilter@62a6a47e, org.springframework.security.web.authentication.logout.LogoutFilter@36017835, io.matel.app.connection.security.JwtAuthenticationFilter@4645a575, io.matel.app.connection.security.JwtAuthorizationFilter@b332eda, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3a61d819, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@20fdaf3e, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6bf70600, org.springframework.security.web.session.SessionManagementFilter@40dc2ade, org.springframework.security.web.access.ExceptionTranslationFilter@519a81dd, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@45a4587d]
+2019-12-13 08:34:14,815 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
+2019-12-13 08:34:14,877 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
+2019-12-13 08:34:15,388 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2019-12-13 08:34:15,887 INFO o.s.c.l.CompositeLog [main] Starting...
+2019-12-13 08:34:15,889 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+2019-12-13 08:34:15,892 INFO o.s.c.l.CompositeLog [main] Started.
+2019-12-13 08:34:15,940 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2019-12-13 08:34:15,979 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
+2019-12-13 08:34:15,986 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplication in 16.864 seconds (JVM running for 21.764)
+2019-12-13 08:34:15,997 INFO i.m.a.AppLauncher [main] Starting with 8 cores
+2019-12-13 08:34:16,030 INFO i.m.a.I.EWrapperImpl [main] >>> IB CONNECTED
+2019-12-13 08:34:16,076 INFO o.h.h.i.QueryTranslatorFactoryInitiator [Thread-4] HHH000397: Using ASTQueryTranslatorFactory
+2019-12-13 08:34:16,413 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-12-13 08:34:16,415 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2019-12-13 08:34:16,440 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 25 ms
+2019-12-13 08:34:17,318 INFO i.m.a.AppLauncher [Thread-7] 86 contracts found
+2019-12-13 08:34:17,354 INFO i.m.a.AppLauncher [Thread-7] Setting up last id tick: 110564306
+2019-12-13 08:34:17,356 INFO i.m.a.AppLauncher [Thread-7] Setting up last id candle: 121081546
+2019-12-13 08:34:17,357 WARN i.m.a.AppLauncher [Thread-7] >>> Read only lock! <<<
+2019-12-13 08:34:17,453 WARN o.h.e.j.s.SqlExceptionHelper [Thread-7] SQL Error: 0, SQLState: 42703
+2019-12-13 08:34:17,455 ERROR o.h.e.j.s.SqlExceptionHelper [Thread-7] ERROR: column generators0_.market_data_error does not exist
+  Position: 481
+2019-12-13 08:34:17,649 INFO i.m.a.m.MacroWriter [Thread-4] Most recent refreshed date is 2019-12-13T00:39:28
+2019-12-13 08:34:18,093 INFO i.m.a.c.a.ActiveUserEvent [http-nio-8080-exec-1] UserActivityEvent{type='login', username='trader', eventSessionId='352028a7-d6f3-6302-1fa4-81c0531c9eac', timestamp=2019-12-13T08:34:18.007842900Z[Europe/London]}
