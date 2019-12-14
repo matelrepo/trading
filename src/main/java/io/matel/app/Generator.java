@@ -77,7 +77,7 @@ public class Generator implements IbClient {
         Random rand = new Random();
         contract = contractRepo.findByIdcontract(contract.getIdcontract());
         appController.setContractsLive(appController.contractRepository.findTop100ByActiveAndTypeOrderByIdcontract(true, "LIVE"));
-        if (this.generatorState.isConnected())
+        if (this.generatorState.getMarketDataStatus()>0)
             disconnectMarketData(false);
 
         Double close = database.findTopCloseByIdContractOrderByTimeStampDesc(contract.getIdcontract());
@@ -90,7 +90,7 @@ public class Generator implements IbClient {
                 generatorState.setLastPrice(Global.STARTING_PRICE);
         }
 
-        this.generatorState.setConnected(true);
+        this.generatorState.setMarketDataStatus(2);
 
 
         Thread t = new Thread(() -> {
@@ -182,6 +182,7 @@ public class Generator implements IbClient {
     }
 
     private void updateGeneratorState(Tick tick){
+        this.generatorState.setMarketDataStatus(1);
         double price = tick.getClose();
         generatorState.setIdtick(tick.getId());
         generatorState.setColor(price > generatorState.getLastPrice() ? 1 : -1);
@@ -291,8 +292,8 @@ public class Generator implements IbClient {
 
     public void disconnectMarketData(boolean save) {
         LOGGER.info("Disconnecting market data for contract " + contract.getIdcontract());
-        if (this.generatorState.isConnected()) {
-            this.generatorState.setConnected(false);
+        if (this.generatorState.getMarketDataStatus()>0) {
+            this.generatorState.setMarketDataStatus(0);
             if (Global.RANDOM)
                 generatorState.setRandomGenerator(false);
             if (save) {
@@ -320,20 +321,22 @@ public class Generator implements IbClient {
     public void setGeneratorState() {
         GeneratorState generatorState = generatorStateRepo.findByIdcontract(contract.getIdcontract());
         if(generatorState!=null) {
-            generatorState.setConnected(false);
-            generatorState.setConnected(false);
                 this.generatorState = generatorState;
         }
     }
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 2400000)
     public void clock() {
-        if(ZonedDateTime.now().minusMinutes(5).isAfter(generatorState.getTimestamp())){
-            generatorState.setInactive(true);
-        }else{
-            generatorState.setInactive(false);
+        try {
+            if (ZonedDateTime.now().minusMinutes(1).isAfter(generatorState.getTimestamp())) {
+                if(generatorState.getMarketDataStatus()!=0)
+                   generatorState.setMarketDataStatus(2);
+            } else {
+                generatorState.setMarketDataStatus(1);
 
-        }
+            }
+        }catch(NullPointerException e){
+e.getMessage();        }
     }
 }
 

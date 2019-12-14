@@ -19,7 +19,6 @@ public class GeneratorState {
 
     @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
     private ZonedDateTime timestamp;
-    private boolean isConnected = false;
 
     private int speed;
     private boolean isRandomGenerator = true;
@@ -56,8 +55,7 @@ public class GeneratorState {
     private int dailyVolume =0; //ok
     private double high=Double.MIN_VALUE; //ok
     private double low=Double.MAX_VALUE; //ok
-    private int marketDataErrorCode = 0;
-    private boolean inactive = true;
+    private int marketDataStatus = 0;
 
 
     @UpdateTimestamp
@@ -100,14 +98,6 @@ public class GeneratorState {
 
     public void setTimestamp(ZonedDateTime timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public boolean isConnected() {
-        return isConnected;
-    }
-
-    public void setConnected(boolean connected) {
-        isConnected = connected;
     }
 
     public int getSpeed() {
@@ -268,7 +258,6 @@ public class GeneratorState {
                 "idcontract=" + idcontract +
                 ", idtick=" + idtick +
                 ", timestamp=" + timestamp +
-                ", isConnected=" + isConnected +
                 ", speed=" + speed +
                 ", isRandomGenerator=" + isRandomGenerator +
                 ", ask=" + ask +
@@ -299,20 +288,12 @@ public class GeneratorState {
         this.previousVolume = previousVolume;
     }
 
-    public int getMarketDataErrorCode() {
-        return marketDataErrorCode;
+    public int getMarketDataStatus() {
+        return marketDataStatus;
     }
 
-    public void setMarketDataErrorCode(int marketDataErrorCode) {
-        this.marketDataErrorCode = marketDataErrorCode;
-    }
-
-    public boolean isInactive() {
-        return inactive;
-    }
-
-    public void setInactive(boolean inactive) {
-        this.inactive = inactive;
+    public void setMarketDataStatus(int marketDataErrorCode) {
+        this.marketDataStatus = marketDataErrorCode;
     }
 
 

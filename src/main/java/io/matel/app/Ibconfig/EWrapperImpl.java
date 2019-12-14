@@ -85,8 +85,7 @@ public class EWrapperImpl implements EWrapper {
             LOGGER.warn(">>> ERROR >>> " + id + " " + errorCode + " " + errorMsg);
             if(errorCode ==200){
                 System.out.println(appController.getGenerators().get(Long.valueOf(id)));
-                appController.getGenerators().get(Long.valueOf(id)).getGeneratorState().setMarketDataErrorCode(200);
-                appController.getGenerators().get(Long.valueOf(id)).getGeneratorState().setConnected(false);
+                appController.getGenerators().get(Long.valueOf(id)).getGeneratorState().setMarketDataStatus(0);
             }
         }
 
