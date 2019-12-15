@@ -76,8 +76,8 @@ public class Generator implements IbClient {
     public void connectMarketData() throws ExecutionException, InterruptedException {
         Random rand = new Random();
         contract = contractRepo.findByIdcontract(contract.getIdcontract());
-        appController.setContractsLive(appController.contractRepository.findTop100ByActiveAndTypeOrderByIdcontract(true, "LIVE"));
-        if (this.generatorState.getMarketDataStatus()>0)
+        appController.setContractsLive(appController.contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE"));
+        if (this.generatorState.getMarketDataStatus()>0 && Global.ONLINE)
             disconnectMarketData(false);
 
         Double close = database.findTopCloseByIdContractOrderByTimeStampDesc(contract.getIdcontract());
@@ -202,8 +202,8 @@ public class Generator implements IbClient {
 
     private void runPrice(long tickerId, int field, double price, TickAttrib attrib) {
 
-        if ((price > 0 && (field == 4 || field == 68) && contract.getFlowType().equals("TRADES"))
-        || ((field == 1 || field == 2) && contract.getFlowType().equals("MID"))) {
+        if (price > 0 && (((field == 4 || field == 68) && contract.getFlowType().equals("TRADES"))
+        || ((field == 1 || field == 2) && contract.getFlowType().equals("MID")))) {
             double newPrice = reformatPrice(price, field);
             if (newPrice > 0 && newPrice != generatorState.getLastPrice()) {
                 Tick tick = new Tick(global.getIdTick(true),contract.getIdcontract(), ZonedDateTime.now().withZoneSameInstant(Global.ZONE_ID), newPrice);
@@ -265,7 +265,6 @@ public class Generator implements IbClient {
             }
 
             if (contract.getFusion() == 1) {
-                double bid = field == 4 ? 2 : 0;
                 newPrice = Utils.round((generatorState.getAsk() + generatorState.getBid()) / 2, contract.getRounding() - 1);
             } else if (contract.getFusion() == 2) {
                 newPrice = Utils.round((generatorState.getAsk() + generatorState.getBid()) * 5 * Math.pow(10, (double) (contract.getRounding() - 2)) / 2, 0);
@@ -298,7 +297,8 @@ public class Generator implements IbClient {
                 generatorState.setRandomGenerator(false);
             if (save) {
                 database.getSaverController().saveBatchTicks(true);
-            }this.dataService.cancelMktData(contract, true );
+            }
+            this.dataService.cancelMktData(contract, true );
         }
     }
 

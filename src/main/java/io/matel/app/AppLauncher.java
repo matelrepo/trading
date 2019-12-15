@@ -57,10 +57,23 @@ public class AppLauncher implements CommandLineRunner {
     public void startLive() {
         try {
             Database database = appController.createDatabase("matel", Global.port, "matel");
-            appController.setContractsLive(appController.contractRepository.findTop100ByActiveAndTypeOrderByIdcontract(true, "LIVE"));
+            appController.setContractsLive(appController.contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE"));
 //           List<ContractBasic> list = new ArrayList<>();
- //          list.add(appController.contractRepository.findByIdcontract(5));
-  //          appController.setContractsLive(list);
+//           list.add(appController.contractRepository.findByIdcontract(98));
+//            list.add(appController.contractRepository.findByIdcontract(99));
+//            list.add(appController.contractRepository.findByIdcontract(100));
+//            list.add(appController.contractRepository.findByIdcontract(101));
+//            list.add(appController.contractRepository.findByIdcontract(102));
+//            list.add(appController.contractRepository.findByIdcontract(103));
+//            list.add(appController.contractRepository.findByIdcontract(104));
+//            list.add(appController.contractRepository.findByIdcontract(105));
+//            list.add(appController.contractRepository.findByIdcontract(106));
+//            list.add(appController.contractRepository.findByIdcontract(107));
+//            list.add(appController.contractRepository.findByIdcontract(108));
+//            list.add(appController.contractRepository.findByIdcontract(109));
+//            list.add(appController.contractRepository.findByIdcontract(110));
+//            list.add(appController.contractRepository.findByIdcontract(111));
+//            appController.setContractsLive(list);
 
             LOGGER.info(appController.getContractsLive().size() + " contracts found");
 //        try {
@@ -84,10 +97,10 @@ public class AppLauncher implements CommandLineRunner {
                 LOGGER.warn(">>> Read only lock! <<<");
 
             for (ContractBasic contract : appController.getContractsLive()) {
-             //   if(contract.getIdcontract()==5) {
+//                if(contract.getIdcontract()>=98) {
                     createGenerator(contract);
                     createProcessor(contract, 0);
-             //  }
+//               }
             }
 
             LOGGER.info("Loading historical candles...");

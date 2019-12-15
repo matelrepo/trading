@@ -9,7 +9,7 @@ import java.util.List;
 
 @Configuration
 public class Global {
-    public static final boolean ONLINE = true;
+    public static final boolean ONLINE = false;
     public static final boolean RANDOM = false;
     public static final boolean READ_ONLY_TICKS = true;
     public static final boolean READ_ONLY_CANDLES = true;

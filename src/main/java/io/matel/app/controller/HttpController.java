@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -50,13 +51,15 @@ public class HttpController {
         this.appController = appController;
     }
 
-    @GetMapping("/contracts/{type}")
-    public List<ContractBasic> getContracts(@PathVariable String type){
+    @GetMapping("/contracts/{type}/{category_}")
+    public List<ContractBasic> getContracts(@PathVariable String type, @PathVariable String category_ ){
         List<ContractBasic> contracts = null;
+        final String category = category_.toUpperCase();
+        System.out.println(category);
         if(appController.getContractsLive().size()>0){
-            contracts = appController.getContractsLive();
+            contracts = appController.getContractsLive().stream().filter(con -> con.getCategory().equals(category)).collect(Collectors.toList());
         }else {
-            contracts = contractRepository.findTop100ByActiveAndTypeOrderByIdcontract(true, type);
+            contracts = contractRepository.findByActiveAndTypeOrderByIdcontract(true, type).stream().filter(con -> con.getCategory().equals(category)).collect(Collectors.toList());
         }
         LOGGER.info("Sending (" + contracts.size() + ") contracts " + type );
         return contracts;
@@ -85,6 +88,17 @@ public class HttpController {
         long idcontract = Long.valueOf(id);
         int freq = Integer.valueOf(frequency);
         return logProcessorStateRepo.findByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
+    }
+
+    @PostMapping("/disconnect-all/{save_}")
+    public void disconnectAll(@PathVariable String save_){
+        boolean save = Boolean.valueOf(save_);
+        appController.disconnectAllMarketData(save);
+    }
+
+    @PostMapping("/connect-all")
+    public void connectALL(){
+        appController.connectAllMarketData();
     }
 
     @PostMapping("/contract/{id}/{factor}")

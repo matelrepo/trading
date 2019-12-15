@@ -126,6 +126,26 @@ public class AppController {
         generators.get(contract.getIdcontract()).connectMarketData();
     }
 
+    public void disconnectAllMarketData(boolean save){
+        generators.forEach((id, gen)->{
+            gen.disconnectMarketData(save);
+        });
+    }
+
+    public void connectAllMarketData(){
+        generators.forEach((id, gen)->{
+            try {
+                gen.connectMarketData();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+
+
     public List<ContractBasic> getContractsLive() {
         return contractsLive;
     }

@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 @Entity
 @Table(name ="contracts")
@@ -35,9 +36,9 @@ public class ContractBasic {
     @Column(nullable = false)
     private String multiplier;
 
-    private String expiration;
+    private LocalDate expiration;
     
-    private String firstNotice;
+    private LocalDate firstNotice;
 
     @Column(nullable = false)
     private boolean active;
@@ -49,13 +50,12 @@ public class ContractBasic {
     private int fusion;
 
     private String type;
-    private String ZoneId;
     private String category;
 
     public ContractBasic(){}
 
     public ContractBasic(long idcontract, String title, String secType, String exchange, String currency, String symbol, double tickSize, int rounding, String multiplier,
-                         String expiration, String firstNotice, boolean active, String flowType, int fusion) {
+                         LocalDate expiration, LocalDate firstNotice, boolean active, String flowType, int fusion) {
         this.idcontract = idcontract;
         this.title = title;
         this.secType = secType;
@@ -144,19 +144,19 @@ public class ContractBasic {
         this.multiplier = multiplier;
     }
 
-    public String getExpiration() {
+    public LocalDate getExpiration() {
         return expiration;
     }
 
-    public void setExpiration(String expiration) {
+    public void setExpiration(LocalDate expiration) {
         this.expiration = expiration;
     }
 
-    public String getFirstNotice() {
+    public LocalDate getFirstNotice() {
         return firstNotice;
     }
 
-    public void setFirstNotice(String firstNotice) {
+    public void setFirstNotice(LocalDate firstNotice) {
         this.firstNotice = firstNotice;
     }
 
@@ -210,14 +210,6 @@ public class ContractBasic {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getZoneId() {
-        return ZoneId;
-    }
-
-    public void setZoneId(String zoneId) {
-        ZoneId = zoneId;
     }
 
     public String getCategory() {
