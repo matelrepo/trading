@@ -9,11 +9,11 @@ import java.util.List;
 
 @Configuration
 public class Global {
-    public static final boolean ONLINE = false;
+    public static final boolean ONLINE = true;
     public static final boolean RANDOM = false;
-    public static final boolean READ_ONLY_TICKS = true;
+    public static final boolean READ_ONLY_TICKS = false;
     public static final boolean READ_ONLY_CANDLES = true;
-    public static final boolean READ_ONLY_LOG_PROCESSOR = true;
+    public static final boolean READ_ONLY_LOG_PROCESSOR = false;
     public static final boolean UPDATE_MACRO = true;
     public static final boolean COMPUTE_DEEP_HISTORICAL = false;
 

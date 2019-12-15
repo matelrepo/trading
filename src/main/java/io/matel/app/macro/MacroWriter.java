@@ -88,8 +88,8 @@ public class MacroWriter {
 
     public List<MacroUpdate> readCsvLineByLine() throws Exception {
  //       String path = "/home/matel/Documents/script/sge/SGE_metadata.csv";
-//        String str = "C:/tmp/SGE_metadata.csv";
-        Path path = Paths.get("c:\\tmp\\SGE_metadata.csv");
+        Path path = Paths.get("/home/matel/Documents/script/sge/SGE_metadata.csv");
+ //       Path path = Paths.get("c:\\tmp\\SGE_metadata.csv");
  //       Path path = Paths.get(
   //              ClassLoader.getSystemResource(str).toURI());
         Reader reader = Files.newBufferedReader(path);

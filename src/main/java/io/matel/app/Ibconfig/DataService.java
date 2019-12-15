@@ -85,7 +85,7 @@ public class DataService {
             con.currency(contract.getCurrency());
             con.exchange(contract.getExchange());
             con.multiplier(contract.getMultiplier());
-            con.lastTradeDateOrContractMonth(contract.getExpiration());
+            con.lastTradeDateOrContractMonth(contract.getExpiration().toString());
             eWrapper.getClient().reqMktData((int) contract.getIdcontract(), con, "", false, false, null);
             numMktDataLines++;
             Thread.sleep(10);
