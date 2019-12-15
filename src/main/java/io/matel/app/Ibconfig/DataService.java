@@ -10,6 +10,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,6 +21,7 @@ public class DataService {
     private static final Logger LOGGER = LogManager.getLogger(DataService.class);
 
     private Map<Long, IbClient> repoIB = new ConcurrentHashMap<>();
+    public static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
     private int numMktDataLines = 0;
     private String host = "127.0.0.1";
@@ -85,7 +88,8 @@ public class DataService {
             con.currency(contract.getCurrency());
             con.exchange(contract.getExchange());
             con.multiplier(contract.getMultiplier());
-            con.lastTradeDateOrContractMonth(contract.getExpiration().toString());
+            if(contract.getExpiration()!= null)
+            con.lastTradeDateOrContractMonth(contract.getExpiration().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
             eWrapper.getClient().reqMktData((int) contract.getIdcontract(), con, "", false, false, null);
             numMktDataLines++;
             Thread.sleep(10);
