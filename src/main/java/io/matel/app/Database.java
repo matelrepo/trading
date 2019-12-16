@@ -99,7 +99,7 @@ public class Database {
                 "\t\t\n" +
                 "\t\t) c) b ON a.code = b.code order by a.date desc ) f\n" +
                 "LEFT JOIN public.macro_update u on f.code = u.code WHERE " +
-                "f.date > NOW() - INTERVAL '7 days' and f.date < NOW() + INTERVAL '15 days'\n" +
+                "f.date > NOW() - INTERVAL '30 days' and f.date < NOW() + INTERVAL '15 days'\n" +
                 "ORDER BY date, created_on desc";
 
         List<MacroDAO> list = new ArrayList<>();

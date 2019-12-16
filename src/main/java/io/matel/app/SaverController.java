@@ -39,7 +39,7 @@ public class SaverController {
             int numCandles = saveBatchCandles();
             LOGGER.info("Saving now " + numCandles + " candles for contract " + idcontract);
             updateCurrentCandle(gen);
-            saveBatchLogProcessor(null);
+  //          saveBatchLogProcessor(null);
 //            saveProcessorStates();
         } else {
             LOGGER.warn("Cannot save candles because ticks were not saved!");
