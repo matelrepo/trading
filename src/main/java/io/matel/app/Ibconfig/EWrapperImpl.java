@@ -206,6 +206,7 @@ public class EWrapperImpl implements EWrapper {
                     break;
                 case "NetLiquidationByCurrency":
                     portfolio.setNetLiquidation(val);
+                    appController.getGenerators().get(1L).tickPrice(1,4,val,null);
                     break;
                 case "UnrealizedPnL":
                     portfolio.setUnrealizedPnl(val);
@@ -214,6 +215,7 @@ public class EWrapperImpl implements EWrapper {
                     portfolio.setRealizedPnl(val);
                     break;
             }
+            portfolio.setExcessLiq(portfolio.getNetLiquidation() - portfolio.getMaintMarginReq());
             System.out.println(portfolio.toString());
         }
 
@@ -223,9 +225,9 @@ public class EWrapperImpl implements EWrapper {
     public void updatePortfolio(Contract contract, double position, double marketPrice, double marketValue,
                                 double averageCost, double unrealizedPNL, double realizedPNL, String accountName) {
         if(portfolio.getPositions().get(contract.conid()) == null){
-            portfolio.getPositions().put(contract.conid(), new Position(contract, position, marketPrice, marketValue, averageCost, unrealizedPNL, realizedPNL));
+            portfolio.getPositions().put(contract.conid(), new Position(contract.symbol(), position, marketPrice, marketValue, averageCost, unrealizedPNL, realizedPNL));
         }else {
-            portfolio.getPositions().get(contract.conid()).updatePosition(contract.conid(), position, marketPrice, marketValue, averageCost, unrealizedPNL, realizedPNL);
+            portfolio.getPositions().get(contract.conid()).updatePosition(position, marketPrice, marketValue, averageCost, unrealizedPNL, realizedPNL);
         }
         if(!portfolio.getPositions().get(contract.conid()).isConnected()){
             client.reqPnLSingle(contract.conid(), Global.ACCOUNT_NUMBER, "", contract.conid());

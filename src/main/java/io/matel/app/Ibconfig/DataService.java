@@ -88,6 +88,11 @@ public class DataService {
         numMktDataLines--;
     }
 
+    public void connectPortfolioUpdate(boolean connect){
+        eWrapper.getClient().reqAccountUpdates(connect, Global.ACCOUNT_NUMBER);
+
+    }
+
 
     public void reqMktData(ContractBasic contract, IbClient handler) throws InterruptedException {
         LOGGER.info("Requesting market data for contract " + contract.getIdcontract());

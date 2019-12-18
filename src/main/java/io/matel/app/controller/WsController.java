@@ -38,7 +38,7 @@ public class WsController {
     }
 
     public void sendPortoflio(Portfolio portfolio){
-        String path = "/get/portfolio/update";
+        String path = "/get/portfolio-update";
         template.convertAndSend(path, portfolio);
     }
 

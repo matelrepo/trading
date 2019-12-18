@@ -15,9 +15,19 @@ public class Portfolio {
     double dailyPnl =0;
     double realizedPnl = 0;
     double unrealizedPnl = 0;
+    double excessLiq = 0;
     ZonedDateTime lastUpdate;
     Map<Integer, Position> positions = new HashMap<>();
 
+
+
+    public double getExcessLiq() {
+        return excessLiq;
+    }
+
+    public void setExcessLiq(double excessLiq) {
+        this.excessLiq = excessLiq;
+    }
     public double getInitMarginReq() {
         return initMarginReq;
     }

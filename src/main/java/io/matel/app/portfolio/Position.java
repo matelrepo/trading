@@ -1,10 +1,8 @@
 package io.matel.app.portfolio;
 
-import com.ib.client.Contract;
-
 public class Position {
 
-    Contract contract;
+    String symbol;
     double quantity =0;
     double marketPrice = 0;
     double marketValue = 0;
@@ -12,11 +10,10 @@ public class Position {
     double unrealizedPnl = 0;
     double realizedPnl = 0;
     double dailyPnl =0;
-
     boolean connected = false;
 
-    public Position(Contract contract, double quantity, double marketPrice, double marketValue, double averageCost, double unrealizedPnl, double realizedPnl) {
-        this.contract = contract;
+    public Position(String symbol, double quantity, double marketPrice, double marketValue, double averageCost, double unrealizedPnl, double realizedPnl) {
+        this.symbol = symbol;
         this.quantity = quantity;
         this.marketPrice = marketPrice;
         this.marketValue = marketValue;
@@ -25,9 +22,8 @@ public class Position {
         this.realizedPnl = realizedPnl;
     }
 
-    public void updatePosition(int conid, double quantity, double marketPrice, double marketValue, double averageCost,
+    public void updatePosition(double quantity, double marketPrice, double marketValue, double averageCost,
                                double unrealizedPnl, double realizedPnl) {
-        this.contract = contract;
         this.quantity = quantity;
         this.marketPrice = marketPrice;
         this.marketValue = marketValue;
@@ -56,9 +52,6 @@ public class Position {
         this.dailyPnl = dailyPnl;
     }
 
-    public Contract getContract() {
-        return contract;
-    }
 
     public double getQuantity() {
         return quantity;
@@ -84,10 +77,14 @@ public class Position {
         return realizedPnl;
     }
 
+
+    public String getSymbol() {
+        return symbol;
+    }
+
     @Override
     public String toString() {
         return "Position{" +
-                "contract=" + contract.conid() +
                 ", quantity=" + quantity +
                 ", marketPrice=" + marketPrice +
                 ", marketValue=" + marketValue +

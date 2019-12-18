@@ -74,67 +74,71 @@ public class Generator implements IbClient {
     }
 
     public void connectMarketData() throws ExecutionException, InterruptedException {
-        Random rand = new Random();
-        contract = contractRepo.findByIdcontract(contract.getIdcontract());
-        appController.setContractsLive(appController.contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE"));
-        if (this.generatorState.getMarketDataStatus()>0 && Global.ONLINE)
-            disconnectMarketData(false);
+            Random rand = new Random();
+            contract = contractRepo.findByIdcontract(contract.getIdcontract());
+            appController.setContractsLive(appController.contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE"));
+            if (this.generatorState.getMarketDataStatus() > 0 && Global.ONLINE)
+                disconnectMarketData(false);
 
-        Double close = database.findTopCloseByIdContractOrderByTimeStampDesc(contract.getIdcontract());
+            Double close = database.findTopCloseByIdContractOrderByTimeStampDesc(contract.getIdcontract());
 
-        if (Global.RANDOM) {
-            generatorState.setRandomGenerator(true);
-            if (close != null)
-                generatorState.setLastPrice(close);
-             else
-                generatorState.setLastPrice(Global.STARTING_PRICE);
-        }
-
-        this.generatorState.setMarketDataStatus(2);
-
-
-        Thread t = new Thread(() -> {
             if (Global.RANDOM) {
-                while (generatorState.isRandomGenerator()) {
-                    double price = 0;
-                    if (Math.random() > 0.50) {
-                        price = generatorState.getLastPrice() + contract.getTickSize();
-                    } else {
-                        price = generatorState.getLastPrice() - contract.getTickSize();
+                generatorState.setRandomGenerator(true);
+                if (close != null)
+                    generatorState.setLastPrice(close);
+                else
+                    generatorState.setLastPrice(Global.STARTING_PRICE);
+            }
+
+            this.generatorState.setMarketDataStatus(2);
+
+
+            Thread t = new Thread(() -> {
+                if (Global.RANDOM) {
+                    while (generatorState.isRandomGenerator()) {
+                        double price = 0;
+                        if (Math.random() > 0.50) {
+                            price = generatorState.getLastPrice() + contract.getTickSize();
+                        } else {
+                            price = generatorState.getLastPrice() - contract.getTickSize();
+                        }
+
+                        runPrice(contract.getIdcontract(), 4, price, null);
+                        int volume = rand.nextInt(1000);
+                        runSize(contract.getIdcontract(), 5, volume);
+                        int volumeTotal = generatorState.getDailyVolume() + volume;
+                        runSize(contract.getIdcontract(), 8, volumeTotal);
+
+                        try {
+                            Thread.sleep(generatorState.getSpeed());
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
-
-                    runPrice(contract.getIdcontract(), 4, price, null);
-                    int volume = rand.nextInt(1000);
-                    runSize(contract.getIdcontract(), 5, volume);
-                    int volumeTotal = generatorState.getDailyVolume() + volume;
-                    runSize(contract.getIdcontract(), 8, volumeTotal);
-
+                } else if (Global.ONLINE) {
                     try {
-                        Thread.sleep(generatorState.getSpeed());
+                        if(contract.getIdcontract()>1) {
+                            dataService.reqMktData(contract, this);
+                        }else {
+                        dataService.connectPortfolioUpdate(true);
+                        }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-            } else if(Global.ONLINE) {
-                try {
-                    dataService.reqMktData(contract, this);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            });
+
+            t.setName(contract.getSymbol() + "." + contract.getCurrency() + "." + contract.getIdcontract());
+            t.start();
+
+            if (close != null) {
+                if (generatorState.getLastPrice() < 0) {
+                    Double price = close;
+                    if (price != null) {
+                        generatorState.setLastPrice(price);
+                    }
                 }
             }
-        });
-
-        t.setName(contract.getSymbol() + "." + contract.getCurrency() + "." + contract.getIdcontract());
-        t.start();
-
-        if (close != null) {
-            if (generatorState.getLastPrice() < 0) {
-                Double price = close;
-                if (price != null) {
-                    generatorState.setLastPrice(price);
-                }
-            }
-        }
     }
 
 
@@ -292,7 +296,11 @@ public class Generator implements IbClient {
             if (save) {
                 database.getSaverController().saveBatchTicks(true);
             }
-            this.dataService.cancelMktData(contract, true );
+            if(contract.getIdcontract()>1) {
+                this.dataService.cancelMktData(contract, true);
+            }else{
+this.dataService.connectPortfolioUpdate(false);
+            }
         }
     }
 
