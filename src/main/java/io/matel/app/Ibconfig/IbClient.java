@@ -8,7 +8,4 @@ public interface IbClient {
 
     public void tickSize(int tickerId, int field, int size);
 
-    public void reconnectMktData();
-
-
 }

@@ -55,7 +55,7 @@ public class AppController {
 
     public Database getDatabase() {
         if (database == null) {
-            database = new Database("matel", "5432", "matel");
+            database = beanFactory.createDatabaseJdbc("matel", "5432", "matel");
         }
         return database;
     }

@@ -12,8 +12,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.*;
 
 
@@ -154,7 +152,8 @@ public class AppLauncher implements CommandLineRunner {
                             generator.getDatabase().getSaverController().saveNow(generator, true);
                         }
 
-                        generator.getDatabase().close();
+//                        generator.getDatabase().close();
+                        generator.setDatabase(database);
                         semaphore.release();
 
 

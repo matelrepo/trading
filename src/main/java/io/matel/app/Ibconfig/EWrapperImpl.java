@@ -104,7 +104,7 @@ public class EWrapperImpl implements EWrapper {
                 LOGGER.warn("Trying to reconnect market data but client is not connected");
             }
             LOGGER.info("Reconnecting market data");
-            dataService.reconnectAllMktData();
+            appController.connectAllMarketData();
         }
         hasConnectedAlready = true;
     }

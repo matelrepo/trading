@@ -46,27 +46,27 @@ public class DataService {
         return repoIB;
     }
 
-    public void reconnectAllMktData(){
-        LOGGER.info(repoIB.size() + " market data found");
-        repoIB.forEach((id, gen)->{
-            cancelMktData(appController.getGenerators().get(id).getContract(), false);
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-        repoIB.forEach((id, gen)->{
-            try {
-                reqMktData(appController.getGenerators().get(id).getContract(), appController.getGenerators().get(id));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-
-    }
+//    public void reconnectAllMktData(){
+//        LOGGER.info(repoIB.size() + " market data found");
+//        repoIB.forEach((id, gen)->{
+//            cancelMktData(appController.getGenerators().get(id).getContract(), false);
+//            try {
+//                Thread.sleep(10);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//
+//        repoIB.forEach((id, gen)->{
+//            try {
+//                reqMktData(appController.getGenerators().get(id).getContract(), appController.getGenerators().get(id));
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//
+//
+//    }
 
     public void cancelMktData(ContractBasic contract, boolean cancelRepo){
         LOGGER.info("Cancelling market data for contract " + contract.getIdcontract());
@@ -92,7 +92,7 @@ public class DataService {
             con.lastTradeDateOrContractMonth(contract.getExpiration().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
             eWrapper.getClient().reqMktData((int) contract.getIdcontract(), con, "", false, false, null);
             numMktDataLines++;
-            Thread.sleep(10);
+            Thread.sleep(50);
         }
     }
 

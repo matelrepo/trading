@@ -139,12 +139,6 @@ public class Generator implements IbClient {
 
 
     @Override
-    public void reconnectMktData() {
-//        dataService.connectLive(contract, this);
-    }
-
-
-    @Override
     public void tickPrice(int tickerId, int field, double price, TickAttrib attrib) {
         runPrice(tickerId, field, price, attrib);
     }
