@@ -14,12 +14,13 @@ public class Global {
     public static final boolean READ_ONLY_TICKS = false;
     public static final boolean READ_ONLY_CANDLES = true;
     public static final boolean READ_ONLY_LOG_PROCESSOR = false;
-    public static final boolean UPDATE_MACRO = true;
+    public static final boolean UPDATE_MACRO = false;
     public static final boolean COMPUTE_DEEP_HISTORICAL = false;
 
     public static final String databaseName = "matel";
     public static final String port = "5432";
     public static final String username = "matel";
+    public static final String ACCOUNT_NUMBER ="U2629343";
 
 
     public static final String SECRET = "SomeSecretForJWTGeneration";

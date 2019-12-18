@@ -14,6 +14,8 @@ public class ContractBasic {
     @Column(unique = true)
     private long idcontract;
 
+    private Integer conid;
+
     private String title;
 
     private String secType;
@@ -188,6 +190,7 @@ public class ContractBasic {
     public String toString() {
         return "ContractBasic{" +
                 "idcontract=" + idcontract +
+                ", conid=" + conid +
                 ", title='" + title + '\'' +
                 ", secType='" + secType + '\'' +
                 ", exchange='" + exchange + '\'' +
@@ -196,11 +199,13 @@ public class ContractBasic {
                 ", tickSize=" + tickSize +
                 ", rounding=" + rounding +
                 ", multiplier='" + multiplier + '\'' +
-                ", expiration='" + expiration + '\'' +
-                ", firstNotice='" + firstNotice + '\'' +
+                ", expiration=" + expiration +
+                ", firstNotice=" + firstNotice +
                 ", active=" + active +
                 ", flowType='" + flowType + '\'' +
                 ", fusion=" + fusion +
+                ", type='" + type + '\'' +
+                ", category='" + category + '\'' +
                 '}';
     }
 
@@ -218,6 +223,14 @@ public class ContractBasic {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Integer getConid() {
+        return conid;
+    }
+
+    public void setConid(Integer conid) {
+        this.conid = conid;
     }
 }
 

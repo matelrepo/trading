@@ -3,11 +3,18 @@ package io.matel.app.Ibconfig;
 import com.ib.client.*;
 import io.matel.app.AppController;
 import io.matel.app.AppLauncher;
+import io.matel.app.config.Global;
+import io.matel.app.controller.WsController;
+import io.matel.app.domain.ContractBasic;
+import io.matel.app.portfolio.Portfolio;
+import io.matel.app.portfolio.Position;
+import io.matel.app.repo.ContractRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -28,6 +35,15 @@ public class EWrapperImpl implements EWrapper {
     @Autowired
     AppController appController;
 
+    @Autowired
+    Portfolio portfolio;
+
+    @Autowired
+    WsController wsController;
+
+    @Autowired
+    ContractRepository contractRepository;
+
     private boolean hasConnectedAlready = false;
 
     public EWrapperImpl() {
@@ -39,29 +55,10 @@ public class EWrapperImpl implements EWrapper {
         this.client = new EClientSocket(this, this.signal);
     }
 
-//
-//    public EReaderSignal getSignal() {
-//        return signal;
-//    }
-//
-//    public EReaderSignal getNewSignal() {
-//        this.signal = new EJavaSignal();
-//        return signal;
-//    }
-
     public void disconnect() {
         client.eDisconnect();
         connectionClosed();
     }
-
-//	public void connect() {
-//
-//		// signal = new EJavaSignal();
-//		// client = new MyEclientSocket(this, signal);
-//		System.out.println("Waiting IB connection - " + host + " " + port);
-//		client.eConnect(host, port, Global.getInstance().getIdClient());
-//		client.reqMarketDataType(3);
-//	}
 
 	public EClientSocket getClient() {
 		return client;
@@ -98,7 +95,12 @@ public class EWrapperImpl implements EWrapper {
     @Override
     public void nextValidId(int orderId) {
         if (!hasConnectedAlready) {
+            client.reqAccountUpdates(true, Global.ACCOUNT_NUMBER);
+//            client.reqAccountSummary(9001, "All", "$LEDGER");
+//            client.reqPositions();
+            client.reqPnL(17001, Global.ACCOUNT_NUMBER, "");
             appLauncher.startLive();
+
         } else {
             while(!client.isConnected()){
                 LOGGER.warn("Trying to reconnect market data but client is not connected");
@@ -140,12 +142,12 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void tickPrice(int tickerId, int field, double price, TickAttrib attrib) {
-        dataService.getRepoIB().get(Long.valueOf(tickerId)).tickPrice(tickerId, field, price, attrib);
+        dataService.getOpenConnectionsContract().get(Long.valueOf(tickerId)).tickPrice(tickerId, field, price, attrib);
     }
 
     @Override
     public void tickSize(int tickerId, int field, int size) {
-        dataService.getRepoIB().get(Long.valueOf(tickerId)).tickSize(tickerId, field,size);
+        dataService.getOpenConnectionsContract().get(Long.valueOf(tickerId)).tickSize(tickerId, field,size);
     }
 
     @Override
@@ -191,35 +193,103 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void updateAccountValue(String key, String value, String currency, String accountName) {
-        // TODO Auto-generated method stub
+        if(((key.equals("InitMarginReq") || key.equals("MaintMarginReq")) && currency.equals("USD")) || ((key.equals("NetLiquidationByCurrency") ||
+                key.equals("UnrealizedPnL") || key.equals("RealizedPnL")) && currency.equals("BASE"))){
+            double val = Double.parseDouble(value);
+            portfolio.setLastUpdate(ZonedDateTime.now());
+            switch(key){
+                case "MaintMarginReq":
+                    portfolio.setMaintMarginReq(val);
+                    break;
+                case "InitMarginReq":
+                    portfolio.setInitMarginReq(val);
+                    break;
+                case "NetLiquidationByCurrency":
+                    portfolio.setNetLiquidation(val);
+                    break;
+                case "UnrealizedPnL":
+                    portfolio.setUnrealizedPnl(val);
+                    break;
+                case "RealizedPnL":
+                    portfolio.setRealizedPnl(val);
+                    break;
+            }
+            System.out.println(portfolio.toString());
+        }
 
     }
 
     @Override
-    public void updatePortfolio(Contract contract, double position, double marketPrice, double marketValue, double averageCost, double unrealizedPNL, double realizedPNL,
-                                String accountName) {
-        // TODO Auto-generated method stub
+    public void updatePortfolio(Contract contract, double position, double marketPrice, double marketValue,
+                                double averageCost, double unrealizedPNL, double realizedPNL, String accountName) {
+        if(portfolio.getPositions().get(contract.conid()) == null){
+            portfolio.getPositions().put(contract.conid(), new Position(contract, position, marketPrice, marketValue, averageCost, unrealizedPNL, realizedPNL));
+        }else {
+            portfolio.getPositions().get(contract.conid()).updatePosition(contract.conid(), position, marketPrice, marketValue, averageCost, unrealizedPNL, realizedPNL);
+        }
+        if(!portfolio.getPositions().get(contract.conid()).isConnected()){
+            client.reqPnLSingle(contract.conid(), Global.ACCOUNT_NUMBER, "", contract.conid());
+        }
+        wsController.sendPortoflio(portfolio);
+        System.out.println(portfolio.getPositions().get(contract.conid()).toString());
 
     }
 
     @Override
     public void updateAccountTime(String timeStamp) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void accountDownloadEnd(String accountName) {
-        // TODO Auto-generated method stub
+        System.out.println("End Download: " + accountName);
 
     }
 
     @Override
+    public void accountSummary(int reqId, String account, String tag, String value, String currency) {
+    }
+
+    @Override
+    public void accountSummaryEnd(int reqId) {
+    }
+
+
+    @Override
+    public void position(String account, Contract contract, double pos, double avgCost) {
+    }
+
+
+    @Override
+    public void positionEnd() {
+    }
+
+    @Override
+    public void pnl(int reqId, double dailyPnL, double unrealizedPnL, double realizedPnL) {
+        portfolio.setDailyPnl(dailyPnL);
+        portfolio.setRealizedPnl(realizedPnL);
+        portfolio.setUnrealizedPnl(unrealizedPnL);
+        wsController.sendPortoflio(portfolio);
+        System.out.println(portfolio.toString());
+    }
+
+    @Override
+    public void pnlSingle(int reqId, int pos, double dailyPnL, double unrealizedPnL, double realizedPnL, double value) {
+        portfolio.getPositions().get(reqId).setConnected(true);
+        portfolio.getPositions().get(reqId).setDailyPnl(dailyPnL);
+        portfolio.getPositions().get(reqId).setUnrealizedPnl(unrealizedPnL);
+        portfolio.getPositions().get(reqId).setRealizedPnl(realizedPnL);
+        wsController.sendPortoflio(portfolio);
+        System.out.println(portfolio.getPositions().get(reqId).toString());
+    }
+
+    @Override
     public void contractDetails(int reqId, ContractDetails contractDetails) {
-//		ContractBasic contract = dataService.getContractsMap().get(reqId);
-////		contract.setIBcontract(contractDetails.contract());
-////		contract.setNumContracts(contract.getNumContracts()+1);
-//		dataService.getContractsMap().put(reqId, contract);
+ContractBasic contract = appController.getGenerators().get(Long.valueOf(reqId)).getContract();
+        if(contract.getConid()==null) {
+            contract.setConid(contractDetails.conid());
+            contractRepository.save(contract);
+        }
+System.out.println(contract.toString());
     }
 
     @Override
@@ -230,7 +300,7 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void contractDetailsEnd(int reqId) {
-        System.out.println("Contract details");
+//        System.out.println("Contract details");
     }
 
     @Override
@@ -341,29 +411,6 @@ public class EWrapperImpl implements EWrapper {
 
     }
 
-    @Override
-    public void position(String account, Contract contract, double pos, double avgCost) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void positionEnd() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void accountSummary(int reqId, String account, String tag, String value, String currency) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void accountSummaryEnd(int reqId) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void verifyMessageAPI(String apiData) {
@@ -542,18 +589,6 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void marketRule(int marketRuleId, PriceIncrement[] priceIncrements) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void pnl(int reqId, double dailyPnL, double unrealizedPnL, double realizedPnL) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void pnlSingle(int reqId, int pos, double dailyPnL, double unrealizedPnL, double realizedPnL, double value) {
         // TODO Auto-generated method stub
 
     }

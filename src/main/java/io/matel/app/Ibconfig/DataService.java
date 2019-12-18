@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DataService {
     private static final Logger LOGGER = LogManager.getLogger(DataService.class);
 
-    private Map<Long, IbClient> repoIB = new ConcurrentHashMap<>();
+    private Map<Long, IbClient> openConnectionsContract = new ConcurrentHashMap<>();
     public static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
     private int numMktDataLines = 0;
@@ -42,8 +42,8 @@ public class DataService {
         eWrapper.getClient().eConnect(host, port, clientId);
     }
 
-    public Map<Long, IbClient> getRepoIB() {
-        return repoIB;
+    public Map<Long, IbClient> getOpenConnectionsContract() {
+        return openConnectionsContract;
     }
 
 //    public void reconnectAllMktData(){
@@ -68,11 +68,23 @@ public class DataService {
 //
 //    }
 
+    public void reqContractDetails(ContractBasic contract){
+        Contract con = new Contract();
+        con.symbol(contract.getSymbol());
+        con.secType(contract.getSecType());
+        con.currency(contract.getCurrency());
+        con.exchange(contract.getExchange());
+        con.multiplier(contract.getMultiplier());
+        if(contract.getExpiration()!= null)
+            con.lastTradeDateOrContractMonth(contract.getExpiration().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+        eWrapper.getClient().reqContractDetails((int) contract.getIdcontract(), con);
+    }
+
     public void cancelMktData(ContractBasic contract, boolean cancelRepo){
         LOGGER.info("Cancelling market data for contract " + contract.getIdcontract());
         eWrapper.getClient().cancelMktData((int) contract.getIdcontract());
         if(cancelRepo)
-        repoIB.remove(contract.getIdcontract());
+        openConnectionsContract.remove(contract.getIdcontract());
         numMktDataLines--;
     }
 
@@ -81,7 +93,7 @@ public class DataService {
         LOGGER.info("Requesting market data for contract " + contract.getIdcontract());
         eWrapper.getClient().reqMarketDataType(3);
         if (Global.ONLINE) {
-            repoIB.put(contract.getIdcontract(), handler);
+            openConnectionsContract.put(contract.getIdcontract(), handler);
             Contract con = new Contract();
             con.symbol(contract.getSymbol());
             con.secType(contract.getSecType());

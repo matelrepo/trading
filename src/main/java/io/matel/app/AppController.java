@@ -1,5 +1,6 @@
 package io.matel.app;
 
+import io.matel.app.Ibconfig.DataService;
 import io.matel.app.config.BeanFactory;
 import io.matel.app.config.Global;
 import io.matel.app.connection.activeuser.ActiveUserEvent;
@@ -35,6 +36,9 @@ public class AppController {
 
     @Autowired
     BeanFactory beanFactory;
+
+    @Autowired
+    DataService dataService;
 
 //    @Autowired
 //    CandleRepository candleRepository;
@@ -102,6 +106,8 @@ public class AppController {
     public Generator createGenerator(ContractBasic contract) {
         Generator generator = beanFactory.createBeanGenerator(contract, Global.RANDOM);
         generators.put(contract.getIdcontract(), generator);
+        if(contract.getConid()==null)
+        dataService.reqContractDetails(contract);
         generator.setGeneratorState();
         generatorsState.put(contract.getIdcontract(), generator.getGeneratorState());
         return generator;

@@ -9,6 +9,7 @@ import io.matel.app.connection.user.UserRepository;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.macro.domain.MacroDAO;
+import io.matel.app.portfolio.Portfolio;
 import io.matel.app.repo.ContractRepository;
 import io.matel.app.repo.LogProcessorStateRepo;
 import io.matel.app.state.GeneratorState;
@@ -41,6 +42,9 @@ public class HttpController {
     @Autowired
     Global global;
 
+    @Autowired
+    Portfolio portfolio;
+
 
     public HttpController(UserRepository userRepository,
                           PasswordEncoder passwordEncoder,
@@ -63,6 +67,11 @@ public class HttpController {
         }
         LOGGER.info("Sending (" + contracts.size() + ") contracts " + type );
         return contracts;
+    }
+
+    @GetMapping("/portfolio")
+    public Portfolio getPortfolio(){
+        return portfolio;
     }
 
     @GetMapping("/ticker-crawl")
