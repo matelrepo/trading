@@ -60,7 +60,7 @@ public class Processor extends FlowMerger {
         if ((isCandleComputed && freq == 1380) || freq == 0)
             offset = isCandleComputed ? 1 : 0;
 
-        logData.timestamp = ZonedDateTime.now();
+        logData.timestamp = flow.get(0).getTimestamp();
         processorState.setTimestamp(ZonedDateTime.now());
         logData.isMaxDetect = isMaxDetect();
 
@@ -179,7 +179,7 @@ public class Processor extends FlowMerger {
         flow.get(0).setColor(processorState.getColor());
         logData.color0 = processorState.getColor();
 
-        if(!Global.COMPUTE_DEEP_HISTORICAL)
+        if(!Global.COMPUTE_DEEP_HISTORICAL || freq >=240)
         if (isCandleComputed || (flow.get(0).getClose() == flow.get(0).getHigh() || flow.get(0).getClose() == flow.get(0).getLow()))
             appController.getGenerators().get(contract.getIdcontract())
                     .getDatabase().getSaverController().saveBatchLogProcessor(logData);
@@ -245,7 +245,7 @@ public class Processor extends FlowMerger {
         logData.isHigh1LessThanOrEqualHigh2 = flow.get(1 - offset).getHigh() <= flow.get(2 - offset).getHigh();
         logData.isHigh3LessThanOrEqualHigh2 = flow.get(3 - offset).getHigh() <= flow.get(2 - offset).getHigh();
         logData.isHigh4LessThanOrEqualHigh2 = flow.get(4 - offset).getHigh() <= flow.get(2 - offset).getHigh();
-        return flow.get(2-offset).getHigh() != processorState.getMax() && flow.get(0).isNewCandle() && flow.get(1 - offset).getHigh() <= flow.get(2 - offset).getHigh()
+        return  flow.get(0).isNewCandle() && flow.get(1 - offset).getHigh() <= flow.get(2 - offset).getHigh()
                 && flow.get(3 - offset).getHigh() <= flow.get(2 - offset).getHigh() && flow.get(4 - offset).getHigh() <= flow.get(2 - offset).getHigh();
     }
 
@@ -253,7 +253,7 @@ public class Processor extends FlowMerger {
         logData.isLow1GreaterThanOrEqualLow2 = flow.get(1 - offset).getLow() >= flow.get(2 - offset).getLow();
         logData.isLow3GreaterThanOrEqualLow2 = flow.get(3 - offset).getLow() >= flow.get(2 - offset).getLow();
         logData.isLow4GreaterThanOrEqualLow2 = flow.get(4 - offset).getLow() >= flow.get(2 - offset).getLow();
-        return flow.get(2-offset).getLow() != processorState.getMin() &&flow.get(0).isNewCandle() && flow.get(1 - offset).getLow() >= flow.get(2 - offset).getLow()
+        return  flow.get(0).isNewCandle() && flow.get(1 - offset).getLow() >= flow.get(2 - offset).getLow()
                 && flow.get(3 - offset).getLow() >= flow.get(2 - offset).getLow() && flow.get(4 - offset).getLow() >= flow.get(2 - offset).getLow();
     }
 

@@ -86,6 +86,7 @@ public class HttpController {
         return appController.getCandlesByIdContractByFreq(idcontract, freq);
     }
 
+
     @GetMapping("/quote-histo/{id}")
     public GeneratorState getGeneratorState(@PathVariable String id){
         long idcontract = Long.valueOf(id);
@@ -96,7 +97,7 @@ public class HttpController {
     public List<LogProcessorState> getLogProcessorState(@PathVariable String id, @PathVariable String frequency){
         long idcontract = Long.valueOf(id);
         int freq = Integer.valueOf(frequency);
-        return logProcessorStateRepo.findByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq);
+        return logProcessorStateRepo.findTop500ByIdcontractAndFreqOrderByIdDesc(idcontract, freq);
     }
 
     @PostMapping("/disconnect-all/{save_}")
