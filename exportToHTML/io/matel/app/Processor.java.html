@@ -1,0 +1,341 @@
+<html>
+<head>
+<title>Processor.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6897bb;}
+.s3 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Processor.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">io.matel.app</span><span class="s0">;</span>
+
+
+<span class="s0">import </span><span class="s1">io.matel.app.config.Global</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">io.matel.app.domain.Candle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">io.matel.app.domain.ContractBasic</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">io.matel.app.domain.EventType</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">io.matel.app.repo.ProcessorStateRepo</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">io.matel.app.state.LogProcessorState</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">io.matel.app.state.ProcessorState</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">io.matel.app.tools.DoubleStatistics</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">javazoom.jl.player.Player</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.beans.factory.annotation.Autowired</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.io.FileInputStream</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.ZonedDateTime</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.temporal.ChronoUnit</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.temporal.TemporalAmount</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.HashMap</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.List</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Map</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.stream.Collector</span><span class="s0">;</span>
+
+<span class="s0">public class </span><span class="s1">Processor </span><span class="s0">extends </span><span class="s1">FlowMerger {</span>
+
+    <span class="s1">@Autowired</span>
+    <span class="s1">ProcessorStateRepo processorStateRepo</span><span class="s0">;</span>
+    <span class="s0">private int </span><span class="s1">offset = </span><span class="s2">0</span><span class="s0">; </span><span class="s3">// Used for offset candle if frequency &gt;0</span>
+    <span class="s1">LogProcessorState logData</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">ZonedDateTime dateNow = ZonedDateTime.now()</span><span class="s0">;</span>
+
+    <span class="s0">private </span><span class="s1">Map&lt;EventType</span><span class="s0">, </span><span class="s1">Boolean&gt; alertConfig = </span><span class="s0">new </span><span class="s1">HashMap&lt;&gt;()</span><span class="s0">;</span>
+    <span class="s0">private boolean </span><span class="s1">alertAudioBigVolume = </span><span class="s0">false;</span>
+
+    <span class="s0">public </span><span class="s1">Processor(ContractBasic contract</span><span class="s0">, int </span><span class="s1">freq) {</span>
+        <span class="s0">super</span><span class="s1">(contract</span><span class="s0">, </span><span class="s1">freq)</span><span class="s0">;</span>
+
+        <span class="s1">processorState = </span><span class="s0">new </span><span class="s1">ProcessorState(contract.getIdcontract()</span><span class="s0">, </span><span class="s1">freq)</span><span class="s0">;</span>
+        <span class="s0">for </span><span class="s1">(EventType type : EventType.values())</span>
+            <span class="s1">alertConfig.put(type</span><span class="s0">, false</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">if </span><span class="s1">(freq &gt; </span><span class="s2">1 </span><span class="s1">&amp;&amp; (contract.getIdcontract() == </span><span class="s2">5 </span><span class="s1">|| contract.getIdcontract() == </span><span class="s2">9</span><span class="s1">)) {</span>
+            <span class="s1">alertAudioBigVolume = </span><span class="s0">true;</span>
+            <span class="s0">for </span><span class="s1">(EventType type : EventType.values())</span>
+                <span class="s1">alertConfig.put(type</span><span class="s0">, true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public </span><span class="s1">List&lt;Candle&gt; getFlow() {</span>
+        <span class="s0">return </span><span class="s1">flow</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">process(ZonedDateTime timestamp</span><span class="s0">, long </span><span class="s1">idTick</span><span class="s0">, </span><span class="s1">Double open</span><span class="s0">, </span><span class="s1">Double high</span><span class="s0">, </span><span class="s1">Double low</span><span class="s0">, double </span><span class="s1">close</span><span class="s0">, boolean </span><span class="s1">isCandleComputed) {</span>
+
+        <span class="s0">if</span><span class="s1">(Global.COMPUTE_DEEP_HISTORICAL &amp;&amp; freq &lt; </span><span class="s2">240 </span><span class="s1">&amp;&amp; timestamp.until(dateNow</span><span class="s0">, </span><span class="s1">ChronoUnit.DAYS) &gt; </span><span class="s2">90</span><span class="s1">) {</span>
+        <span class="s1">}</span><span class="s0">else</span><span class="s1">{</span>
+            <span class="s1">merge(timestamp</span><span class="s0">, </span><span class="s1">idTick</span><span class="s0">, </span><span class="s1">open</span><span class="s0">, </span><span class="s1">high</span><span class="s0">, </span><span class="s1">low</span><span class="s0">, </span><span class="s1">close</span><span class="s0">, </span><span class="s1">isCandleComputed)</span><span class="s0">;</span>
+            <span class="s1">logData = </span><span class="s0">new </span><span class="s1">LogProcessorState(contract.getIdcontract()</span><span class="s0">, </span><span class="s1">freq</span><span class="s0">, </span><span class="s1">offset)</span><span class="s0">;</span>
+            <span class="s1">logData.idTick = idTick</span><span class="s0">;</span>
+            <span class="s1">logData.flowSizeGreaterThan4 = flow.size() &gt; </span><span class="s2">4</span><span class="s0">;</span>
+            <span class="s0">if </span><span class="s1">(flow.size() &gt; </span><span class="s2">4</span><span class="s1">)</span>
+                <span class="s1">algorythm(isCandleComputed)</span><span class="s0">;</span>
+            <span class="s0">if </span><span class="s1">(Global.ONLINE || Global.RANDOM)</span>
+                <span class="s1">wsController.sendLiveCandle(flow.get(</span><span class="s2">0</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">algorythm(</span><span class="s0">boolean </span><span class="s1">isCandleComputed) {</span>
+
+        <span class="s1">logData.smallCandleNoiseRemoval = smallCandleNoiseRemoval</span><span class="s0">;</span>
+
+
+        <span class="s0">if </span><span class="s1">((isCandleComputed &amp;&amp; freq == </span><span class="s2">1380</span><span class="s1">) || freq == </span><span class="s2">0</span><span class="s1">)</span>
+            <span class="s1">offset = isCandleComputed ? </span><span class="s2">1 </span><span class="s1">: </span><span class="s2">0</span><span class="s0">;</span>
+
+        <span class="s1">logData.timestamp = flow.get(</span><span class="s2">0</span><span class="s1">).getTimestamp()</span><span class="s0">;</span>
+        <span class="s1">processorState.setTimestamp(ZonedDateTime.now())</span><span class="s0">;</span>
+        <span class="s1">logData.isMaxDetect = isMaxDetect()</span><span class="s0">;</span>
+
+        <span class="s1">logData.low0 = flow.get(</span><span class="s2">0</span><span class="s1">).getLow()</span><span class="s0">;</span>
+        <span class="s1">logData.high0 = flow.get(</span><span class="s2">0</span><span class="s1">).getHigh()</span><span class="s0">;</span>
+        <span class="s1">logData.low1 = flow.get(</span><span class="s2">1 </span><span class="s1">- offset).getLow()</span><span class="s0">;</span>
+        <span class="s1">logData.high1 = flow.get(</span><span class="s2">1 </span><span class="s1">- offset).getHigh()</span><span class="s0">;</span>
+        <span class="s1">logData.low2 = flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getLow()</span><span class="s0">;</span>
+        <span class="s1">logData.high2 = flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getHigh()</span><span class="s0">;</span>
+        <span class="s1">logData.low3 = flow.get(</span><span class="s2">3 </span><span class="s1">- offset).getLow()</span><span class="s0">;</span>
+        <span class="s1">logData.high3 = flow.get(</span><span class="s2">3 </span><span class="s1">- offset).getHigh()</span><span class="s0">;</span>
+        <span class="s1">logData.low4 = flow.get(</span><span class="s2">4 </span><span class="s1">- offset).getLow()</span><span class="s0">;</span>
+        <span class="s1">logData.high4 = flow.get(</span><span class="s2">4 </span><span class="s1">- offset).getHigh()</span><span class="s0">;</span>
+
+        <span class="s1">logData.isMaxDetect = isMaxDetect()</span><span class="s0">;</span>
+        <span class="s1">logData.max = processorState.getMax()</span><span class="s0">;</span>
+        <span class="s1">logData.isHigh2LessThanMax = flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getHigh() &lt; processorState.getMax()</span><span class="s0">;</span>
+        <span class="s1">logData.maxTrend = flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getHigh() &lt; processorState.getMax()</span><span class="s0">;</span>
+        <span class="s1">processorState.setMaxTrend(flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getHigh() &lt; processorState.getMax())</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(isMaxDetect() &amp;&amp; !smallCandleNoiseRemoval) {</span>
+            <span class="s1">logData.maxValue = flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getHigh()</span><span class="s0">;</span>
+            <span class="s1">logData.maxValid = flow.get(</span><span class="s2">1 </span><span class="s1">- offset).getLow()</span><span class="s0">;</span>
+            <span class="s1">logData.isEventTypeMaxDetect = </span><span class="s0">true;</span>
+            <span class="s1">processorState.setMaxValue(flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getHigh())</span><span class="s0">;</span>
+            <span class="s1">processorState.setMaxValid(flow.get(</span><span class="s2">1 </span><span class="s1">- offset).getLow())</span><span class="s0">;</span>
+            <span class="s1">processorState.setTradable(</span><span class="s0">this</span><span class="s1">.getColorMin(processorState.isMaxTrend()</span><span class="s0">, </span><span class="s1">processorState.isMinTrend()) &lt; </span><span class="s2">0 </span><span class="s1">&amp;&amp; processorState.getColor() &gt;= </span><span class="s2">0</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">recordEvent(EventType.MAX_DETECT)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s1">logData.low0LessThanMaxValid = flow.get(</span><span class="s2">0</span><span class="s1">).getLow() &lt; processorState.getMaxValid()</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(processorState.getActiveEvents().get(EventType.MAX_DETECT) &amp;&amp; flow.get(</span><span class="s2">0</span><span class="s1">).getLow() &lt; processorState.getMaxValid()) {</span>
+            <span class="s1">logData.colorGreaterThanMinus1 = processorState.getColor() &gt; -</span><span class="s2">1</span><span class="s0">;</span>
+            <span class="s0">if </span><span class="s1">(processorState.getColor() &gt; -</span><span class="s2">1</span><span class="s1">) {</span>
+                <span class="s1">processorState.setMax(processorState.getMaxValue())</span><span class="s0">;</span>
+                <span class="s1">logData.max = processorState.getMaxValue()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s1">logData.maxTrend = processorState.isMaxTrend()</span><span class="s0">;</span>
+            <span class="s1">logData.minTrend = processorState.isMinTrend()</span><span class="s0">;</span>
+            <span class="s1">logData.getColorMax = </span><span class="s0">this</span><span class="s1">.getColorMax(processorState.isMaxTrend()</span><span class="s0">, </span><span class="s1">processorState.isMinTrend())</span><span class="s0">;</span>
+
+            <span class="s1">processorState.setColor(</span><span class="s0">this</span><span class="s1">.getColorMax(processorState.isMaxTrend()</span><span class="s0">, </span><span class="s1">processorState.isMinTrend()))</span><span class="s0">;</span>
+            <span class="s1">recordEvent(EventType.MAX_CONFIRM)</span><span class="s0">;</span>
+            <span class="s1">logData.isEventTypeMaxConfirm = </span><span class="s0">true;</span>
+        <span class="s1">}</span>
+
+        <span class="s1">logData.isEventTypeMaxDetect = processorState.getActiveEvents().get(EventType.MAX_DETECT)</span><span class="s0">;</span>
+        <span class="s1">logData.high0GreaterThanMaxValue = flow.get(</span><span class="s2">0</span><span class="s1">).getHigh() &gt; processorState.getMaxValue()</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(processorState.getActiveEvents().get(EventType.MAX_DETECT) &amp;&amp; flow.get(</span><span class="s2">0</span><span class="s1">).getHigh() &gt; processorState.getMaxValue()) {</span>
+            <span class="s1">recordEvent(EventType.MAX_DETECT_CANCEL)</span><span class="s0">;</span>
+
+            <span class="s1">logData.isEventTypeMaxDetectCancel = </span><span class="s0">true;</span>
+        <span class="s1">}</span>
+
+        <span class="s1">logData.isMinDetect = isMinDetect()</span><span class="s0">;</span>
+        <span class="s1">logData.isLow2GreatherThanMin = flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getLow() &gt; processorState.getMin()</span><span class="s0">;</span>
+        <span class="s1">logData.min = processorState.getMin()</span><span class="s0">;</span>
+        <span class="s1">logData.minTrend = flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getLow() &gt; processorState.getMin()</span><span class="s0">;</span>
+        <span class="s1">processorState.setMinTrend(flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getLow() &gt; processorState.getMin())</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(isMinDetect() &amp;&amp; !smallCandleNoiseRemoval) {</span>
+            <span class="s1">logData.minValue = flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getLow()</span><span class="s0">;</span>
+            <span class="s1">logData.minValid = flow.get(</span><span class="s2">1 </span><span class="s1">- offset).getHigh()</span><span class="s0">;</span>
+            <span class="s1">logData.isEventTypeMinDetect = </span><span class="s0">true;</span>
+
+
+            <span class="s1">processorState.setMinValue(flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getLow())</span><span class="s0">;</span>
+            <span class="s1">processorState.setMinValid(flow.get(</span><span class="s2">1 </span><span class="s1">- offset).getHigh())</span><span class="s0">;</span>
+            <span class="s1">processorState.setTradable(</span><span class="s0">this</span><span class="s1">.getColorMin(processorState.isMaxTrend()</span><span class="s0">, </span><span class="s1">processorState.isMinTrend()) &gt; </span><span class="s2">0 </span><span class="s1">&amp;&amp; processorState.getColor() &lt;= </span><span class="s2">0</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">recordEvent(EventType.MIN_DETECT)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s1">logData.isEventTypeMinDetect = processorState.getActiveEvents().get(EventType.MIN_DETECT)</span><span class="s0">;</span>
+        <span class="s1">logData.high0GreatherThanMinValid = flow.get(</span><span class="s2">0</span><span class="s1">).getHigh() &gt; processorState.getMinValid()</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(processorState.getActiveEvents().get(EventType.MIN_DETECT) &amp;&amp; flow.get(</span><span class="s2">0</span><span class="s1">).getHigh() &gt; processorState.getMinValid()) {</span>
+            <span class="s1">logData.colorLessThan1 = processorState.getColor() &lt; </span><span class="s2">1</span><span class="s0">;</span>
+            <span class="s0">if </span><span class="s1">(processorState.getColor() &lt; </span><span class="s2">1</span><span class="s1">) {</span>
+                <span class="s1">processorState.setMin(processorState.getMinValue())</span><span class="s0">;</span>
+                <span class="s1">logData.min = processorState.getMinValue()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s1">logData.getColorMin = </span><span class="s0">this</span><span class="s1">.getColorMin(processorState.isMaxTrend()</span><span class="s0">, </span><span class="s1">processorState.isMinTrend())</span><span class="s0">;</span>
+            <span class="s1">logData.maxTrend = processorState.isMaxTrend()</span><span class="s0">;</span>
+            <span class="s1">logData.minTrend = processorState.isMinTrend()</span><span class="s0">;</span>
+            <span class="s1">processorState.setColor(</span><span class="s0">this</span><span class="s1">.getColorMin(processorState.isMaxTrend()</span><span class="s0">, </span><span class="s1">processorState.isMinTrend()))</span><span class="s0">;</span>
+            <span class="s1">recordEvent(EventType.MIN_CONFIRM)</span><span class="s0">;</span>
+            <span class="s1">logData.isEventTypeMinConfirm = </span><span class="s0">true;</span>
+        <span class="s1">}</span>
+
+        <span class="s1">logData.isEventTypeMinDetect = processorState.getActiveEvents().get(EventType.MIN_DETECT)</span><span class="s0">;</span>
+        <span class="s1">logData.low0LessThanMinValue = flow.get(</span><span class="s2">0</span><span class="s1">).getLow() &lt; processorState.getMinValue()</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(processorState.getActiveEvents().get(EventType.MIN_DETECT) &amp;&amp; flow.get(</span><span class="s2">0</span><span class="s1">).getLow() &lt; processorState.getMinValue()) {</span>
+            <span class="s1">recordEvent(EventType.MIN_DETECT_CANCEL)</span><span class="s0">;</span>
+            <span class="s1">logData.isEventTypeMinDetectCancel = </span><span class="s0">true;</span>
+        <span class="s1">}</span>
+
+        <span class="s1">flow.get(</span><span class="s2">0</span><span class="s1">).setCloseAverage(flow.stream().mapToDouble(x -&gt; x.getClose()).summaryStatistics().getAverage())</span><span class="s0">;</span>
+        <span class="s1">logData.closeAverage = flow.get(</span><span class="s2">0</span><span class="s1">).getCloseAverage()</span><span class="s0">;</span>
+
+        <span class="s1">flow.get(</span><span class="s2">0</span><span class="s1">).setAbnormalHeightLevel(flow.stream().map(x -&gt; (x.getHigh() - x.getLow()))</span>
+                <span class="s1">.collect(Collector.of(</span>
+                        <span class="s1">DoubleStatistics::</span><span class="s0">new,</span>
+                        <span class="s1">DoubleStatistics::accept</span><span class="s0">,</span>
+                        <span class="s1">DoubleStatistics::combine</span><span class="s0">,</span>
+                        <span class="s1">d -&gt; d.getAverage() + </span><span class="s2">2 </span><span class="s1">* d.getStandardDeviation()</span>
+                <span class="s1">)))</span><span class="s0">;</span>
+
+
+        <span class="s1">logData.high0MinusLow0 = flow.get(</span><span class="s2">0</span><span class="s1">).getHigh() - flow.get(</span><span class="s2">0</span><span class="s1">).getLow()</span><span class="s0">;</span>
+        <span class="s1">logData.abnormalHeightLevel = flow.get(</span><span class="s2">0</span><span class="s1">).getAbnormalHeightLevel()</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">((flow.get(</span><span class="s2">0</span><span class="s1">).getHigh() - flow.get(</span><span class="s2">0</span><span class="s1">).getLow()) &gt; flow.get(</span><span class="s2">0</span><span class="s1">).getAbnormalHeightLevel()) {</span>
+            <span class="s0">if </span><span class="s1">(!flow.get(</span><span class="s2">0</span><span class="s1">).isBigCandle()) {</span>
+<span class="s3">//                if (alertAudioBigVolume &amp;&amp; Global.play_sound) {</span>
+                    <span class="s1">EventType type = </span><span class="s0">null;</span>
+                    <span class="s0">if </span><span class="s1">(flow.get(</span><span class="s2">0</span><span class="s1">).getClose() &gt; flow.get(</span><span class="s2">0</span><span class="s1">).getOpen()) {</span>
+                        <span class="s1">type = EventType.BUYERS</span><span class="s0">;</span>
+                    <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                        <span class="s1">type = EventType.SELLERS</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                    <span class="s1">recordEvent(type)</span><span class="s0">;</span>
+<span class="s3">//                }</span>
+            <span class="s1">}</span>
+            <span class="s1">flow.get(</span><span class="s2">0</span><span class="s1">).setBigCandle(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s1">flow.get(</span><span class="s2">0</span><span class="s1">).setBigCandle(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s1">flow.get(</span><span class="s2">0</span><span class="s1">).setColor(processorState.getColor())</span><span class="s0">;</span>
+        <span class="s1">logData.color0 = processorState.getColor()</span><span class="s0">;</span>
+
+
+        <span class="s0">if </span><span class="s1">(!Global.COMPUTE_DEEP_HISTORICAL || freq &gt;= </span><span class="s2">240</span><span class="s1">)</span>
+            <span class="s0">if </span><span class="s1">(isCandleComputed || (flow.get(</span><span class="s2">0</span><span class="s1">).getClose() == flow.get(</span><span class="s2">0</span><span class="s1">).getHigh() || flow.get(</span><span class="s2">0</span><span class="s1">).getClose() == flow.get(</span><span class="s2">0</span><span class="s1">).getLow()))</span>
+                <span class="s1">appController.getGenerators().get(contract.getIdcontract())</span>
+                        <span class="s1">.getDatabase().getSaverController().saveBatchLogProcessor(logData)</span><span class="s0">;</span>
+
+        <span class="s1">processorState.setTradable(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+
+    <span class="s1">}</span>
+
+<span class="s3">//    private void playAlert() {</span>
+<span class="s3">//        try {</span>
+<span class="s3">//            String way = &quot;&quot;;</span>
+<span class="s3">//            if (flow.get(0).getClose() &gt; flow.get(0).getOpen()) {</span>
+<span class="s3">//                way = &quot;_buyer&quot;;</span>
+<span class="s3">//            } else {</span>
+<span class="s3">//                way = &quot;_seller&quot;;</span>
+<span class="s3">//            }</span>
+<span class="s3">//</span>
+<span class="s3">//            FileInputStream fileInputStream1 = new FileInputStream(&quot;src/main/resources/audio/c&quot; + contract.getIdcontract() + &quot;.mp3&quot;);</span>
+<span class="s3">//            Player player1 = new Player((fileInputStream1));</span>
+<span class="s3">//            player1.play();</span>
+<span class="s3">//</span>
+<span class="s3">//            FileInputStream fileInputStream2 = new FileInputStream(&quot;src/main/resources/audio/&quot; + freq + way + &quot;.mp3&quot;);</span>
+<span class="s3">//            Player player2 = new Player((fileInputStream2));</span>
+<span class="s3">//            player2.play();</span>
+<span class="s3">// //           System.out.println(&quot;Song is playing&quot;);</span>
+<span class="s3">//        } catch (Exception e) {</span>
+<span class="s3">//            System.out.println(e);</span>
+<span class="s3">//        }</span>
+<span class="s3">//    }</span>
+
+    <span class="s0">private int </span><span class="s1">getColorMax(</span><span class="s0">boolean </span><span class="s1">maxTrend</span><span class="s0">, boolean </span><span class="s1">minTrend) {</span>
+        <span class="s0">if </span><span class="s1">(maxTrend &amp;&amp; !minTrend) {</span>
+            <span class="s0">if </span><span class="s1">(flow.get(</span><span class="s2">1</span><span class="s1">).getColor() &lt;= -</span><span class="s2">1</span><span class="s1">)</span>
+                <span class="s0">return </span><span class="s1">-</span><span class="s2">2</span><span class="s0">;</span>
+            <span class="s0">return </span><span class="s1">-</span><span class="s2">1</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(!maxTrend &amp;&amp; minTrend) {</span>
+            <span class="s0">return </span><span class="s2">0</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(maxTrend &amp;&amp; minTrend) {</span>
+            <span class="s0">if </span><span class="s1">(flow.get(</span><span class="s2">1</span><span class="s1">).getColor() &lt;= -</span><span class="s2">1</span><span class="s1">)</span>
+                <span class="s0">return </span><span class="s1">-</span><span class="s2">2</span><span class="s0">;</span>
+            <span class="s0">return </span><span class="s1">-</span><span class="s2">1</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s0">if </span><span class="s1">(flow.get(</span><span class="s2">1</span><span class="s1">).getColor() &lt;= -</span><span class="s2">1</span><span class="s1">)</span>
+                <span class="s0">return </span><span class="s1">-</span><span class="s2">2</span><span class="s0">;</span>
+            <span class="s0">return </span><span class="s1">-</span><span class="s2">1</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private int </span><span class="s1">getColorMin(</span><span class="s0">boolean </span><span class="s1">maxTrend</span><span class="s0">, boolean </span><span class="s1">minTrend) {</span>
+        <span class="s0">if </span><span class="s1">(maxTrend &amp;&amp; !minTrend) {</span>
+            <span class="s0">return </span><span class="s2">0</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(!maxTrend &amp;&amp; minTrend) {</span>
+            <span class="s0">if </span><span class="s1">(flow.get(</span><span class="s2">1</span><span class="s1">).getColor() &gt;= </span><span class="s2">1</span><span class="s1">) {</span>
+                <span class="s0">return </span><span class="s2">2</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s0">return </span><span class="s2">1</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(maxTrend &amp;&amp; minTrend) {</span>
+            <span class="s0">if </span><span class="s1">(flow.get(</span><span class="s2">1</span><span class="s1">).getColor() &gt;= </span><span class="s2">1</span><span class="s1">) {</span>
+                <span class="s0">return </span><span class="s2">2</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s0">return </span><span class="s2">1</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s0">if </span><span class="s1">(flow.get(</span><span class="s2">1</span><span class="s1">).getColor() &gt;= </span><span class="s2">1</span><span class="s1">) {</span>
+                <span class="s0">return </span><span class="s2">2</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s0">return </span><span class="s2">1</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">recordEvent(EventType type) {</span>
+        <span class="s1">processorState.setType(type)</span><span class="s0">;</span>
+        <span class="s1">wsController.sendEvent(processorState)</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(freq &gt; </span><span class="s2">0 </span><span class="s1">&amp;&amp; !Global.READ_ONLY_CANDLES &amp;&amp; Global.hasCompletedLoading)</span>
+            <span class="s1">processorStateRepo.save(processorState)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">saveProcessorState() {</span>
+        <span class="s0">if </span><span class="s1">(!Global.READ_ONLY_CANDLES)</span>
+            <span class="s1">processorStateRepo.save(processorState)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private boolean </span><span class="s1">isMaxDetect() {</span>
+        <span class="s1">logData.isNewCandle0 = flow.get(</span><span class="s2">0</span><span class="s1">).isNewCandle()</span><span class="s0">;</span>
+        <span class="s1">logData.isHigh1LessThanOrEqualHigh2 = flow.get(</span><span class="s2">1 </span><span class="s1">- offset).getHigh() &lt;= flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getHigh()</span><span class="s0">;</span>
+        <span class="s1">logData.isHigh3LessThanOrEqualHigh2 = flow.get(</span><span class="s2">3 </span><span class="s1">- offset).getHigh() &lt;= flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getHigh()</span><span class="s0">;</span>
+        <span class="s1">logData.isHigh4LessThanOrEqualHigh2 = flow.get(</span><span class="s2">4 </span><span class="s1">- offset).getHigh() &lt;= flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getHigh()</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">flow.get(</span><span class="s2">0</span><span class="s1">).isNewCandle() &amp;&amp; flow.get(</span><span class="s2">1 </span><span class="s1">- offset).getHigh() &lt;= flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getHigh()</span>
+                <span class="s1">&amp;&amp; flow.get(</span><span class="s2">3 </span><span class="s1">- offset).getHigh() &lt;= flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getHigh() &amp;&amp; flow.get(</span><span class="s2">4 </span><span class="s1">- offset).getHigh() &lt;= flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getHigh()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private boolean </span><span class="s1">isMinDetect() {</span>
+        <span class="s1">logData.isLow1GreaterThanOrEqualLow2 = flow.get(</span><span class="s2">1 </span><span class="s1">- offset).getLow() &gt;= flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getLow()</span><span class="s0">;</span>
+        <span class="s1">logData.isLow3GreaterThanOrEqualLow2 = flow.get(</span><span class="s2">3 </span><span class="s1">- offset).getLow() &gt;= flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getLow()</span><span class="s0">;</span>
+        <span class="s1">logData.isLow4GreaterThanOrEqualLow2 = flow.get(</span><span class="s2">4 </span><span class="s1">- offset).getLow() &gt;= flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getLow()</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">flow.get(</span><span class="s2">0</span><span class="s1">).isNewCandle() &amp;&amp; flow.get(</span><span class="s2">1 </span><span class="s1">- offset).getLow() &gt;= flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getLow()</span>
+                <span class="s1">&amp;&amp; flow.get(</span><span class="s2">3 </span><span class="s1">- offset).getLow() &gt;= flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getLow() &amp;&amp; flow.get(</span><span class="s2">4 </span><span class="s1">- offset).getLow() &gt;= flow.get(</span><span class="s2">2 </span><span class="s1">- offset).getLow()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">setProcessorState(ProcessorState processorState) {</span>
+        <span class="s0">if </span><span class="s1">(processorState != </span><span class="s0">null</span><span class="s1">) {</span>
+            <span class="s0">this</span><span class="s1">.processorState = processorState</span><span class="s0">;</span>
+            <span class="s1">lastDayOfQuarter = processorState.getLastDayOfQuarter()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+<span class="s3">//    public void setAlertAudioBigVolume(boolean value){</span>
+<span class="s3">//        alertAudioBigVolume = value;</span>
+<span class="s3">//    }</span>
+
+<span class="s3">//    public Map&lt;EventType, Boolean&gt; getAlertConfig(){</span>
+<span class="s3">//        return alertConfig;</span>
+<span class="s3">//    }</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>
