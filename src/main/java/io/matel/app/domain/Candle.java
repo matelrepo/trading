@@ -51,9 +51,6 @@ public class Candle {
     @Column(nullable = false)
     private int triggerDown;
 
-//    @JsonIgnore
-//    private boolean discarded;
-
     private boolean newCandle;
 //    private long speed = -1;
     private int progress = 0;
@@ -74,12 +71,6 @@ public class Candle {
     private ZonedDateTime updatedOn;
 
     public Candle() { }
-
-//    public Candle(long idcontract ,long timestamp, double close) {
-//        this.timestamp = ZonedDateTime.now();
-//        this.close = close;
-//        this.idcontract = idcontract;
-//    }
 
     public Candle(ZonedDateTime timestamp, double open, double high, double low, double close, long idcontract, int freq) {
         this.timestamp = timestamp;

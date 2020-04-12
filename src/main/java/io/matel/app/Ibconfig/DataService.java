@@ -8,6 +8,7 @@ import io.matel.app.domain.ContractBasic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -27,11 +28,14 @@ public class DataService {
     private String host = "127.0.0.1";
     private int port = 7496; //7496
 
-    @Autowired
     EWrapperImpl eWrapper;
 
     @Autowired
     AppController appController;
+
+    public  DataService(@Lazy EWrapperImpl eWrapper){
+        this.eWrapper = eWrapper;
+    }
 
 
     public void connect() {
@@ -90,7 +94,6 @@ public class DataService {
 
     public void connectPortfolioUpdate(boolean connect){
         eWrapper.getClient().reqAccountUpdates(connect, Global.ACCOUNT_NUMBER);
-
     }
 
 

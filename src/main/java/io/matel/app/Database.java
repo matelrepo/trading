@@ -3,6 +3,7 @@ package io.matel.app;
 import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
+import io.matel.app.domain.Historical;
 import io.matel.app.domain.Tick;
 import io.matel.app.macro.domain.MacroDAO;
 import io.matel.app.repo.LogProcessorStateRepo;
@@ -119,32 +120,32 @@ public class Database {
     }
 
 
-    public void getDailyConHisto(long idTick) {
-        try {
-            String sql = "SELECT date, open, high, low, close, symbol, volume FROM public.daily_candle WHERE id > " + idTick + " order by date;";
-            ResultSet rs = connection.createStatement().executeQuery(sql);
-            while (rs.next()) {
-                ContractBasic contract = appController.getContractsBySymbol().get(rs.getString(6));
-                ZonedDateTime date = rs.getTimestamp(1).toLocalDateTime().atZone(Global.ZONE_ID);
-                try {
-                    Candle candle = new Candle(date, Utils.round(rs.getDouble(2), contract.getRounding()), Utils.round(rs.getDouble(3), contract.getRounding()),
-                            Utils.round(rs.getDouble(4), contract.getRounding()), Utils.round(rs.getDouble(5),
-                            contract.getRounding()), contract.getIdcontract(), 1380);
-//                candle.setIdtick(rs.getInt(1));
-//                Global.getInstance().setIdTick(rs.getInt(1));
-//                candle.setTriggerDown(rs.getInt(5));
-//                candle.setTriggerDown(rs.getInt(6));
-                    appController.getGenerators().get(contract.getIdcontract()).process(candle);
-                } catch (NullPointerException e) {
-                    e.getMessage();
-                }
-            }
-            connection.commit();
-            rs.close();
-        } catch (SQLException | InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void getDailyConHisto(long idTick) {
+//        try {
+//            String sql = "SELECT date, open, high, low, close, symbol, volume FROM public.daily_candle WHERE id > " + idTick + " order by date;";
+//            ResultSet rs = connection.createStatement().executeQuery(sql);
+//            while (rs.next()) {
+//                ContractBasic contract = appController.getContractsBySymbol().get(rs.getString(6));
+//                ZonedDateTime date = rs.getTimestamp(1).toLocalDateTime().atZone(Global.ZONE_ID);
+//                try {
+//                    Candle candle = new Candle(date, Utils.round(rs.getDouble(2), contract.getRounding()), Utils.round(rs.getDouble(3), contract.getRounding()),
+//                            Utils.round(rs.getDouble(4), contract.getRounding()), Utils.round(rs.getDouble(5),
+//                            contract.getRounding()), contract.getIdcontract(), 1380);
+////                candle.setIdtick(rs.getInt(1));
+////                Global.getInstance().setIdTick(rs.getInt(1));
+////                candle.setTriggerDown(rs.getInt(5));
+////                candle.setTriggerDown(rs.getInt(6));
+//                    appController.getGenerators().get(contract.getIdcontract()).process(candle);
+//                } catch (NullPointerException e) {
+//                    e.getMessage();
+//                }
+//            }
+//            connection.commit();
+//            rs.close();
+//        } catch (SQLException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public Long findTopIdTickOrderByIdDesc() {
         Long idTick = null;
@@ -160,10 +161,23 @@ public class Database {
     }
 
 
-    public Double findTopCloseByIdContractOrderByTimeStampDesc(long idcontract) {
+    public Double findTopCloseFromTickByIdContractOrderByTimeStampDesc(long idcontract) {
         Double close = null;
         try {
             String sql = "SELECT close FROM public.tick WHERE idcontract = " + idcontract + " order by timestamp desc limit 1";
+            ResultSet rs = connection.createStatement().executeQuery(sql);
+            while (rs.next()) {
+                close = rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+        }
+        return close;
+    }
+
+    public Double findTopCloseFromCandleByIdContractOrderByTimeStampDesc(long idcontract) {
+        Double close = null;
+        try {
+            String sql = "SELECT close FROM public.candle WHERE idcontract = " + idcontract + " and freq =1 order by timestamp desc limit 1";
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 close = rs.getDouble(1);
@@ -271,23 +285,24 @@ public class Database {
                     appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false, saveTick);
                count++;
                 } catch (NullPointerException e) {
+                    LOGGER.warn("Error null pointer in database");
 
                 }
             }
 
-            LOGGER.info("Historical completed for contract " + idcontract);
+            //LOGGER.info("Historical completed for contract " + idcontract);
             connection.commit();
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         if(count ==0 ) {
-            System.out.println(maxIdTick);
+           // System.out.println(maxIdTick);
 
             return -1;
         }
         else {
-            System.out.println(maxIdTick);
+           // System.out.println(maxIdTick);
             return maxIdTick;
         }
     }
@@ -354,7 +369,7 @@ public class Database {
                     "trigger_down, trigger_up,\n" +
                     "abnormal_height_level, big_candle, close_average,\n" +
                     "volume, created_on, updated_on)" +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             for (Candle candle : candles) {
                 preparedStatement.setLong(1, candle.getId());
@@ -378,6 +393,33 @@ public class Database {
                 preparedStatement.setTimestamp(19, new Timestamp(ZonedDateTime.now().toEpochSecond()*1000));
                 preparedStatement.setTimestamp(20, new Timestamp(ZonedDateTime.now().toEpochSecond()*1000));
 
+                preparedStatement.addBatch();
+                count++;
+            }
+            preparedStatement.executeBatch();
+            preparedStatement.close();
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    public synchronized int saveHisto(List<Historical> histos) {
+        int count = 0;
+        try (Statement statement = this.connection.createStatement()) {
+            String sql = "INSERT INTO public.histo " +
+                    "(cid, tid, freq, open, high, low, close)" +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (Historical histo : histos) {
+                preparedStatement.setLong(1, histo.getCid());
+                preparedStatement.setLong(2, histo.getTid());
+                preparedStatement.setInt(3, histo.getFreq());
+                preparedStatement.setDouble(4, histo.getOpen());
+                preparedStatement.setDouble(5, histo.getHigh());
+                preparedStatement.setDouble(6, histo.getLow());
+                preparedStatement.setDouble(7, histo.getClose());
                 preparedStatement.addBatch();
                 count++;
             }

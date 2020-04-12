@@ -4,6 +4,7 @@ import io.matel.app.config.Global;
 import io.matel.app.controller.WsController;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
+import io.matel.app.domain.Historical;
 import io.matel.app.state.ProcessorState;
 import io.matel.app.tools.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,7 +123,7 @@ public class FlowMerger {
 
     protected void merge(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, boolean isCandleComputed) {
 
-        if (freq > 420) {
+        if (freq > 840) {
             if (previousDate == null)
                 newCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
             else
@@ -193,6 +194,15 @@ public class FlowMerger {
                 flow.get(0).setProgress((int) progress);
             }
         }
+
+
+//    if(freq ==240) {
+        Historical histo = new Historical( flow.get(0).getId(), flow.get(0).getIdtick(), flow.get(0).getFreq(),
+                flow.get(0).getOpen(), flow.get(0).getHigh(), flow.get(0).getLow(), flow.get(0).getClose());
+//        System.out.println(histo.toString());
+        appController.getGenerators().get(contract.getIdcontract())
+                .getDatabase().getSaverController().saveBatchHistorical(histo, false);
+//    }
 
 
     }

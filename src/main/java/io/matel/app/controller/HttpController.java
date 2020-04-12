@@ -8,6 +8,7 @@ import io.matel.app.connection.activeuser.ActiveUserEvent;
 import io.matel.app.connection.user.UserRepository;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
+import io.matel.app.domain.EventType;
 import io.matel.app.macro.domain.MacroDAO;
 import io.matel.app.portfolio.Portfolio;
 import io.matel.app.repo.ContractRepository;
@@ -108,6 +109,7 @@ public class HttpController {
 
     @PostMapping("/connect-all")
     public void connectALL(){
+        System.out.println("coucou");
         appController.connectAllMarketData();
     }
 
@@ -171,7 +173,49 @@ public class HttpController {
         return appController.getGeneratorsState();
     }
 
-    //    @PostMapping("/register")
+    @PostMapping("/speed/{id}/{_speed}")
+    public void increaseSpeed(@PathVariable String id, @PathVariable String _speed){
+        long idcontract = Long.valueOf(id);
+        int speed = Integer.valueOf(_speed);
+        appController.getGenerators().get(idcontract).getGeneratorState().setSpeed(speed);
+    }
+
+    @PostMapping("/activate-email")
+    public void setupGlobalAlert(@RequestBody String _email){
+        boolean email = Boolean.valueOf(_email);
+        Global.send_email = email;
+    }
+//
+//    @PostMapping("/event-alert/{_id}/{_freq}/{type}")
+//    public void setupProcessorAlert(@PathVariable String _id, @PathVariable String _freq, @PathVariable String type, @RequestBody String _alert){
+//        long idcontract = Long.valueOf(_id);
+//        int freq = Integer.valueOf(_freq);
+//        boolean alert = Boolean.valueOf(_alert);
+//        EventType eventType = EventType.valueOf(type);
+//        appController.getGenerators().get(idcontract).getProcessors().get(freq).getAlertConfig().put(eventType, alert);
+//    }
+//
+//    @PostMapping("event-alert/big/{_id}/{_freq}")
+//    public void setupBigCandleAlert(@PathVariable String _id, @PathVariable String _freq,@RequestBody String _alert){
+//        long idcontract = Long.valueOf(_id);
+//        int freq = Integer.valueOf(_freq);
+//        boolean alert = Boolean.valueOf(_alert);
+//        appController.getGenerators().get(idcontract).getProcessors().get(freq).setAlertAudioBigVolume(alert);
+//    }
+//
+//    @PostMapping("event-alert/big/{_id}/all")
+//    public void setupBigCandleAlertAllFreq(@PathVariable String _id,@RequestBody String _alert){
+//        final long idcontract = Long.valueOf(_id);
+//        final boolean alert = Boolean.valueOf(_alert);
+//        appController.getGenerators().get(idcontract).getProcessors().forEach((freq, processor) -> {
+//            if(freq>1){
+//                processor.setAlertAudioBigVolume(alert);
+//            }
+//        });
+//    }
+
+
+//        @PostMapping("/register")
 //    public ResponseEntity register(@RequestBody UserView model) {
 ////        System.out.println(model.getUsername());
 ////        System.out.println(this.userRepository.findByUsername(model.getUsername()));

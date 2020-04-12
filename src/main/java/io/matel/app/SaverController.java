@@ -2,6 +2,7 @@ package io.matel.app;
 
 import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
+import io.matel.app.domain.Historical;
 import io.matel.app.domain.Tick;
 import io.matel.app.state.LogProcessorState;
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +18,8 @@ public class SaverController {
     private List<LogProcessorState> logProcessorBuffer = new ArrayList<>();
 
     private List<Candle> insertCandlesBuffer = new ArrayList<>();
-    private List<Candle> updateCandlesBuffer = new ArrayList<>();
+    private List<Historical> insertHistoBuffer = new ArrayList<>();
+    //    private List<Candle> updateCandlesBuffer = new ArrayList<>();
     private Database database;
 
     public SaverController(Database database) {
@@ -34,18 +36,19 @@ public class SaverController {
         if (gen != null) idcontract = gen.getContract().getIdcontract();
 
         int numTicks = saveBatchTicks(saveNow);
-        LOGGER.info("Saving now " + numTicks + " ticks for contract " + idcontract);
+        //LOGGER.info("Saving now " + numTicks + " ticks for contract " + idcontract);
         if (numTicks > 0 || saveNow) {
             int numCandles = saveBatchCandles();
-            LOGGER.info("Saving now " + numCandles + " candles for contract " + idcontract);
+            //LOGGER.info("Saving now " + numCandles + " candles for contract " + idcontract);
             updateCurrentCandle(gen);
-  //          saveBatchLogProcessor(null);
+            saveBatchLogProcessor(null, true);
+            saveBatchHistorical(null, true);
 //            saveProcessorStates();
         } else {
-            LOGGER.warn("Cannot save candles because ticks were not saved!");
+            //LOGGER.warn("Cannot save candles because ticks were not saved!");
         }
 
-        LOGGER.info("Saving completed");
+       // LOGGER.info("Saving completed");
     }
 
 
@@ -68,9 +71,14 @@ public class SaverController {
         return count;
     }
 
-    public synchronized int saveBatchLogProcessor(LogProcessorState logProcessorState) {
+    public synchronized int saveBatchLogProcessor() {
+        return saveBatchLogProcessor(null, true);
+    }
+
+
+    public synchronized int saveBatchLogProcessor(LogProcessorState logProcessorState, boolean saveNow) {
         int count =0;
-        if (!Global.READ_ONLY_LOG_PROCESSOR) {
+        if (!Global.READ_ONLY_LOG_PROCESSOR && (Global.hasCompletedLoading || Global.COMPUTE_DEEP_HISTORICAL)) {
             if (logProcessorState != null)
                 this.logProcessorBuffer.add(logProcessorState);
 
@@ -109,15 +117,29 @@ public class SaverController {
         return count;
     }
 
+    public synchronized int saveBatchHistorical() {
+        return saveBatchCandles(null, true);
+    }
+
+    public synchronized int saveBatchHistorical(Historical histo, boolean saveNow) {
+        int count = 0;
+        if (!Global.READ_ONLY_HISTORICAL) {
+            if (histo != null)
+                if (histo.getFreq() > 0) {
+                        insertHistoBuffer.add(histo);
+                }
+            if (insertHistoBuffer.size() > Global.MAX_HISTO_SIZE_SAVING || histo == null || saveNow) {
+                LOGGER.info("Regular batch histo saving (" + insertHistoBuffer.size() + ")");
+                count = database.saveHisto(this.insertHistoBuffer);
+                insertHistoBuffer.clear();
+            }
+        }
+        return count;
+    }
+
     private synchronized void updateCurrentCandle(Generator gen) {
         if (!Global.READ_ONLY_CANDLES) {
             if (gen == null) {
-//                gen.getProcessors().forEach((frequency, processor) -> {
-//                    if (processor.getFlow().size() > 0) {
-////                        if (frequency > 0)
-////                            candleRepository.save(processor.getFlow().get(0));
-//                    }
-//                });
             } else {
                 gen.getProcessors().forEach((frequency, processor) -> {
                     if (processor.getFlow().size() > 0)

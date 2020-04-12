@@ -15,20 +15,17 @@ public class LogProcessorState {
     public long idTick;
     public int freq;
     public long idcontract;
-    public int offset_;
     public ZonedDateTime timestamp;
 
     public LogProcessorState(){}
 
-    public LogProcessorState(long idcontract, int freq, int offset){
+    public LogProcessorState(long idcontract, int freq){
         this.idcontract = idcontract;
         this.freq = freq;
-        this.offset_ = offset;
     }
 
     public boolean isNewCandle0;
     public boolean smallCandleNoiseRemoval;
-    public boolean flowSizeGreaterThan4;
 
     public boolean isMaxDetect;
     public boolean isEventTypeMaxDetect;
@@ -38,8 +35,10 @@ public class LogProcessorState {
     public boolean isEventTypeMaxDetectCancel;
     public boolean isEventTypeMaxConfirm;
     public boolean isEventTypeMinConfirm;
+    public boolean isTradable;
 
 
+    public double close;
     public double low0;
     public double high0;
     public double low1;
@@ -100,11 +99,9 @@ public class LogProcessorState {
                 ", idTick=" + idTick +
                 ", freq=" + freq +
                 ", idcontract=" + idcontract +
-                ", offset_=" + offset_ +
                 ", timestamp=" + timestamp +
                 ", isNewCandle0=" + isNewCandle0 +
                 ", smallCandleNoiseRemoval=" + smallCandleNoiseRemoval +
-                ", flowSizeGreaterThan4=" + flowSizeGreaterThan4 +
                 ", isMaxDetect=" + isMaxDetect +
                 ", isEventTypeMaxDetect=" + isEventTypeMaxDetect +
                 ", isMinDetect=" + isMinDetect +

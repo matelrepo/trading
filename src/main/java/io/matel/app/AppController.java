@@ -9,6 +9,7 @@ import io.matel.app.domain.ContractBasic;
 import io.matel.app.macro.domain.MacroDAO;
 import io.matel.app.repo.*;
 import io.matel.app.state.GeneratorState;
+import io.matel.app.state.LogProcessorState;
 import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,6 +34,9 @@ public class AppController {
 
     @Autowired
     ProcessorStateRepo processorStateRepo;
+
+    @Autowired
+    LogProcessorStateRepo logProcesoorStateRepo;
 
     @Autowired
     BeanFactory beanFactory;
@@ -115,14 +119,21 @@ public class AppController {
 
     public void createProcessors(ContractBasic contract, int minFreq) {
         Map<Integer, ProcessorState> procData = new HashMap<>();
+//        Map<Integer, LogProcessorState> logProcStateData = new HashMap<>();
+
         processorStateRepo.findByIdcontract(contract.getIdcontract()).forEach(data -> {
             procData.put(data.getFreq(), data);
         });
+
+//        logProcesoorStateRepo.findByIdcontract(contract.getIdcontract()).forEach(data -> {
+//            logProcStateData.put(data.freq, data);
+//        });
 
         for (int frequency : Global.FREQUENCIES) {
             if (frequency >= minFreq) {
                 Processor processor = beanFactory.createBeanProcessor(contract, frequency);
                 processor.setProcessorState(procData.get(frequency));
+//                processor.setLogProcessorState(logProcStateData.get(frequency));
                 generators.get(contract.getIdcontract()).getProcessors().put(frequency, processor);
             }
         }
@@ -147,6 +158,11 @@ public class AppController {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -158,6 +174,15 @@ public class AppController {
 
     public void setContractsLive(List<ContractBasic> contracts) {
         this.contractsLive = contracts;
+    }
+
+    public List<ContractBasic> initContracts(){
+        List<ContractBasic> list = new ArrayList<>();
+  //      list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
+        list.add(contractRepository.findByIdcontract(5));
+//       list.add(contractRepository.findByIdcontract(67));
+       setContractsLive(list);
+        return list;
     }
 
     public Map<Long, Generator> getGenerators() {

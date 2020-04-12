@@ -9,9 +9,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 
 
@@ -24,6 +27,7 @@ public class AppLauncher implements CommandLineRunner {
     private WsController wsController;
     private ConcurrentHashMap<Long, LoadingErrorHandler> errors = new ConcurrentHashMap();
     private Semaphore semaphore = new Semaphore(Global.EXECUTOR_THREADS);
+    private int numContracts = 0;
 
     @Autowired
     Global global;
@@ -31,10 +35,10 @@ public class AppLauncher implements CommandLineRunner {
     @Autowired
     MacroWriter macroWriter;
 
-    @Autowired
     DataService dataService;
 
-    public AppLauncher(AppController appController, WsController wsController) {
+    public AppLauncher(AppController appController, WsController wsController, @Lazy DataService dataService) {
+        this.dataService = dataService;
         this.appController = appController;
         this.wsController = wsController;
     }
@@ -54,27 +58,11 @@ public class AppLauncher implements CommandLineRunner {
 
     public void startLive() {
         try {
-            Database database = appController.createDatabase("matel", Global.port, "matel");
-            appController.setContractsLive(appController.contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE"));
-//           List<ContractBasic> list = new ArrayList<>();
-//           list.add(appController.contractRepository.findByIdcontract(98));
-//            list.add(appController.contractRepository.findByIdcontract(99));
-//            list.add(appController.contractRepository.findByIdcontract(100));
-//            list.add(appController.contractRepository.findByIdcontract(101));
-//            list.add(appController.contractRepository.findByIdcontract(102));
-//            list.add(appController.contractRepository.findByIdcontract(103));
-//            list.add(appController.contractRepository.findByIdcontract(104));
-//            list.add(appController.contractRepository.findByIdcontract(105));
-//            list.add(appController.contractRepository.findByIdcontract(106));
-//            list.add(appController.contractRepository.findByIdcontract(107));
-//            list.add(appController.contractRepository.findByIdcontract(108));
-//            list.add(appController.contractRepository.findByIdcontract(109));
-//            list.add(appController.contractRepository.findByIdcontract(110));
-//            list.add(appController.contractRepository.findByIdcontract(111));
-//            appController.setContractsLive(list);
+            Database database = appController.createDatabase("matel", Global.PORT, "matel");
+            appController.setContractsLive(appController.initContracts());
 
+            numContracts = appController.getContractsLive().size();
             LOGGER.info(appController.getContractsLive().size() + " contracts found");
-//        try {
             Long idTick = database.findTopIdTickOrderByIdDesc();
             if (idTick == null) idTick = 0L;
             Global.startIdTick = idTick;
@@ -84,9 +72,7 @@ public class AppLauncher implements CommandLineRunner {
 
             global.setIdTick(idTick);
             global.setIdCandle(idCandle);
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//        }
+
             LOGGER.info("Setting up last id tick: " + global.getIdTick(false));
             LOGGER.info("Setting up last id candle: " + global.getIdCandle(false));
             database.close();
@@ -95,19 +81,21 @@ public class AppLauncher implements CommandLineRunner {
                 LOGGER.warn(">>> Read only lock! <<<");
 
             for (ContractBasic contract : appController.getContractsLive()) {
-//                if(contract.getIdcontract()>=98) {
                     createGenerator(contract);
                     createProcessor(contract, 0);
-//               }
             }
 
             LOGGER.info("Loading historical candles...");
             appController.getGenerators().forEach((id, generator) -> {
                 try {
                     semaphore.acquire();
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     new Thread(() -> {
                         generator.initDatabase();
-
                         LoadingErrorHandler error = new LoadingErrorHandler();
                         this.errors.put(generator.getContract().getIdcontract(), error);
                         error.idcontract = generator.getContract().getIdcontract();
@@ -124,21 +112,27 @@ public class AppLauncher implements CommandLineRunner {
 
 
                         if (Global.COMPUTE_DEEP_HISTORICAL) {
-                            Database tickDatabase = appController.createDatabase("cleanm", Global.port, "atmuser");
+                            Database tickDatabase = appController.createDatabase("cleanm", Global.PORT, "atmuser");
                             long minIdTick = 0;
                             int count = 0;
 
+//                            while (minIdTick >= 0) {
+//                                //System.out.println(count + " round(s) with tick " + minIdTick + " 2018");
+//                                count++;
+//                                minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data18", minIdTick);
+//                            }
+//                            minIdTick = 0;
+//                            count = 0;
+//                            while (minIdTick >= 0) {
+//                                //System.out.println(count + " round(s) with tick " + minIdTick + " 2019");
+//                                count++;
+//                                minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data19", minIdTick);
+//                            }
+//                            minIdTick = 0;
+//                            count = 0;
                             while (minIdTick >= 0) {
-                                System.out.println(count + " round(s) with tick " + minIdTick);
                                 count++;
-                                minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data18", minIdTick);
-                            }
-                            minIdTick = 0;
-                            count = 0;
-                            while (minIdTick >= 0) {
-                                System.out.println(count + " round(s) with tick " + minIdTick);
-                                count++;
-                                minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data19", minIdTick);
+                                minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data20", minIdTick);
                             }
                             tickDatabase.close();
                             generator.getDatabase().getSaverController().saveNow(generator, true);
@@ -147,31 +141,33 @@ public class AppLauncher implements CommandLineRunner {
 
                         if (!Global.COMPUTE_DEEP_HISTORICAL && !error.errorDetected) {
                             appController.loadHistoricalCandlesFromDbb(generator.getContract().getIdcontract(), false);
-                            LOGGER.info("Computing ticks...");
                             generator.getDatabase().getTicksByTable(error.idcontract, false, "public.tick", error.lastCandleId);
                             generator.getDatabase().getSaverController().saveNow(generator, true);
                         }
 
-//                        generator.getDatabase().close();
                         generator.setDatabase(database);
                         semaphore.release();
 
 
-                        LOGGER.info("Connecting market data for all contracts...");
                         try {
                             generator.setDatabase(appController.getDatabase());
                             appController.connectMarketData(generator.getContract());
+                            numContracts = numContracts -1;
+                            Thread.sleep(1000);
+                            LOGGER.info("Loading completed for contract " + generator.getContract().getIdcontract());
+                            LOGGER.info("Remaining contracts " + numContracts +"/" + appController.getContractsLive().size());
+                            if(numContracts ==0) {
+                                LOGGER.info("All completed");
+                                Global.hasCompletedLoading = true;
+                            }
                         } catch (ExecutionException | InterruptedException e) {
                             e.printStackTrace();
                         }
-                        LOGGER.info(">>> Finished contract " + generator.getContract().getIdcontract());
 
-//                    appController.getGenerators().forEach((idcon, gen) -> {
                         generator.saveGeneratorState();
                         generator.getProcessors().forEach((freq, proc) -> {
                             proc.saveProcessorState();
                         });
-//                    });
 
                     }).start();
                 } catch (InterruptedException e) {
@@ -179,7 +175,6 @@ public class AppLauncher implements CommandLineRunner {
                 }
             });
 
-//            LOGGER.info("All completed");
         }catch(NullPointerException e){
             e.printStackTrace();
         }

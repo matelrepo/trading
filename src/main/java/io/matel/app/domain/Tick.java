@@ -3,10 +3,7 @@ package io.matel.app.domain;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -31,12 +28,6 @@ public class Tick {
 
     @Column(nullable = false)
     private int triggerDown;
-
-//    @Column(nullable = false)
-//    private long speed = -1;
-
-//    @JsonIgnore
-//    private boolean discarded;
 
     @Column(nullable = false)
     private int volume =0;

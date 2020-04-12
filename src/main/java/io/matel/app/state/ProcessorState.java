@@ -1,9 +1,12 @@
 package io.matel.app.state;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.matel.app.config.Global;
 import io.matel.app.domain.EventType;
+import javazoom.jl.player.Player;
 
 import javax.persistence.*;
+import java.io.FileInputStream;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -30,7 +33,13 @@ public class ProcessorState {
     private double minValue = Double.MIN_VALUE;
     private double minValid = Double.MIN_VALUE;
     private double min = Double.MIN_VALUE;
+    private double value = 0;
+    private double target = 0;
     private LocalDate lastDayOfQuarter;
+    private boolean isTradable = false;
+
+    @Enumerated(EnumType.STRING)
+    private EventType event;
 
     @Transient
     private Map<EventType, Boolean> activeEvents = new HashMap<>();
@@ -51,6 +60,7 @@ public class ProcessorState {
             activeEvents.put(type, false);
         }
     }
+
 
 
     public long getIdcontract() {
@@ -142,28 +152,43 @@ public class ProcessorState {
     }
 
     @JsonIgnore
-    public Map<EventType, Boolean> getActiveEvents() {
+    public Map<EventType, Boolean> activeEvents() {
         return activeEvents;
     }
 
-    @JsonIgnore
-    public void setActiveEvents(Map<EventType, Boolean> activeEvents) {
-        this.activeEvents = activeEvents;
-    }
+//    @JsonIgnore
+//    public void setActiveEvents(Map<EventType, Boolean> activeEvents) {
+//        this.activeEvents = activeEvents;
+//    }
 
-    public void setEvents(String events){
+//    public void setEvents(String events){
+//        this.events = events;
+//    }
+
+    public void setActiveEvents(String events){
         this.events = events;
-        for (String s : events.split(",")) {
-            activeEvents.put(EventType.valueOf(s), true);
+        if(!this.events.equals("")) {
+//            System.out.println("set active Events " + events);
+            for (String s : events.split(",")) {
+//                System.out.println(s);
+                if (s != null)
+                    activeEvents.put(EventType.valueOf(s), true);
+            }
         }
     }
 
     public String getEvents(){
+        return events;
+    }
+
+    public String getActiveEvents(){
+//        System.out.println("get " + events);
         events = "";
         activeEvents.forEach((eventType, isTrue) ->{
             if(isTrue)
                 events = events + ',' + eventType;
         });
+        if(events.length()>0)
         if(events.charAt(0) == ',')
             events = events.substring(1);
 
@@ -172,6 +197,7 @@ public class ProcessorState {
 
     @JsonIgnore
     public void setType(EventType type) {
+        event = type;
         switch (type) {
             case MAX_ADV:
                 activeEvents.put(EventType.MAX_ADV, true);
@@ -183,19 +209,27 @@ public class ProcessorState {
                 activeEvents.put(EventType.MAX_DETECT, true);
                 activeEvents.put(EventType.MAX_DETECT_CANCEL, false);
                 activeEvents.put(EventType.MAX_ADV, false);
+                value = maxValue;
+                target = maxValid;
                 break;
             case MAX_CONFIRM:
                 activeEvents.put(EventType.MIN_CONFIRM, false);
                 activeEvents.put(EventType.MAX_DETECT, false);
                 activeEvents.put(EventType.MAX_CONFIRM, true);
+                value = maxValue;
+                target = maxValid;
                 break;
             case MAX_DETECT_CANCEL:
                 activeEvents.put(EventType.MAX_DETECT, false);
                 activeEvents.put(EventType.MAX_DETECT_CANCEL, true);
+                value = maxValue;
+                target = maxValid;
                 break;
             case MAX_CONFIRM_CANCEL:
                 activeEvents.put(EventType.MAX_CONFIRM, false);
                 activeEvents.put(EventType.MAX_CONFIRM_CANCEL, true);
+                value = maxValue;
+                target = maxValid;
                 break;
             case MIN_ADV:
                 activeEvents.put(EventType.MIN_ADV, true);
@@ -207,43 +241,74 @@ public class ProcessorState {
                 activeEvents.put(EventType.MIN_DETECT, true);
                 activeEvents.put(EventType.MIN_DETECT_CANCEL, false);
                 activeEvents.put(EventType.MIN_ADV, false);
+                value = minValue;
+                target = minValid;
                 break;
             case MIN_CONFIRM:
                 activeEvents.put(EventType.MAX_CONFIRM, false);
                 activeEvents.put(EventType.MIN_CONFIRM, true);
                 activeEvents.put(EventType.MIN_DETECT, false);
+                value = minValue;
+                target = minValid;
                 break;
             case MIN_DETECT_CANCEL:
                 activeEvents.put(EventType.MIN_DETECT, false);
                 activeEvents.put(EventType.MIN_DETECT_CANCEL, true);
+                value = minValue;
+                target = minValid;
                 break;
             case MIN_CONFIRM_CANCEL:
                 activeEvents.put(EventType.MIN_CONFIRM_CANCEL, true);
                 activeEvents.put(EventType.MIN_CONFIRM, false);
+                value = minValue;
+                target = minValid;
                 break;
             default:
                 break;
         }
-        getEvents();
+
+//        String str_contract = "c" + contract;
+//        if(alert & Global.play_sound){
+//            System.out.println("New event -> " + type.toString() + " " + type.toString());
+//            try {
+//
+//                FileInputStream fileInputStream1 = new FileInputStream("src/main/resources/audio/" + str_contract +".mp3");
+//                Player player1 = new Player((fileInputStream1));
+//                player1.play();
+//
+//                FileInputStream fileInputStream2 = new FileInputStream("src/main/resources/audio/" + freq +
+//                        type.toString().substring(0,3) + type.toString().substring(3) + ".mp3");
+//                Player player2 = new Player((fileInputStream2));
+//                player2.play();
+//
+//                if(isTradable) {
+//                    FileInputStream fileInputStream3 = new FileInputStream("src/main/resources/audio/trading.mp3");
+//                    Player player3 = new Player((fileInputStream3));
+//                    player3.play();
+//                }
+//
+//            }catch (Exception e){
+//                System.out.println(e);
+//            }
+//        }
+
+
+        getActiveEvents();
+
     }
 
     @Override
     public String toString() {
         return "ProcessorData{" +
-                "idcontract=" + idcontract +
-                ", freq=" + freq +
-                ", timestamp=" + timestamp +
+                "(" + idcontract +
+                "-" + freq +
+                ") ,event=" + event +
                 ", color=" + color +
-                ", minTrend=" + minTrend +
-                ", maxTrend=" + maxTrend +
-                ", maxValue=" + maxValue +
-                ", maxValid=" + maxValid +
-                ", max=" + max +
-                ", minValue=" + minValue +
-                ", minValid=" + minValid +
-                ", min=" + min +
+                ", value=" + value +
+                ", target=" + target +
+                ", events=" + events +
                 ", activeEvents=" + activeEvents +
-                ", events='" + events + '\'' +
+                ", tradable=" + isTradable +
                 '}';
     }
 
@@ -254,4 +319,30 @@ public class ProcessorState {
     public void setLastDayOfQuarter(LocalDate lastDayOfQuarter) {
         this.lastDayOfQuarter = lastDayOfQuarter;
     }
+
+    public boolean isTradable() {
+        return isTradable;
+    }
+
+    public void setTradable(boolean tradable) {
+        isTradable = tradable;
+    }
+
+
+    public EventType getEvent() {
+        return event;
+    }
+
+    public double getValue(){
+        return value;
+    }
+
+    public double getTarget(){
+        return target;
+    }
+
+    public void setEvent(EventType event) {
+        this.event = event;
+    }
+
 }

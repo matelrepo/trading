@@ -18,9 +18,9 @@ public class GeneratorState {
     private long idtick;
 
     @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime timestamp;
+    private ZonedDateTime timestamp = ZonedDateTime.now();
 
-    private int speed;
+    private int speed = 2000;
     private boolean isRandomGenerator = true;
 
     private int triggerUp =0;
@@ -66,14 +66,11 @@ public class GeneratorState {
 
     public GeneratorState(long idcontract, boolean isRandomGenerator, int speed){
         this(idcontract,isRandomGenerator);
-        this.speed = speed;
     }
 
     public GeneratorState(long idcontract, boolean isRandomGenerator) {
         this.idcontract = idcontract;
         this.isRandomGenerator = isRandomGenerator;
-        Random rand = new Random();
-        speed = rand.nextInt(10000);
     }
 
     public long getIdcontract() {
@@ -105,6 +102,7 @@ public class GeneratorState {
     }
 
     public void setSpeed(int speed) {
+        System.out.println("coucou " + speed);
         this.speed = speed;
     }
 

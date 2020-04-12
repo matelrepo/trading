@@ -94,6 +94,7 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void nextValidId(int orderId) {
+        System.out.println("next valid id");
         if (!hasConnectedAlready) {
             client.reqAccountUpdates(true, Global.ACCOUNT_NUMBER);
 //            client.reqAccountSummary(9001, "All", "$LEDGER");
@@ -205,8 +206,8 @@ public class EWrapperImpl implements EWrapper {
                     portfolio.setInitMarginReq(val);
                     break;
                 case "NetLiquidationByCurrency":
-                    portfolio.setNetLiquidation(val);
-                    appController.getGenerators().get(1L).tickPrice(1,4,val,null);
+//                    portfolio.setNetLiquidation(val);
+//                    appController.getGenerators().get(1L).tickPrice(1,4,val,null);
                     break;
                 case "UnrealizedPnL":
                     portfolio.setUnrealizedPnl(val);
@@ -216,7 +217,7 @@ public class EWrapperImpl implements EWrapper {
                     break;
             }
             portfolio.setExcessLiq(portfolio.getNetLiquidation() - portfolio.getMaintMarginReq());
-            System.out.println(portfolio.toString());
+            //System.out.println(portfolio.toString());
         }
 
     }
@@ -233,7 +234,7 @@ public class EWrapperImpl implements EWrapper {
             client.reqPnLSingle(contract.conid(), Global.ACCOUNT_NUMBER, "", contract.conid());
         }
         wsController.sendPortoflio(portfolio);
-        System.out.println(portfolio.getPositions().get(contract.conid()).toString());
+        //System.out.println(portfolio.getPositions().get(contract.conid()).toString());
 
     }
 
@@ -243,7 +244,7 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void accountDownloadEnd(String accountName) {
-        System.out.println("End Download: " + accountName);
+        LOGGER.info("End Download: " + accountName);
 
     }
 
@@ -271,7 +272,7 @@ public class EWrapperImpl implements EWrapper {
         portfolio.setRealizedPnl(realizedPnL);
         portfolio.setUnrealizedPnl(unrealizedPnL);
         wsController.sendPortoflio(portfolio);
-        System.out.println(portfolio.toString());
+        //System.out.println(portfolio.toString());
     }
 
     @Override
@@ -281,7 +282,7 @@ public class EWrapperImpl implements EWrapper {
         portfolio.getPositions().get(reqId).setUnrealizedPnl(unrealizedPnL);
         portfolio.getPositions().get(reqId).setRealizedPnl(realizedPnL);
         wsController.sendPortoflio(portfolio);
-        System.out.println(portfolio.getPositions().get(reqId).toString());
+        //System.out.println(portfolio.getPositions().get(reqId).toString());
     }
 
     @Override
@@ -291,7 +292,7 @@ ContractBasic contract = appController.getGenerators().get(Long.valueOf(reqId)).
             contract.setConid(contractDetails.conid());
             contractRepository.save(contract);
         }
-System.out.println(contract.toString());
+//System.out.println(contract.toString());
     }
 
     @Override
