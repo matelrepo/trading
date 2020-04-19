@@ -3,11 +3,9 @@ package io.matel.app.controller;
 import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.domain.Ticket;
-import io.matel.app.portfolio.Portfolio;
 import io.matel.app.state.GeneratorState;
 import io.matel.app.state.ProcessorState;
-import io.matel.app.tools.MailService;
+import io.matel.app.config.tools.MailService;
 import javazoom.jl.player.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -44,11 +42,6 @@ public class WsController {
             String path = "/get/prices";
             template.convertAndSend(path, states);
         }
-    }
-
-    public void sendPortoflio(Portfolio portfolio) {
-        String path = "/get/portfolio-update";
-        template.convertAndSend(path, portfolio);
     }
 
     public void sendEvent(ProcessorState processorState, ContractBasic contract) {

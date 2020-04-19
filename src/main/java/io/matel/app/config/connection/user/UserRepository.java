@@ -1,4 +1,4 @@
-package io.matel.app.connection.user;
+package io.matel.app.config.connection.user;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

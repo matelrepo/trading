@@ -1,4 +1,4 @@
-package io.matel.app.connection.user;
+package io.matel.app.config.connection.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;

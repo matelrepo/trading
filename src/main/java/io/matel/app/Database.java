@@ -2,12 +2,7 @@ package io.matel.app;
 
 import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
-import io.matel.app.domain.ContractBasic;
-import io.matel.app.domain.Historical;
 import io.matel.app.domain.Tick;
-import io.matel.app.macro.domain.MacroDAO;
-import io.matel.app.repo.LogProcessorStateRepo;
-import io.matel.app.tools.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +18,6 @@ public class Database {
     @Autowired
     AppController appController;
 
-    @Autowired
-    LogProcessorStateRepo logProcessorStateRepo;
 
     private static final Logger LOGGER = LogManager.getLogger(Database.class);
     private SaverController saverController;
@@ -70,82 +63,6 @@ public class Database {
         return connection;
     }
 
-
-    public void getMacroItemsByCountry(String country_) {
-        String sql = "SELECT f.code, f.date, f.current, f.previous, u.country, u.data_name, u.created_on, u.updated_on FROM (\n" +
-                "SELECT a.code, a.date, a.value as current, b.value as previous FROM (\n" +
-                "SELECT * from (\n" +
-                "SELECT\n" +
-                "   code, date, value,\n" +
-                "   DENSE_RANK () OVER ( \n" +
-                "      PARTITION BY code\n" +
-                "      ORDER BY date DESC\n" +
-                "   ) date_rank \n" +
-                "FROM\n" +
-                "   public.macro_data order by date desc\n" +
-                "\t) t1 WHERE date_rank =1\n" +
-                "\t) a\n" +
-                "\tLEFT JOIN(\n" +
-                "\tSELECT * FROM (\n" +
-                "\tSELECT * from (\n" +
-                "SELECT\n" +
-                "   code, date, value,\n" +
-                "   DENSE_RANK () OVER ( \n" +
-                "      PARTITION BY code\n" +
-                "      ORDER BY date DESC\n" +
-                "   ) date_rank \n" +
-                "FROM\n" +
-                "   public.macro_data order by date desc\n" +
-                "\t) t1 WHERE date_rank =2\n" +
-                "\t\t\n" +
-                "\t\t) c) b ON a.code = b.code order by a.date desc ) f\n" +
-                "LEFT JOIN public.macro_update u on f.code = u.code WHERE " +
-                "f.date > NOW() - INTERVAL '30 days' and f.date < NOW() + INTERVAL '15 days'\n" +
-                "ORDER BY date desc, created_on desc";
-
-        List<MacroDAO> list = new ArrayList<>();
-        try {
-            ResultSet rs = connection.createStatement().executeQuery(sql);
-            while (rs.next()) {
-                MacroDAO item = new MacroDAO(rs.getString(1), rs.getDate(2).toLocalDate(),
-                        rs.getDouble(3), rs.getDouble(4), rs.getString(5), rs.getString(6),
-                        rs.getTimestamp(7).toLocalDateTime().atZone(Global.ZONE_ID), rs.getTimestamp(8).toLocalDateTime().atZone(Global.ZONE_ID));
-                list.add(item);
-            }
-            Global.ticker_crawl = list;
-            connection.commit();
-
-        } catch (SQLException e) {
-        }
-    }
-
-
-//    public void getDailyConHisto(long idTick) {
-//        try {
-//            String sql = "SELECT date, open, high, low, close, symbol, volume FROM public.daily_candle WHERE id > " + idTick + " order by date;";
-//            ResultSet rs = connection.createStatement().executeQuery(sql);
-//            while (rs.next()) {
-//                ContractBasic contract = appController.getContractsBySymbol().get(rs.getString(6));
-//                ZonedDateTime date = rs.getTimestamp(1).toLocalDateTime().atZone(Global.ZONE_ID);
-//                try {
-//                    Candle candle = new Candle(date, Utils.round(rs.getDouble(2), contract.getRounding()), Utils.round(rs.getDouble(3), contract.getRounding()),
-//                            Utils.round(rs.getDouble(4), contract.getRounding()), Utils.round(rs.getDouble(5),
-//                            contract.getRounding()), contract.getIdcontract(), 1380);
-////                candle.setIdtick(rs.getInt(1));
-////                Global.getInstance().setIdTick(rs.getInt(1));
-////                candle.setTriggerDown(rs.getInt(5));
-////                candle.setTriggerDown(rs.getInt(6));
-//                    appController.getGenerators().get(contract.getIdcontract()).process(candle);
-//                } catch (NullPointerException e) {
-//                    e.getMessage();
-//                }
-//            }
-//            connection.commit();
-//            rs.close();
-//        } catch (SQLException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public Long findTopIdTickOrderByIdDesc() {
         Long idTick = null;
@@ -393,33 +310,6 @@ public class Database {
                 preparedStatement.setTimestamp(19, new Timestamp(ZonedDateTime.now().toEpochSecond()*1000));
                 preparedStatement.setTimestamp(20, new Timestamp(ZonedDateTime.now().toEpochSecond()*1000));
 
-                preparedStatement.addBatch();
-                count++;
-            }
-            preparedStatement.executeBatch();
-            preparedStatement.close();
-            connection.commit();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return count;
-    }
-
-    public synchronized int saveHisto(List<Historical> histos) {
-        int count = 0;
-        try (Statement statement = this.connection.createStatement()) {
-            String sql = "INSERT INTO public.histo " +
-                    "(cid, tid, freq, open, high, low, close)" +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            for (Historical histo : histos) {
-                preparedStatement.setLong(1, histo.getCid());
-                preparedStatement.setLong(2, histo.getTid());
-                preparedStatement.setInt(3, histo.getFreq());
-                preparedStatement.setDouble(4, histo.getOpen());
-                preparedStatement.setDouble(5, histo.getHigh());
-                preparedStatement.setDouble(6, histo.getLow());
-                preparedStatement.setDouble(7, histo.getClose());
                 preparedStatement.addBatch();
                 count++;
             }

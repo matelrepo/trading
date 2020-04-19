@@ -4,17 +4,12 @@ package io.matel.app.controller;
 import io.matel.app.AppController;
 import io.matel.app.AppLauncher;
 import io.matel.app.config.Global;
-import io.matel.app.connection.activeuser.ActiveUserEvent;
-import io.matel.app.connection.user.UserRepository;
+import io.matel.app.config.connection.activeuser.ActiveUserEvent;
+import io.matel.app.config.connection.user.UserRepository;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.domain.EventType;
-import io.matel.app.macro.domain.MacroDAO;
-import io.matel.app.portfolio.Portfolio;
 import io.matel.app.repo.ContractRepository;
-import io.matel.app.repo.LogProcessorStateRepo;
 import io.matel.app.state.GeneratorState;
-import io.matel.app.state.LogProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +32,10 @@ public class HttpController {
     @Autowired
     ContractRepository contractRepository;
 
-    @Autowired
-    LogProcessorStateRepo logProcessorStateRepo;
 
     @Autowired
     Global global;
 
-    @Autowired
-    Portfolio portfolio;
 
 
     public HttpController(UserRepository userRepository,
@@ -70,15 +61,6 @@ public class HttpController {
         return contracts;
     }
 
-    @GetMapping("/portfolio")
-    public Portfolio getPortfolio(){
-        return portfolio;
-    }
-
-    @GetMapping("/ticker-crawl")
-    public List<MacroDAO> getTickerCrawl(){
-        return Global.ticker_crawl;
-    }
 
     @GetMapping("/histo-candles/{id}/{frequency}")
     public List<Candle> getHistoricalCandles(@PathVariable String id, @PathVariable String frequency){
@@ -92,13 +74,6 @@ public class HttpController {
     public GeneratorState getGeneratorState(@PathVariable String id){
         long idcontract = Long.valueOf(id);
         return appController.getGenerators().get(idcontract).getGeneratorState();
-    }
-
-    @GetMapping("/log-processor/{id}/{frequency}")
-    public List<LogProcessorState> getLogProcessorState(@PathVariable String id, @PathVariable String frequency){
-        long idcontract = Long.valueOf(id);
-        int freq = Integer.valueOf(frequency);
-        return logProcessorStateRepo.findTop500ByIdcontractAndFreqOrderByIdDesc(idcontract, freq);
     }
 
     @PostMapping("/disconnect-all/{save_}")

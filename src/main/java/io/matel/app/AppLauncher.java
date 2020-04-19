@@ -1,10 +1,9 @@
 package io.matel.app;
 
-import io.matel.app.Ibconfig.DataService;
+import io.matel.app.config.Ibconfig.DataService;
 import io.matel.app.config.Global;
 import io.matel.app.controller.WsController;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.macro.MacroWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.*;
 
 
@@ -32,8 +29,6 @@ public class AppLauncher implements CommandLineRunner {
     @Autowired
     Global global;
 
-    @Autowired
-    MacroWriter macroWriter;
 
     DataService dataService;
 
@@ -47,7 +42,6 @@ public class AppLauncher implements CommandLineRunner {
     public void run(String... args) {
 
         LOGGER.info("Starting with " + Global.EXECUTOR_THREADS + " cores");
-        macroUpdate();
         if(Global.ONLINE){
             dataService.connect();
         }else{
@@ -211,21 +205,6 @@ public class AppLauncher implements CommandLineRunner {
     @Scheduled(fixedRate = 5000)
     public void clock() {
         this.wsController.sendPrices(appController.getGeneratorsState());
-    }
-
-    @Scheduled(cron = "0 0 4 * * ?")
-    public void macroUpdate(){
-                new Thread(() -> {
-            try {
-                if (Global.UPDATE_MACRO)
-                    macroWriter.start();
-                else
-                    LOGGER.info(">>> MACRO_UPDATE is switched off");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-                    appController.getDatabase().getMacroItemsByCountry("United States");
-                }).start();
     }
 
 

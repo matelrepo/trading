@@ -1,6 +1,6 @@
-package io.matel.app.connection.user;
+package io.matel.app.config.connection.user;
 
-import io.matel.app.connection.activeuser.ActiveUserEvent;
+import io.matel.app.config.connection.activeuser.ActiveUserEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.userdetails.UserDetails;

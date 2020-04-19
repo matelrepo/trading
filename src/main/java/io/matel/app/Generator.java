@@ -2,23 +2,21 @@ package io.matel.app;
 
 
 import com.ib.client.TickAttrib;
-import io.matel.app.Ibconfig.DataService;
-import io.matel.app.Ibconfig.IbClient;
+import io.matel.app.config.Ibconfig.DataService;
+import io.matel.app.config.Ibconfig.IbClient;
 import io.matel.app.config.Global;
 import io.matel.app.controller.WsController;
-import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.Tick;
 import io.matel.app.repo.ContractRepository;
 import io.matel.app.repo.GeneratorStateRepo;
 import io.matel.app.state.GeneratorState;
-import io.matel.app.tools.Utils;
+import io.matel.app.config.tools.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import javax.swing.plaf.synth.SynthRadioButtonUI;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;

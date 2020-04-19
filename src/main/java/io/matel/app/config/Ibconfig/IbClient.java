@@ -1,4 +1,4 @@
-package io.matel.app.Ibconfig;
+package io.matel.app.config.Ibconfig;
 
 import com.ib.client.TickAttrib;
 

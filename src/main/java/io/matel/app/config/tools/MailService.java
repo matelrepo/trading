@@ -1,4 +1,4 @@
-package io.matel.app.tools;
+package io.matel.app.config.tools;
 
 import io.matel.app.config.Global;
 import io.matel.app.domain.ContractBasic;

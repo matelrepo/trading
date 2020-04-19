@@ -1,7 +1,7 @@
 package io.matel.app.domain;
 
 
-import io.matel.app.tools.Utils;
+import io.matel.app.config.tools.Utils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 

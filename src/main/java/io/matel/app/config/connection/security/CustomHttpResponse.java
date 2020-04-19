@@ -1,4 +1,4 @@
-package io.matel.app.connection.security;
+package io.matel.app.config.connection.security;
 
 public class CustomHttpResponse {
 

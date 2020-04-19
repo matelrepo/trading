@@ -1,4 +1,4 @@
-package io.matel.app.connection.user;
+package io.matel.app.config.connection.user;
 
 public class UserView {
     private int id;

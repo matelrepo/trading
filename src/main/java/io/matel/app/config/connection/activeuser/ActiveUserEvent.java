@@ -1,4 +1,4 @@
-package io.matel.app.connection.activeuser;
+package io.matel.app.config.connection.activeuser;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

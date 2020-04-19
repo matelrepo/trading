@@ -1,4 +1,4 @@
-package io.matel.app.tools;
+package io.matel.app.config.tools;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;

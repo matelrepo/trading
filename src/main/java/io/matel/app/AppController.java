@@ -1,15 +1,13 @@
 package io.matel.app;
 
-import io.matel.app.Ibconfig.DataService;
+import io.matel.app.config.Ibconfig.DataService;
 import io.matel.app.config.BeanFactory;
 import io.matel.app.config.Global;
-import io.matel.app.connection.activeuser.ActiveUserEvent;
+import io.matel.app.config.connection.activeuser.ActiveUserEvent;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.macro.domain.MacroDAO;
 import io.matel.app.repo.*;
 import io.matel.app.state.GeneratorState;
-import io.matel.app.state.LogProcessorState;
 import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,9 +32,6 @@ public class AppController {
 
     @Autowired
     ProcessorStateRepo processorStateRepo;
-
-    @Autowired
-    LogProcessorStateRepo logProcesoorStateRepo;
 
     @Autowired
     BeanFactory beanFactory;
@@ -76,8 +71,6 @@ public class AppController {
     private Map<Long, Generator> generators = new ConcurrentHashMap<>();
     private Map<Long, GeneratorState> generatorsState = new ConcurrentHashMap<>();
     private Map<String, ActiveUserEvent> activeUsers = new ConcurrentHashMap<>();  //By SessionId
-    private List<MacroDAO> tickerCrawl;
-
 
     public boolean loadHistoricalCandlesFromDbb(Long idcontract, boolean reset) {
         generators.get(idcontract).getProcessors().forEach((freq, processor) -> {
@@ -233,13 +226,6 @@ public class AppController {
 ////        }
 //    }
 
-    public List<MacroDAO> getTickerCrawl() {
-        return tickerCrawl;
-    }
-
-    public void setTickerCrawl(List<MacroDAO> tickerCrawl) {
-        this.tickerCrawl = tickerCrawl;
-    }
 
     @PreDestroy
     public void savingOnClose(){

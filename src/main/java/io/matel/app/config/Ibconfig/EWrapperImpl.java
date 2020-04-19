@@ -1,4 +1,4 @@
-package io.matel.app.Ibconfig;
+package io.matel.app.config.Ibconfig;
 
 import com.ib.client.*;
 import io.matel.app.AppController;
@@ -6,8 +6,6 @@ import io.matel.app.AppLauncher;
 import io.matel.app.config.Global;
 import io.matel.app.controller.WsController;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.portfolio.Portfolio;
-import io.matel.app.portfolio.Position;
 import io.matel.app.repo.ContractRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,8 +33,6 @@ public class EWrapperImpl implements EWrapper {
     @Autowired
     AppController appController;
 
-    @Autowired
-    Portfolio portfolio;
 
     @Autowired
     WsController wsController;
@@ -194,47 +190,12 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void updateAccountValue(String key, String value, String currency, String accountName) {
-        if(((key.equals("InitMarginReq") || key.equals("MaintMarginReq")) && currency.equals("USD")) || ((key.equals("NetLiquidationByCurrency") ||
-                key.equals("UnrealizedPnL") || key.equals("RealizedPnL")) && currency.equals("BASE"))){
-            double val = Double.parseDouble(value);
-            portfolio.setLastUpdate(ZonedDateTime.now());
-            switch(key){
-                case "MaintMarginReq":
-                    portfolio.setMaintMarginReq(val);
-                    break;
-                case "InitMarginReq":
-                    portfolio.setInitMarginReq(val);
-                    break;
-                case "NetLiquidationByCurrency":
-//                    portfolio.setNetLiquidation(val);
-//                    appController.getGenerators().get(1L).tickPrice(1,4,val,null);
-                    break;
-                case "UnrealizedPnL":
-                    portfolio.setUnrealizedPnl(val);
-                    break;
-                case "RealizedPnL":
-                    portfolio.setRealizedPnl(val);
-                    break;
-            }
-            portfolio.setExcessLiq(portfolio.getNetLiquidation() - portfolio.getMaintMarginReq());
-            //System.out.println(portfolio.toString());
-        }
 
     }
 
     @Override
     public void updatePortfolio(Contract contract, double position, double marketPrice, double marketValue,
                                 double averageCost, double unrealizedPNL, double realizedPNL, String accountName) {
-        if(portfolio.getPositions().get(contract.conid()) == null){
-            portfolio.getPositions().put(contract.conid(), new Position(contract.symbol(), position, marketPrice, marketValue, averageCost, unrealizedPNL, realizedPNL));
-        }else {
-            portfolio.getPositions().get(contract.conid()).updatePosition(position, marketPrice, marketValue, averageCost, unrealizedPNL, realizedPNL);
-        }
-        if(!portfolio.getPositions().get(contract.conid()).isConnected()){
-            client.reqPnLSingle(contract.conid(), Global.ACCOUNT_NUMBER, "", contract.conid());
-        }
-        wsController.sendPortoflio(portfolio);
-        //System.out.println(portfolio.getPositions().get(contract.conid()).toString());
 
     }
 
@@ -268,21 +229,12 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void pnl(int reqId, double dailyPnL, double unrealizedPnL, double realizedPnL) {
-        portfolio.setDailyPnl(dailyPnL);
-        portfolio.setRealizedPnl(realizedPnL);
-        portfolio.setUnrealizedPnl(unrealizedPnL);
-        wsController.sendPortoflio(portfolio);
-        //System.out.println(portfolio.toString());
+
     }
 
     @Override
     public void pnlSingle(int reqId, int pos, double dailyPnL, double unrealizedPnL, double realizedPnL, double value) {
-        portfolio.getPositions().get(reqId).setConnected(true);
-        portfolio.getPositions().get(reqId).setDailyPnl(dailyPnL);
-        portfolio.getPositions().get(reqId).setUnrealizedPnl(unrealizedPnL);
-        portfolio.getPositions().get(reqId).setRealizedPnl(realizedPnL);
-        wsController.sendPortoflio(portfolio);
-        //System.out.println(portfolio.getPositions().get(reqId).toString());
+
     }
 
     @Override

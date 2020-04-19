@@ -1,11 +1,8 @@
 package io.matel.app.config;
 
-import io.matel.app.macro.domain.MacroDAO;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 public class Global {
@@ -13,9 +10,6 @@ public class Global {
     public static final boolean RANDOM = true;
     public static final boolean READ_ONLY_TICKS = true;
     public static final boolean READ_ONLY_CANDLES = true;
-    public static final boolean READ_ONLY_HISTORICAL = true;
-    public static final boolean READ_ONLY_LOG_PROCESSOR = true;
-    public static final boolean UPDATE_MACRO = false;
     public static final boolean COMPUTE_DEEP_HISTORICAL = false;
 
     public static final String PORT = "5432";
@@ -36,7 +30,6 @@ public class Global {
     public static long startIdCandle = 0;
     public static long startIdTick = 0;
     public static boolean hasCompletedLoading = false;
-    public static List<MacroDAO> ticker_crawl = new ArrayList<>();
 
     private long idTick;
     private long idCandle;

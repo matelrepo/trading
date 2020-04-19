@@ -1,6 +1,6 @@
 package io.matel.app.state;
 
-import io.matel.app.tools.Utils;
+import io.matel.app.config.tools.Utils;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import java.time.ZonedDateTime;
-import java.util.Random;
 
 @Entity
 public class GeneratorState {

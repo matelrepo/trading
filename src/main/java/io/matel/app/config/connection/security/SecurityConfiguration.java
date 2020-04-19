@@ -1,7 +1,7 @@
-package io.matel.app.connection.security;
+package io.matel.app.config.connection.security;
 
-import io.matel.app.connection.user.UserPrincipalDetailsService;
-import io.matel.app.connection.user.UserRepository;
+import io.matel.app.config.connection.user.UserPrincipalDetailsService;
+import io.matel.app.config.connection.user.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;

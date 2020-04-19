@@ -1,10 +1,10 @@
-package io.matel.app.connection.security;
+package io.matel.app.config.connection.security;
 
 import com.auth0.jwt.JWT;
 import io.matel.app.config.Global;
-import io.matel.app.connection.user.User;
-import io.matel.app.connection.user.UserPrincipal;
-import io.matel.app.connection.user.UserRepository;
+import io.matel.app.config.connection.user.UserPrincipal;
+import io.matel.app.config.connection.user.User;
+import io.matel.app.config.connection.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
