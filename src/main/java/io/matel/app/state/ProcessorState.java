@@ -1,28 +1,25 @@
 package io.matel.app.state;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.matel.app.config.Global;
 import io.matel.app.domain.EventType;
-import javazoom.jl.player.Player;
 
 import javax.persistence.*;
-import java.io.FileInputStream;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-@IdClass(ProcessorStateKey.class)
-public class ProcessorState {
+public class ProcessorState implements  Cloneable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    private long idTick;
+    private long idCandle;
     private long idcontract;
-
-    @Id
     private int freq;
-
-
     private ZonedDateTime timestamp;
     private int color = 0;
     private boolean minTrend = false;
@@ -37,6 +34,7 @@ public class ProcessorState {
     private double target = 0;
     private LocalDate lastDayOfQuarter;
     private boolean isTradable = false;
+    private double open, high, low, close;
 
     @Enumerated(EnumType.STRING)
     private EventType event;
@@ -61,7 +59,66 @@ public class ProcessorState {
         }
     }
 
+    public Object clone()throws CloneNotSupportedException{
+        return super.clone();
+    }
 
+
+    public long getIdCandle() {
+        return idCandle;
+    }
+
+    public void setIdCandle(long idCandle) {
+        this.idCandle = idCandle;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getIdTick() {
+        return idTick;
+    }
+
+    public void setIdTick(long idTick) {
+        this.idTick = idTick;
+    }
+
+    public double getOpen() {
+        return open;
+    }
+
+    public void setOpen(double open) {
+        this.open = open;
+    }
+
+    public double getHigh() {
+        return high;
+    }
+
+    public void setHigh(double high) {
+        this.high = high;
+    }
+
+    public double getLow() {
+        return low;
+    }
+
+    public void setLow(double low) {
+        this.low = low;
+    }
+
+    public double getClose() {
+        return close;
+    }
+
+    public void setClose(double close) {
+        this.close = close;
+    }
 
     public long getIdcontract() {
         return idcontract;
@@ -156,21 +213,10 @@ public class ProcessorState {
         return activeEvents;
     }
 
-//    @JsonIgnore
-//    public void setActiveEvents(Map<EventType, Boolean> activeEvents) {
-//        this.activeEvents = activeEvents;
-//    }
-
-//    public void setEvents(String events){
-//        this.events = events;
-//    }
-
     public void setActiveEvents(String events){
         this.events = events;
         if(!this.events.equals("")) {
-//            System.out.println("set active Events " + events);
             for (String s : events.split(",")) {
-//                System.out.println(s);
                 if (s != null)
                     activeEvents.put(EventType.valueOf(s), true);
             }
@@ -182,7 +228,6 @@ public class ProcessorState {
     }
 
     public String getActiveEvents(){
-//        System.out.println("get " + events);
         events = "";
         activeEvents.forEach((eventType, isTrue) ->{
             if(isTrue)
@@ -266,51 +311,9 @@ public class ProcessorState {
             default:
                 break;
         }
-
-//        String str_contract = "c" + contract;
-//        if(alert & Global.play_sound){
-//            System.out.println("New event -> " + type.toString() + " " + type.toString());
-//            try {
-//
-//                FileInputStream fileInputStream1 = new FileInputStream("src/main/resources/audio/" + str_contract +".mp3");
-//                Player player1 = new Player((fileInputStream1));
-//                player1.play();
-//
-//                FileInputStream fileInputStream2 = new FileInputStream("src/main/resources/audio/" + freq +
-//                        type.toString().substring(0,3) + type.toString().substring(3) + ".mp3");
-//                Player player2 = new Player((fileInputStream2));
-//                player2.play();
-//
-//                if(isTradable) {
-//                    FileInputStream fileInputStream3 = new FileInputStream("src/main/resources/audio/trading.mp3");
-//                    Player player3 = new Player((fileInputStream3));
-//                    player3.play();
-//                }
-//
-//            }catch (Exception e){
-//                System.out.println(e);
-//            }
-//        }
-
-
         getActiveEvents();
-
     }
 
-    @Override
-    public String toString() {
-        return "ProcessorData{" +
-                "(" + idcontract +
-                "-" + freq +
-                ") ,event=" + event +
-                ", color=" + color +
-                ", value=" + value +
-                ", target=" + target +
-                ", events=" + events +
-                ", activeEvents=" + activeEvents +
-                ", tradable=" + isTradable +
-                '}';
-    }
 
     public LocalDate getLastDayOfQuarter() {
         return lastDayOfQuarter;
@@ -328,7 +331,6 @@ public class ProcessorState {
         isTradable = tradable;
     }
 
-
     public EventType getEvent() {
         return event;
     }
@@ -345,4 +347,35 @@ public class ProcessorState {
         this.event = event;
     }
 
+    @Override
+    public String toString() {
+        return "ProcessorState{" +
+                "id=" + id +
+                ", idTick=" + idTick +
+                ", idCandle=" + idCandle +
+                ", idcontract=" + idcontract +
+                ", freq=" + freq +
+                ", timestamp=" + timestamp +
+                ", color=" + color +
+                ", minTrend=" + minTrend +
+                ", maxTrend=" + maxTrend +
+                ", maxValue=" + maxValue +
+                ", maxValid=" + maxValid +
+                ", max=" + max +
+                ", minValue=" + minValue +
+                ", minValid=" + minValid +
+                ", min=" + min +
+                ", value=" + value +
+                ", target=" + target +
+                ", lastDayOfQuarter=" + lastDayOfQuarter +
+                ", isTradable=" + isTradable +
+                ", open=" + open +
+                ", high=" + high +
+                ", low=" + low +
+                ", close=" + close +
+                ", event=" + event +
+                ", activeEvents=" + activeEvents +
+                ", events='" + events + '\'' +
+                '}';
+    }
 }

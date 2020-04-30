@@ -1,8 +1,10 @@
-package io.matel.app;
+package io.matel.app.database;
 
+import io.matel.app.AppController;
 import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.Tick;
+import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.sql.*;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Database {
     protected Connection connection;
@@ -117,6 +121,20 @@ public class Database {
         return idCandle;
     }
 
+    public Map<Long, Long> findTopIdTickFromProcessorState() {
+        Map<Long, Long> idTicks = new HashMap<>();
+        try {
+            String sql = "SELECT idcontract, max(id_tick) FROM public.processor_state GROUP BY idcontract";
+            System.out.println(sql);
+            ResultSet rs = connection.createStatement().executeQuery(sql);
+            while (rs.next()) {
+                idTicks.put(rs.getLong(1), rs.getLong(2));
+            }
+        } catch (SQLException e) {
+        }
+        return idTicks;
+    }
+
     public int countIdTickBreaks(long idcontract) {
         int breaks = 0;
         try {
@@ -134,6 +152,7 @@ public class Database {
         long idCandle = 0;
         try {
             String sql = "SELECT MIN(t2.mtick) FROM(SELECT t.mtick from (SELECT max(idtick) as mtick, freq FROM public.candle WHERE idcontract =" + idcontract + " GROUP BY freq ORDER BY freq) as t GROUP BY mtick) as t2";
+         System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 idCandle = rs.getLong(1);
@@ -156,8 +175,9 @@ public class Database {
         return idTick;
     }
 
-    public List<Candle> findTopByIdcontractAndFreqOrderByTimestampDesc(Long idcontract, int freq) {
+    public List<Candle> findTopByIdcontractAndFreqOrderByTimestampDesc(Long idcontract, int freq, boolean clone) {
         List<Candle> candles = new ArrayList<>();
+        long id = clone ? idcontract -1000 : idcontract;
         try {
             String sql = "SELECT \n" +
                     "id, idcontract, freq, idtick, timestamp,\n" +
@@ -166,10 +186,10 @@ public class Database {
                     "trigger_down, trigger_up,\n" +
                     "abnormal_height_level, big_candle, close_average,\n" +
                     "created_on, updated_on, volume \n" +
-                    "FROM public.candle WHERE idcontract =" + idcontract + " and freq =" + freq + " order by timestamp desc limit " + Global.MAX_LENGTH_CANDLE;
+                    "FROM public.candle WHERE idcontract =" + id + " and freq =" + freq + " order by timestamp desc limit " + Global.MAX_LENGTH_CANDLE;
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
-                candles.add(new Candle(rs.getLong(1), appController.getGenerators().get(rs.getLong(2)).getContract(), rs.getInt(3), rs.getLong(4),
+                candles.add(new Candle(rs.getLong(1), appController.getGenerators().get( rs.getLong(2)).getContract(), rs.getInt(3), rs.getLong(4),
                         rs.getTimestamp(5).toLocalDateTime().atZone(Global.ZONE_ID),
                         rs.getDouble(6), rs.getDouble(7), rs.getDouble(8), rs.getDouble(9),
                         rs.getInt(10), rs.getBoolean(11), rs.getInt(12),
@@ -194,6 +214,7 @@ public class Database {
             }else{
                  sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM " + table + " WHERE contract =" + idcontract + " and id>" + idTick + " order by date LIMIT 250000";
             }
+            System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 try {
@@ -222,6 +243,60 @@ public class Database {
            // System.out.println(maxIdTick);
             return maxIdTick;
         }
+    }
+
+    public synchronized int saveProcessorStates(List<ProcessorState> states) {
+        int count = 0;
+        try (Statement statement = this.connection.createStatement()) {
+            String sql = "INSERT INTO public.processor_state " +
+                    "(close, color, event, events, freq, high, id_candle, id_tick, idcontract,is_tradable,last_day_of_quarter, low, max, max_trend, max_valid," +
+                    "max_value, min, min_trend, min_valid, min_value, open, target, timestamp,value)" +
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (ProcessorState state : states) {
+                preparedStatement.setDouble(1, state.getClose());
+                preparedStatement.setInt(2, state.getColor());
+               // System.out.println(state.getEvent());
+                if(state.getEvent()==null){
+                    preparedStatement.setString(3,null);
+                }else{
+                    preparedStatement.setString(3,state.getEvent().toString());
+                }
+                preparedStatement.setString(4,state.getEvents());
+                preparedStatement.setInt(5, state.getFreq());
+                preparedStatement.setDouble(6, state.getHigh());
+                preparedStatement.setLong(7, state.getIdCandle());
+                preparedStatement.setLong(8, state.getIdTick());
+                preparedStatement.setLong(9, state.getIdcontract());
+                preparedStatement.setBoolean(10,state.isTradable());
+                preparedStatement.setObject(11,state.getLastDayOfQuarter());
+                preparedStatement.setDouble(12, state.getLow());
+                preparedStatement.setDouble(13, state.getMax());
+                preparedStatement.setBoolean(14,state.isMaxTrend());
+                preparedStatement.setDouble(15, state.getMaxValid());
+                preparedStatement.setDouble(16, state.getMaxValue());
+                preparedStatement.setDouble(17, state.getMin());
+                preparedStatement.setBoolean(18,state.isMinTrend());
+                preparedStatement.setDouble(19, state.getMinValid());
+                preparedStatement.setDouble(20, state.getMinValue());
+                preparedStatement.setDouble(21, state.getOpen());
+                preparedStatement.setDouble(22, state.getTarget());
+                if(state.getTimestamp()!=null) {
+                    preparedStatement.setTimestamp(23, new Timestamp(state.getTimestamp().toEpochSecond() * 1000));
+                }else{
+                    preparedStatement.setTimestamp(23,null);
+                }
+                preparedStatement.setDouble(24, state.getValue());
+                preparedStatement.addBatch();
+                count++;
+            }
+            preparedStatement.executeBatch();
+            preparedStatement.close();
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 
     public synchronized int saveTicks(List<Tick> ticks) {
@@ -285,8 +360,8 @@ public class Database {
                     "color, new_candle, progress,\n" +
                     "trigger_down, trigger_up,\n" +
                     "abnormal_height_level, big_candle, close_average,\n" +
-                    "volume, created_on, updated_on)" +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "volume, created_on, updated_on, checkpoint)" +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             for (Candle candle : candles) {
                 preparedStatement.setLong(1, candle.getId());
@@ -309,6 +384,8 @@ public class Database {
                 preparedStatement.setInt(18, candle.getVolume());
                 preparedStatement.setTimestamp(19, new Timestamp(ZonedDateTime.now().toEpochSecond()*1000));
                 preparedStatement.setTimestamp(20, new Timestamp(ZonedDateTime.now().toEpochSecond()*1000));
+                preparedStatement.setBoolean(21, candle.isCheckpoint());
+
 
                 preparedStatement.addBatch();
                 count++;
@@ -321,6 +398,8 @@ public class Database {
         }
         return count;
     }
+
+
 
 }
 

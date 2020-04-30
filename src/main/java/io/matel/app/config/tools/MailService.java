@@ -26,8 +26,13 @@ public class MailService {
         if (Global.send_email) {
             SimpleMailMessage mail = new SimpleMailMessage();
             mail.setTo("mcolsenet@gmail.com");
-            mail.setSubject("(" + processorState.getIdcontract() + ") " + contract.getSymbol() + " >> (" + processorState.getFreq() + ") " + processorState.getEvent());
-            mail.setText((new StringBuilder("Value=")).append(processorState.getValue()).append(" Target=").append(processorState.getTarget()).toString());
+            if(processorState != null && contract != null) {
+                mail.setSubject("(" + processorState.getIdcontract() + ") " + contract.getSymbol() + " >> (" + processorState.getFreq() + ") " + processorState.getEvent());
+                mail.setText((new StringBuilder("Value=")).append(processorState.getValue()).append(" Target=").append(processorState.getTarget()).toString());
+            }else{
+                mail.setSubject("test");
+                mail.setText("hey");
+            }
             javaMailSender.send(mail);
         }
     }

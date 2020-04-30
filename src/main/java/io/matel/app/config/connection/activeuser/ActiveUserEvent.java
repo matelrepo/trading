@@ -14,7 +14,7 @@ public class ActiveUserEvent {
     private static final Logger LOGGER = LogManager.getLogger(ActiveUserEvent.class);
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
     private String type;
     private String username;

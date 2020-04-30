@@ -1,10 +1,14 @@
-package io.matel.app;
+package io.matel.app.database;
 
+import io.matel.app.Generator;
 import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.Tick;
+import io.matel.app.repo.ProcessorStateRepo;
+import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -15,6 +19,7 @@ public class SaverController {
     private List<Tick> ticksBuffer = new ArrayList<>();
 
     private List<Candle> insertCandlesBuffer = new ArrayList<>();
+    private List<ProcessorState> insertProcessorState = new ArrayList<>();
     private Database database;
 
     public SaverController(Database database) {
@@ -36,6 +41,7 @@ public class SaverController {
             int numCandles = saveBatchCandles();
             //LOGGER.info("Saving now " + numCandles + " candles for contract " + idcontract);
             updateCurrentCandle(gen);
+            saveBatchProcessorState(true);
 //            saveProcessorStates();
         } else {
             //LOGGER.warn("Cannot save candles because ticks were not saved!");
@@ -64,7 +70,28 @@ public class SaverController {
         return count;
     }
 
+    public synchronized int saveBatchProcessorState(boolean saveNow) {
+        return saveBatchProcessorState(null, saveNow);
+    }
 
+    public synchronized int saveBatchProcessorState(ProcessorState processorState, boolean saveNow) {
+        int count = 0;
+            if (processorState != null)
+                this.insertProcessorState.add(processorState);
+        if (!Global.READ_ONLY_CANDLES && (Global.hasCompletedLoading || Global.COMPUTE_DEEP_HISTORICAL)) {
+            if (insertProcessorState.size() > 0 && (insertProcessorState.size() > Global.MAX_CANDLES_SIZE_SAVING * 4 || processorState == null || saveNow)) {
+                LOGGER.info(ZonedDateTime.now() + "- Regular batch processor state saving (" + insertProcessorState.size() + ")");
+                count = database.saveProcessorStates(this.insertProcessorState);
+                insertProcessorState.clear();
+            }
+        }
+        return count;
+    }
+
+
+public List<ProcessorState> getProcessorStateBuffer(){
+        return insertProcessorState;
+}
 
     public synchronized int saveBatchCandles() {
         return saveBatchCandles(null, true);

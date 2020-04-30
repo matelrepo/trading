@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name ="contracts")
-public class ContractBasic {
+public class ContractBasic implements Cloneable {
 
     @Id
     @Column(unique = true)
@@ -54,6 +54,8 @@ public class ContractBasic {
     private String type;
     private String category;
 
+    private long cloneid = -1;
+
     public ContractBasic(){}
 
     public ContractBasic(long idcontract, String title, String secType, String exchange, String currency, String symbol, double tickSize, int rounding, String multiplier,
@@ -72,6 +74,10 @@ public class ContractBasic {
         this.active = active;
         this.flowType = flowType;
         this.fusion = fusion;
+    }
+
+    public Object clone()throws CloneNotSupportedException{
+        return (ContractBasic)super.clone();
     }
 
     public long getIdcontract() {
@@ -231,6 +237,15 @@ public class ContractBasic {
 
     public void setConid(Integer conid) {
         this.conid = conid;
+    }
+
+
+    public long getCloneid() {
+        return cloneid;
+    }
+
+    public void setCloneid(long cloneid) {
+        this.cloneid = cloneid;
     }
 }
 

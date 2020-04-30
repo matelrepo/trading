@@ -159,7 +159,8 @@ public class FlowMerger {
                             updateCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                         break;
                     case 6900:
-                        if (timestamp.getDayOfWeek().getValue() < previousDate.getDayOfWeek().getValue()) {
+                        if (timestamp.getDayOfWeek().getValue() < previousDate.getDayOfWeek().getValue() ||
+                                (timestamp.getDayOfWeek().getValue() == previousDate.getDayOfWeek().getValue() && timestamp.getDayOfMonth()>previousDate.getDayOfMonth())) {
                             if (flow.size() > 0) {
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setWeeklyMark(flow.get(0).getClose());
 //
@@ -174,6 +175,9 @@ public class FlowMerger {
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setDailyMark(flow.get(0).getClose());
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setHigh(close);
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setLow(close);
+                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setChangePerc(0);
+                                appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setChangeValue(0);
+
                             }
                             newCandle(timestamp, idTick, open, high, low, close, isCandleComputed);
                         } else

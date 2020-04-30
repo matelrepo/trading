@@ -6,10 +6,13 @@ import io.matel.app.AppLauncher;
 import io.matel.app.config.Global;
 import io.matel.app.config.connection.activeuser.ActiveUserEvent;
 import io.matel.app.config.connection.user.UserRepository;
+import io.matel.app.config.tools.MailService;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.repo.ContractRepository;
+import io.matel.app.state.ContractController;
 import io.matel.app.state.GeneratorState;
+import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,12 @@ public class HttpController {
     @Autowired
     ContractRepository contractRepository;
 
+    @Autowired
+    ContractController contractController;
+
+    @Autowired
+    MailService mailService;
+
 
     @Autowired
     Global global;
@@ -52,8 +61,8 @@ public class HttpController {
         List<ContractBasic> contracts = null;
         final String category = category_.toUpperCase();
         System.out.println(category);
-        if(appController.getContractsLive().size()>0){
-            contracts = appController.getContractsLive().stream().filter(con -> con.getCategory().equals(category)).collect(Collectors.toList());
+        if(contractController.getContracts().size()>0){
+            contracts = contractController.getContracts().stream().filter(con -> con.getCategory().equals(category)).collect(Collectors.toList());
         }else {
             contracts = contractRepository.findByActiveAndTypeOrderByIdcontract(true, type).stream().filter(con -> con.getCategory().equals(category)).collect(Collectors.toList());
         }
@@ -66,7 +75,7 @@ public class HttpController {
     public List<Candle> getHistoricalCandles(@PathVariable String id, @PathVariable String frequency){
         long idcontract = Long.valueOf(id);
         int freq = Integer.valueOf(frequency);
-        return appController.getCandlesByIdContractByFreq(idcontract, freq);
+        return appController.getCandlesByIdContractByFreq(idcontract, freq, false);
     }
 
 
@@ -76,10 +85,34 @@ public class HttpController {
         return appController.getGenerators().get(idcontract).getGeneratorState();
     }
 
+    @GetMapping("/processor-state/{id}")
+    public List<ProcessorState> getProcessorStates(@PathVariable String id){
+        long idcontract = Long.valueOf(id);
+        System.out.println(appController.getGenerators().get(idcontract).getDatabase().getSaverController().getProcessorStateBuffer().size());
+        return appController.getGenerators().get(idcontract).getDatabase().getSaverController().getProcessorStateBuffer();
+    }
+
     @PostMapping("/disconnect-all/{save_}")
     public void disconnectAll(@PathVariable String save_){
         boolean save = Boolean.valueOf(save_);
         appController.disconnectAllMarketData(save);
+    }
+
+    @PostMapping("/send-email")
+    public void sendEmail(){
+        mailService.sendEmail(null, null);
+    }
+
+    @PostMapping("/contracts/clone/{id}")
+    public void cloneContract(@PathVariable String id){
+        int idcontract = Integer.valueOf(id);
+        contractController.cloneContract(idcontract);
+    }
+
+    @PostMapping("/contracts/remove/{id}")
+    public void removeContract(@PathVariable String id){
+        int idcontract = Integer.valueOf(id);
+        contractController.removeContract(idcontract);
     }
 
     @PostMapping("/connect-all")

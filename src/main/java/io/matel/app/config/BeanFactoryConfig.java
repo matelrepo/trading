@@ -1,9 +1,10 @@
 package io.matel.app.config;
 
-import io.matel.app.Database;
+import io.matel.app.database.Database;
 import io.matel.app.Generator;
 import io.matel.app.Processor;
 import io.matel.app.domain.ContractBasic;
+import io.matel.app.state.ProcessorState;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -3,7 +3,10 @@ package io.matel.app;
 import io.matel.app.config.Ibconfig.DataService;
 import io.matel.app.config.Global;
 import io.matel.app.controller.WsController;
-import io.matel.app.domain.ContractBasic;
+import io.matel.app.database.Database;
+import io.matel.app.repo.ProcessorStateRepo;
+import io.matel.app.state.ContractController;
+import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 
 
@@ -28,6 +33,13 @@ public class AppLauncher implements CommandLineRunner {
 
     @Autowired
     Global global;
+
+    @Autowired
+    ContractController contractController;
+
+
+    @Autowired
+    ProcessorStateRepo processorStateRepo;
 
 
     DataService dataService;
@@ -53,10 +65,10 @@ public class AppLauncher implements CommandLineRunner {
     public void startLive() {
         try {
             Database database = appController.createDatabase("matel", Global.PORT, "matel");
-            appController.setContractsLive(appController.initContracts());
+            contractController.setContracts(contractController.initContracts());
 
-            numContracts = appController.getContractsLive().size();
-            LOGGER.info(appController.getContractsLive().size() + " contracts found");
+            numContracts = contractController.getContracts().size();
+            LOGGER.info(contractController.getContracts().size() + " contracts found");
             Long idTick = database.findTopIdTickOrderByIdDesc();
             if (idTick == null) idTick = 0L;
             Global.startIdTick = idTick;
@@ -73,11 +85,6 @@ public class AppLauncher implements CommandLineRunner {
 
             if (Global.READ_ONLY_TICKS)
                 LOGGER.warn(">>> Read only lock! <<<");
-
-            for (ContractBasic contract : appController.getContractsLive()) {
-                    createGenerator(contract);
-                    createProcessor(contract, 0);
-            }
 
             LOGGER.info("Loading historical candles...");
             appController.getGenerators().forEach((id, generator) -> {
@@ -110,35 +117,35 @@ public class AppLauncher implements CommandLineRunner {
                             long minIdTick = 0;
                             int count = 0;
 
-//                            while (minIdTick >= 0) {
-//                                //System.out.println(count + " round(s) with tick " + minIdTick + " 2018");
-//                                count++;
-//                                minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data18", minIdTick);
-//                            }
-//                            minIdTick = 0;
-//                            count = 0;
-//                            while (minIdTick >= 0) {
-//                                //System.out.println(count + " round(s) with tick " + minIdTick + " 2019");
-//                                count++;
-//                                minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data19", minIdTick);
-//                            }
-//                            minIdTick = 0;
-//                            count = 0;
+                            while (minIdTick >= 0) {
+                                count++;
+                                minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data18", minIdTick);
+                            }
+                            minIdTick = 0;
+                            count = 0;
+                            while (minIdTick >= 0) {
+                                count++;
+                                minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data19", minIdTick);
+                            }
+                            minIdTick = 0;
+                            count = 0;
                             while (minIdTick >= 0) {
                                 count++;
                                 minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data20", minIdTick);
                             }
                             tickDatabase.close();
                             generator.getDatabase().getSaverController().saveNow(generator, true);
+                            generator.getProcessors().forEach((freq, proc)->{
+                                processorStateRepo.save(proc.getProcessorState());
+                            });
 
                         }
 
                         if (!Global.COMPUTE_DEEP_HISTORICAL && !error.errorDetected) {
-                            appController.loadHistoricalCandlesFromDbb(generator.getContract().getIdcontract(), false);
-                            generator.getDatabase().getTicksByTable(error.idcontract, false, "public.tick", error.lastCandleId);
+                            appController.loadHistoricalData(generator);
+                            appController.computeTicks(generator, error.lastCandleId);
                             generator.getDatabase().getSaverController().saveNow(generator, true);
                         }
-
                         generator.setDatabase(database);
                         semaphore.release();
 
@@ -149,7 +156,7 @@ public class AppLauncher implements CommandLineRunner {
                             numContracts = numContracts -1;
                             Thread.sleep(1000);
                             LOGGER.info("Loading completed for contract " + generator.getContract().getIdcontract());
-                            LOGGER.info("Remaining contracts " + numContracts +"/" + appController.getContractsLive().size());
+                            LOGGER.info("Remaining contracts " + numContracts +"/" + contractController.getContracts().size());
                             if(numContracts ==0) {
                                 LOGGER.info("All completed");
                                 Global.hasCompletedLoading = true;
@@ -159,9 +166,6 @@ public class AppLauncher implements CommandLineRunner {
                         }
 
                         generator.saveGeneratorState();
-                        generator.getProcessors().forEach((freq, proc) -> {
-                            proc.saveProcessorState();
-                        });
 
                     }).start();
                 } catch (InterruptedException e) {
@@ -175,32 +179,8 @@ public class AppLauncher implements CommandLineRunner {
 
     }
 
-    private Generator createGenerator(ContractBasic contract) {
-        return appController.createGenerator(contract);
-    }
 
-    private void createProcessor(ContractBasic contract, int minFreq) {
-        appController.createProcessors(contract, minFreq);
-    }
 
-    //    public void startDailyCon(){
-//        new Thread(()->{
-//            LOGGER.info("Creating daily contracts universe");
-//            appController.setContractsDailyCon(appController.contractRepository.findTop100ByActiveAndType(true, "DAILYCON"));
-//            appController.getContractsDailyCon().forEach((contract->{
-//                appController.getContractsBySymbol().put(contract.getSymbol(), contract);
-//            }));
-//
-//            for(ContractBasic contract : appController.getContractsDailyCon()){
-//                createGenerator(contract);
-//                createProcessor(contract, 1380);
-//            }
-////            dbb.getDailyConHisto();
-////            appController.saverController.saveNow(true);
-//
-//            LOGGER.info(">>Daily contracts universe created");
-//        }).start();
-//    }
 
     @Scheduled(fixedRate = 5000)
     public void clock() {

@@ -6,27 +6,31 @@ import io.matel.app.config.Ibconfig.DataService;
 import io.matel.app.config.Ibconfig.IbClient;
 import io.matel.app.config.Global;
 import io.matel.app.controller.WsController;
+import io.matel.app.database.Database;
 import io.matel.app.domain.ContractBasic;
+import io.matel.app.domain.EventType;
 import io.matel.app.domain.Tick;
 import io.matel.app.repo.ContractRepository;
 import io.matel.app.repo.GeneratorStateRepo;
+import io.matel.app.repo.ProcessorStateRepo;
+import io.matel.app.state.ContractController;
 import io.matel.app.state.GeneratorState;
 import io.matel.app.config.tools.Utils;
+import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
 
-public class Generator implements IbClient {
+public class Generator implements IbClient, ProcessorListener {
     private static final Logger LOGGER = LogManager.getLogger(Generator.class);
 
     @Autowired
@@ -47,14 +51,23 @@ public class Generator implements IbClient {
     @Autowired
     ContractRepository contractRepo;
 
+    @Autowired
+    ProcessorStateRepo processorStateRepo;
+
+    @Autowired
+    ContractController contractController;
+
 
     private ContractBasic contract;
     private List<Tick> flowLive = new ArrayList<>();
     private Map<Integer, Processor> processors = new ConcurrentHashMap<>();
     private GeneratorState generatorState;
     private Database database;
+    private ZonedDateTime dateNow = ZonedDateTime.now();
 
     public Database getDatabase() {
+        if(database ==null)
+            database = appController.getDatabase();
         return database;
     }
 
@@ -75,7 +88,7 @@ public class Generator implements IbClient {
     public void connectMarketData() throws ExecutionException, InterruptedException {
         Random rand = new Random();
         contract = contractRepo.findByIdcontract(contract.getIdcontract());
-        appController.initContracts();
+//        contractController.initContracts(false);
         if (this.generatorState.getMarketDataStatus() > 0 && Global.ONLINE)
             disconnectMarketData(false);
 
@@ -231,12 +244,6 @@ public class Generator implements IbClient {
 //    }
 
     public void processPrice(Tick tick, boolean countConsecutiveUpDown, boolean savingTick) {
-//        try {
-//            Thread.sleep(500);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
- //       System.out.println("New tick " + tick.toString());
         updateGeneratorState(tick);
         flowLive.add(0, tick);
         if (flowLive.size() > Global.MAX_LENGTH_TICKS)
@@ -350,6 +357,26 @@ public class Generator implements IbClient {
         }
     }
 
+    @Override
+    public void notifyEvent(ProcessorState state) {
+
+        if (Global.COMPUTE_DEEP_HISTORICAL && state.getTimestamp().until(dateNow, ChronoUnit.DAYS) > 80) {
+        } else {
+
+                synchronized (this) {
+                    processors.forEach((id, proc) -> {
+                        if (proc.getFlow().size() > 0)
+                            proc.getFlow().get(0).setCheckpoint(true);
+                        try {
+                            database.getSaverController().saveBatchProcessorState((ProcessorState) proc.getProcessorState().clone(), false);
+                        } catch (CloneNotSupportedException e) {
+                            e.printStackTrace();
+                        }
+                    });
+               }
+
+        }
+    }
 }
 
 

@@ -59,6 +59,9 @@ public class Candle {
     private double abnormalHeightLevel;
     private boolean bigCandle;
 
+
+    private boolean checkpoint = false;
+
     @Column(nullable = false)
     private int volume = 0;
 
@@ -145,6 +148,15 @@ public class Candle {
         this.createdOn = createdOn;
         this.updatedOn = updatedOn;
         this.volume = volume;
+    }
+
+
+    public boolean isCheckpoint() {
+        return checkpoint;
+    }
+
+    public void setCheckpoint(boolean checkpoint) {
+        this.checkpoint = checkpoint;
     }
 
     public long getId() {
