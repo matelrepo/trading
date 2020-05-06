@@ -161,7 +161,7 @@ public class FlowMerger {
                         break;
                     case 6900:
                         if (timestamp.getDayOfWeek().getValue() < previousDate.getDayOfWeek().getValue() ||
-                                (timestamp.getDayOfWeek().getValue() == previousDate.getDayOfWeek().getValue() &&  Period.between(timestamp.toLocalDate(), previousDate.toLocalDate()).getDays()>1)) {
+                                (timestamp.getDayOfWeek().getValue() == previousDate.getDayOfWeek().getValue() &&  Period.between(timestamp.toLocalDate(), previousDate.toLocalDate()).getDays()<-1)) {
                             if (flow.size() > 0) {
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setWeeklyMark(flow.get(0).getClose());
 //

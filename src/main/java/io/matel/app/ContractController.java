@@ -33,8 +33,8 @@ public class ContractController {
 
     public List<ContractBasic> initContracts() {
         List<ContractBasic> list = new ArrayList<>();
-         // list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
-        list.add(contractRepository.findByIdcontract(5));
+          list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
+        //list.add(contractRepository.findByIdcontract(5));
        //    list.add(contractRepository.findByIdcontract(98));
 
         setContracts(list);
