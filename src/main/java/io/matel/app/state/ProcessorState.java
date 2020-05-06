@@ -45,6 +45,16 @@ public class ProcessorState implements  Cloneable {
     @Column(nullable = false, columnDefinition= "TEXT")
     private String events= "";
 
+    public boolean isCheckpoint() {
+        return checkpoint;
+    }
+
+    public void setCheckpoint(boolean checkpoint) {
+        this.checkpoint = checkpoint;
+    }
+
+    private boolean checkpoint = false;
+
     public ProcessorState(long idcontract, int freq) {
         this.idcontract = idcontract;
         this.freq = freq;

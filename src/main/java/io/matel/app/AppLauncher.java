@@ -2,11 +2,10 @@ package io.matel.app;
 
 import io.matel.app.config.Ibconfig.DataService;
 import io.matel.app.config.Global;
+import io.matel.app.config.tools.MailService;
 import io.matel.app.controller.WsController;
 import io.matel.app.database.Database;
 import io.matel.app.repo.ProcessorStateRepo;
-import io.matel.app.state.ContractController;
-import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
 
 
@@ -40,6 +37,9 @@ public class AppLauncher implements CommandLineRunner {
 
     @Autowired
     ProcessorStateRepo processorStateRepo;
+
+    @Autowired
+    MailService mailService;
 
 
     DataService dataService;
@@ -83,8 +83,10 @@ public class AppLauncher implements CommandLineRunner {
             LOGGER.info("Setting up last id candle: " + global.getIdCandle(false));
             database.close();
 
-            if (Global.READ_ONLY_TICKS)
+            if (Global.READ_ONLY_TICKS) {
                 LOGGER.warn(">>> Read only lock! <<<");
+                mailService.sendMessage(">>> Read only lock! <<<");
+            }
 
             LOGGER.info("Loading historical candles...");
             appController.getGenerators().forEach((id, generator) -> {

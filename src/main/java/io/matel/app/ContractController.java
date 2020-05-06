@@ -1,4 +1,4 @@
-package io.matel.app.state;
+package io.matel.app;
 
 import io.matel.app.AppController;
 import io.matel.app.Generator;
@@ -33,7 +33,7 @@ public class ContractController {
 
     public List<ContractBasic> initContracts() {
         List<ContractBasic> list = new ArrayList<>();
-       //   list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
+         // list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
         list.add(contractRepository.findByIdcontract(5));
        //    list.add(contractRepository.findByIdcontract(98));
 

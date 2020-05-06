@@ -205,11 +205,14 @@ public class Processor extends FlowMerger {
 
     private void recordEvent(EventType type) {
         processorState.setType(type);
-        if (freq > 0 && (type == EventType.MIN_CONFIRM || type == EventType.MAX_CONFIRM))
+        if (freq > 0 && (type == EventType.MIN_CONFIRM || type == EventType.MAX_CONFIRM)) {
+            processorState.setCheckpoint(true);
             listeners.forEach(listener -> {
-                    listener.notifyEvent(processorState);
+                listener.notifyEvent(processorState);
             });
+        }
         wsController.sendEvent(processorState, contract);
+        processorState.setCheckpoint(false);
     }
 
     public ProcessorState getProcessorState() {

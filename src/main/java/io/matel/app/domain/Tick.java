@@ -1,9 +1,11 @@
 package io.matel.app.domain;
 
+import io.matel.app.config.Global;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -44,7 +46,7 @@ public class Tick {
 
     public Tick(long idtick,long idcontract , ZonedDateTime timestamp, double close) {
         this.id = idtick;
-        this.timestamp = timestamp;
+        this.timestamp = timestamp.withZoneSameLocal(Global.ZONE_ID);
         this.close = close;
         this.idcontract = idcontract;
     }

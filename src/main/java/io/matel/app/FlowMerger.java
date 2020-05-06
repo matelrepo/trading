@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -160,7 +161,7 @@ public class FlowMerger {
                         break;
                     case 6900:
                         if (timestamp.getDayOfWeek().getValue() < previousDate.getDayOfWeek().getValue() ||
-                                (timestamp.getDayOfWeek().getValue() == previousDate.getDayOfWeek().getValue() && timestamp.getDayOfMonth()>previousDate.getDayOfMonth())) {
+                                (timestamp.getDayOfWeek().getValue() == previousDate.getDayOfWeek().getValue() &&  Period.between(timestamp.toLocalDate(), previousDate.toLocalDate()).getDays()>1)) {
                             if (flow.size() > 0) {
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setWeeklyMark(flow.get(0).getClose());
 //

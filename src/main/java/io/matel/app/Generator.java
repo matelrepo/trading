@@ -8,12 +8,10 @@ import io.matel.app.config.Global;
 import io.matel.app.controller.WsController;
 import io.matel.app.database.Database;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.domain.EventType;
 import io.matel.app.domain.Tick;
 import io.matel.app.repo.ContractRepository;
 import io.matel.app.repo.GeneratorStateRepo;
 import io.matel.app.repo.ProcessorStateRepo;
-import io.matel.app.state.ContractController;
 import io.matel.app.state.GeneratorState;
 import io.matel.app.config.tools.Utils;
 import io.matel.app.state.ProcessorState;
@@ -22,7 +20,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -56,6 +53,8 @@ public class Generator implements IbClient, ProcessorListener {
 
     @Autowired
     ContractController contractController;
+
+    private boolean checkpoint = false;
 
 
     private ContractBasic contract;
@@ -254,6 +253,23 @@ public class Generator implements IbClient, ProcessorListener {
             processor.process(tick.getTimestamp(), tick.getId(), null, null, null, tick.getClose(), false);
         });
 
+        if(checkpoint){
+            synchronized (this) {
+                processors.forEach((freq, proc) -> {
+                    if(freq>0) {
+                        if (proc.getFlow().size() > 0)
+                            proc.getFlow().get(0).setCheckpoint(true);
+                        try {
+                            database.getSaverController().saveBatchProcessorState((ProcessorState) proc.getProcessorState().clone(), false);
+                        } catch (CloneNotSupportedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+            checkpoint = false;
+        }
+
         if (savingTick) {
             int count = database.getSaverController().saveBatchTicks(flowLive.get(0), false);
             if (count > 0)
@@ -359,22 +375,9 @@ public class Generator implements IbClient, ProcessorListener {
 
     @Override
     public void notifyEvent(ProcessorState state) {
-
         if (Global.COMPUTE_DEEP_HISTORICAL && state.getTimestamp().until(dateNow, ChronoUnit.DAYS) > 80) {
         } else {
-
-                synchronized (this) {
-                    processors.forEach((id, proc) -> {
-                        if (proc.getFlow().size() > 0)
-                            proc.getFlow().get(0).setCheckpoint(true);
-                        try {
-                            database.getSaverController().saveBatchProcessorState((ProcessorState) proc.getProcessorState().clone(), false);
-                        } catch (CloneNotSupportedException e) {
-                            e.printStackTrace();
-                        }
-                    });
-               }
-
+ checkpoint = true;
         }
     }
 }

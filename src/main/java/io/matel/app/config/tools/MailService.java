@@ -37,5 +37,15 @@ public class MailService {
         }
     }
 
+    public void sendMessage(String str) throws MailException{
+        if (Global.send_email) {
+            SimpleMailMessage mail = new SimpleMailMessage();
+            mail.setTo("mcolsenet@gmail.com");
+                mail.setSubject(str);
+                mail.setText("");
+            javaMailSender.send(mail);
+        }
+    }
+
 }
 

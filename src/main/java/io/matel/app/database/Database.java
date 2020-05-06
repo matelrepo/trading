@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.*;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -125,7 +126,7 @@ public class Database {
         Map<Long, Long> idTicks = new HashMap<>();
         try {
             String sql = "SELECT idcontract, max(id_tick) FROM public.processor_state GROUP BY idcontract";
-            System.out.println(sql);
+        //    System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 idTicks.put(rs.getLong(1), rs.getLong(2));
@@ -152,7 +153,7 @@ public class Database {
         long idCandle = 0;
         try {
             String sql = "SELECT MIN(t2.mtick) FROM(SELECT t.mtick from (SELECT max(idtick) as mtick, freq FROM public.candle WHERE idcontract =" + idcontract + " GROUP BY freq ORDER BY freq) as t GROUP BY mtick) as t2";
-         System.out.println(sql);
+      //   System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 idCandle = rs.getLong(1);
@@ -214,11 +215,12 @@ public class Database {
             }else{
                  sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM " + table + " WHERE contract =" + idcontract + " and id>" + idTick + " order by date LIMIT 250000";
             }
-            System.out.println(sql);
+       //     System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 try {
-                    Tick tick = new Tick(rs.getLong(1), rs.getLong(4), ZonedDateTime.ofInstant(rs.getTimestamp(5).toInstant(), Global.ZONE_ID), rs.getDouble(2));
+                    Tick tick = new Tick(rs.getLong(1), rs.getLong(4),
+                            ZonedDateTime.ofInstant(rs.getTimestamp(5).toInstant(), Global.ZONE_ID), rs.getDouble(2));
                     if(tick.getId() > maxIdTick) maxIdTick = tick.getId();
                     appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false, saveTick);
                count++;
@@ -250,8 +252,8 @@ public class Database {
         try (Statement statement = this.connection.createStatement()) {
             String sql = "INSERT INTO public.processor_state " +
                     "(close, color, event, events, freq, high, id_candle, id_tick, idcontract,is_tradable,last_day_of_quarter, low, max, max_trend, max_valid," +
-                    "max_value, min, min_trend, min_valid, min_value, open, target, timestamp,value)" +
-                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    "max_value, min, min_trend, min_valid, min_value, open, target, timestamp,value, checkpoint)" +
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             for (ProcessorState state : states) {
                 preparedStatement.setDouble(1, state.getClose());
@@ -287,6 +289,8 @@ public class Database {
                     preparedStatement.setTimestamp(23,null);
                 }
                 preparedStatement.setDouble(24, state.getValue());
+                preparedStatement.setBoolean(25, state.isCheckpoint());
+
                 preparedStatement.addBatch();
                 count++;
             }
