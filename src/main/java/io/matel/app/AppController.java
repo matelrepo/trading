@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PreDestroy;
-import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,20 +72,20 @@ public class AppController {
         generators.get(idcontract).getProcessors().forEach((freq, processor) -> {
             if (reset) processor.resetFlow();
             if (freq > 0) {
-                getCandlesByIdContractByFreq(idcontract, freq, clone);
+                getCandlesByIdContractByFreq(idcontract, freq, null, clone);
 
             }
         });
         return true;
     }
 
-    public List<Candle> getCandlesByIdContractByFreq(long idcontract, int freq, boolean clone) {
+    public List<Candle> getCandlesByIdContractByFreq(long idcontract, int freq, Long maxIdCandle, boolean clone) {
         List<Candle> candles=null;
         try {
             if (generators.get(idcontract).getProcessors().get(freq).getFlow().size() > 0) {
                 candles = generators.get(idcontract).getProcessors().get(freq).getFlow();
             } else {
-                candles = generators.get(idcontract).getDatabase().findTopByIdcontractAndFreqOrderByTimestampDesc(idcontract, freq, clone);
+                candles = generators.get(idcontract).getDatabase().getHistoricalCandles(idcontract, freq, maxIdCandle, clone);
                 if (candles.size() > 0) {
                     generators.get(idcontract).getProcessors().get(freq).setFlow(candles);
                 }
@@ -125,9 +124,9 @@ public class AppController {
         }
     }
 
-    public void loadHistoricalData(Generator generator){
+    public void loadHistoricalData(Generator generator, Long maxIdCandle){
         long id = generator.getContract().getCloneid()<0 ? generator.getContract().getIdcontract() : generator.getContract().getCloneid();
-        loadHistoricalCandlesFromDbb(generator.getContract().getIdcontract(), false, generator.getContract().getCloneid()>0);
+        loadHistoricalCandlesFromDbb(generator.getContract().getIdcontract(), false,generator.getContract().getCloneid()>0);
         List<ProcessorState> states = new ArrayList<>();
         states = processorStateRepo.findByIdTick(getProcessorStatesIdTickByIdContract().get(id));
         states.forEach(state ->{

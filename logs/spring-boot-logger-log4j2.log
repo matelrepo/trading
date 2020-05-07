@@ -1,20 +1,51 @@
-2020-05-06 05:41:31,088 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Lenovo-PC with PID 16232 (C:\Users\user\IdeaProjects\trading\target\classes started by Matel in C:\Users\user\IdeaProjects\trading)
-2020-05-06 05:41:31,095 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
-2020-05-06 05:41:31,904 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
-2020-05-06 05:41:32,038 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 128ms. Found 5 repository interfaces.
-2020-05-06 05:41:32,454 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$56d215cc] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-05-06 05:41:32,716 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
-2020-05-06 05:41:32,734 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
-2020-05-06 05:41:32,746 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
-2020-05-06 05:41:32,747 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
-2020-05-06 05:41:32,905 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
-2020-05-06 05:41:32,905 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1761 ms
-2020-05-06 05:41:33,074 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
-2020-05-06 05:41:33,169 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
-2020-05-06 05:41:33,245 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
+2020-05-07 09:49:09,825 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Lenovo-PC with PID 11808 (C:\Users\user\IdeaProjects\trading\target\classes started by Matel in C:\Users\user\IdeaProjects\trading)
+2020-05-07 09:49:09,836 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
+2020-05-07 09:49:10,594 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-05-07 09:49:10,698 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 98ms. Found 5 repository interfaces.
+2020-05-07 09:49:11,070 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$67167771] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-05-07 09:49:11,304 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
+2020-05-07 09:49:11,320 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2020-05-07 09:49:11,333 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2020-05-07 09:49:11,334 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
+2020-05-07 09:49:11,475 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2020-05-07 09:49:11,475 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1590 ms
+2020-05-07 09:49:11,632 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2020-05-07 09:49:11,718 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2020-05-07 09:49:11,773 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
 	name: default
 	...]
-2020-05-06 05:41:33,323 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
-2020-05-06 05:41:33,325 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
-2020-05-06 05:41:33,478 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
-2020-05-06 05:41:33,767 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2020-05-07 09:49:11,834 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
+2020-05-07 09:49:11,836 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
+2020-05-07 09:49:11,960 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2020-05-07 09:49:12,210 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2020-05-07 09:49:12,294 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
+2020-05-07 09:49:12,299 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@995ad50
+2020-05-07 09:49:12,576 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
+2020-05-07 09:49:12,881 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.config.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
+2020-05-07 09:49:13,069 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2020-05-07 09:49:13,585 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
+2020-05-07 09:49:13,589 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
+2020-05-07 09:49:13,813 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3df681cc, org.springframework.security.web.context.SecurityContextPersistenceFilter@2fa4888c, org.springframework.security.web.header.HeaderWriterFilter@46a9c368, org.springframework.web.filter.CorsFilter@3ba815ee, org.springframework.security.web.authentication.logout.LogoutFilter@b0c4905, io.matel.app.config.connection.security.JwtAuthenticationFilter@2fbd47b7, io.matel.app.config.connection.security.JwtAuthorizationFilter@2ecd2aa4, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@47cf65f1, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@396ec737, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@27bc2650, org.springframework.security.web.session.SessionManagementFilter@79f59e0e, org.springframework.security.web.access.ExceptionTranslationFilter@3555d804, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@34604b32]
+2020-05-07 09:49:13,828 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
+2020-05-07 09:49:13,848 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
+2020-05-07 09:49:13,998 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2020-05-07 09:49:14,156 INFO o.s.c.l.CompositeLog [main] Starting...
+2020-05-07 09:49:14,157 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+2020-05-07 09:49:14,158 INFO o.s.c.l.CompositeLog [main] Started.
+2020-05-07 09:49:14,168 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2020-05-07 09:49:14,189 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
+2020-05-07 09:49:14,192 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplication in 4.901 seconds (JVM running for 6.167)
+2020-05-07 09:49:14,194 INFO i.m.a.AppLauncher [main] Starting with 8 cores
+2020-05-07 09:49:14,251 INFO o.h.h.i.QueryTranslatorFactoryInitiator [main] HHH000397: Using ASTQueryTranslatorFactory
+2020-05-07 09:49:14,362 INFO i.m.a.AppLauncher [main] 1 contracts found
+2020-05-07 09:49:14,368 INFO i.m.a.AppLauncher [main] Setting up last id tick: 172057213
+2020-05-07 09:49:14,368 INFO i.m.a.AppLauncher [main] Setting up last id candle: 4062879
+2020-05-07 09:49:14,369 WARN i.m.a.AppLauncher [main] >>> Read only lock! <<<
+2020-05-07 09:49:17,091 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-05-07 09:49:17,091 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2020-05-07 09:49:17,100 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 8 ms
+2020-05-07 09:49:17,241 INFO i.m.a.c.c.a.ActiveUserEvent [http-nio-8080-exec-1] UserActivityEvent{type='login', username='trader', eventSessionId='19bff57d-3d6d-d27b-91a2-cafbb1245b36', timestamp=2020-05-07T09:49:17.231065300Z[UTC]}
+2020-05-07 09:49:18,521 INFO i.m.a.AppLauncher [main] Loading historical candles...
+2020-05-07 09:49:32,034 INFO i.m.a.AppLauncher [Thread-5] Loading completed for contract 5
+2020-05-07 09:49:32,036 INFO i.m.a.AppLauncher [Thread-5] Remaining contracts 0/1
+2020-05-07 09:49:32,037 INFO i.m.a.AppLauncher [Thread-5] All completed

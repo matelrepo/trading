@@ -35,8 +35,8 @@ public class AppLauncher implements CommandLineRunner {
     ContractController contractController;
 
 
-    @Autowired
-    ProcessorStateRepo processorStateRepo;
+//    @Autowired
+//    ProcessorStateRepo processorStateRepo;
 
     @Autowired
     MailService mailService;
@@ -136,15 +136,16 @@ public class AppLauncher implements CommandLineRunner {
                                 minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data20", minIdTick);
                             }
                             tickDatabase.close();
+
                             generator.getDatabase().getSaverController().saveNow(generator, true);
-                            generator.getProcessors().forEach((freq, proc)->{
-                                processorStateRepo.save(proc.getProcessorState());
-                            });
+//                            generator.getProcessors().forEach((freq, proc)->{
+//                                processorStateRepo.save(proc.getProcessorState());
+//                            });
 
                         }
 
                         if (!Global.COMPUTE_DEEP_HISTORICAL && !error.errorDetected) {
-                            appController.loadHistoricalData(generator);
+                            appController.loadHistoricalData(generator, null);
                             appController.computeTicks(generator, error.lastCandleId);
                             generator.getDatabase().getSaverController().saveNow(generator, true);
                         }

@@ -12,7 +12,11 @@ import java.time.ZonedDateTime;
 @Table(name = "candle",
         indexes = {@Index(name = "index_date",  columnList="timestamp", unique = false),
                 @Index(name = "index_idcontract_freq",  columnList="idcontract, freq", unique = false)})
-public class Candle {
+public class Candle implements  Cloneable {
+
+    public Object clone()throws CloneNotSupportedException{
+        return super.clone();
+    }
 
     @Id
     @Column(unique = true)

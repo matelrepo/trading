@@ -76,8 +76,9 @@ public class SaverController {
 
     public synchronized int saveBatchProcessorState(ProcessorState processorState, boolean saveNow) {
         int count = 0;
-            if (processorState != null)
+            if (processorState != null) {
                 this.insertProcessorState.add(processorState);
+            }
         if (!Global.READ_ONLY_CANDLES && (Global.hasCompletedLoading || Global.COMPUTE_DEEP_HISTORICAL)) {
             if (insertProcessorState.size() > 0 && (insertProcessorState.size() > Global.MAX_CANDLES_SIZE_SAVING * 4 || processorState == null || saveNow)) {
                 LOGGER.info(ZonedDateTime.now() + "- Regular batch processor state saving (" + insertProcessorState.size() + ")");

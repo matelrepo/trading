@@ -1,7 +1,6 @@
 package io.matel.app;
 
-import io.matel.app.AppController;
-import io.matel.app.Generator;
+import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.repo.ContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Component
@@ -33,8 +33,8 @@ public class ContractController {
 
     public List<ContractBasic> initContracts() {
         List<ContractBasic> list = new ArrayList<>();
-          list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
-        //list.add(contractRepository.findByIdcontract(5));
+       //   list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
+        list.add(contractRepository.findByIdcontract(5));
        //    list.add(contractRepository.findByIdcontract(98));
 
         setContracts(list);
@@ -60,8 +60,16 @@ public class ContractController {
            Generator generator = createGenerator(con);
             createProcessor(con);
             contracts.add(con);
-            appController.loadHistoricalData(generator);
-            appController.computeTicks(generator, 0);
+           // appController.loadHistoricalData(generator);
+            Map<Integer, Candle> idCandles = generator.getDatabase().getIdCandlesTable(164722502L, generator.getContract().getIdcontract()-1000);
+            generator.getProcessors().forEach((freq, processor) -> {
+                processor.resetFlow();
+                if (freq > 0) {
+                    appController.getCandlesByIdContractByFreq(generator.getContract().getIdcontract(), freq, idCandles.get(freq).getId(), true);
+                    processor.getFlow().add(0,idCandles.get(freq));
+                }
+            });
+            //appController.computeTicks(generator, 0);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

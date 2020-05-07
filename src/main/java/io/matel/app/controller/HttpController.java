@@ -75,7 +75,7 @@ public class HttpController {
     public List<Candle> getHistoricalCandles(@PathVariable String id, @PathVariable String frequency){
         long idcontract = Long.valueOf(id);
         int freq = Integer.valueOf(frequency);
-        return appController.getCandlesByIdContractByFreq(idcontract, freq, false);
+        return appController.getCandlesByIdContractByFreq(idcontract, freq,null,false);
     }
 
 

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Database {
     protected Connection connection;
@@ -176,8 +177,53 @@ public class Database {
         return idTick;
     }
 
-    public List<Candle> findTopByIdcontractAndFreqOrderByTimestampDesc(Long idcontract, int freq, boolean clone) {
+
+//    public Map<Integer, Long > getIdCandlesTable(Long idTick, long idContract) {
+//            Map<Integer, Long> idCandlesByFreq = new ConcurrentHashMap<>();
+//            if(idTick==null)
+//                idTick=Long.MAX_VALUE;
+//        try {
+//            String sql = "select freq, id_candle, open, high,low,close from public.processor_state WHERE id_tick IN (select id_tick from public.processor_state where id_tick IN " +
+//                    "(select max(id_tick) from public.processor_state where id_tick <=" + idTick + " and idcontract =" + idContract+ ") limit 1 ) order by freq";
+//           System.out.println(sql);
+//            ResultSet rs = connection.createStatement().executeQuery(sql);
+//            while (rs.next()) {
+//                idCandlesByFreq.put(rs.getInt(1), rs.getLong(2));
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return idCandlesByFreq;
+//    }
+
+    public Map<Integer, Candle > getIdCandlesTable(Long idTick, long idContract) {
+        Map<Integer, Candle> idCandlesByFreq = new ConcurrentHashMap<>();
+        if(idTick==null)
+            idTick=Long.MAX_VALUE;
+        try {
+            String sql = "select timestamp, open, high, low, close, idcontract, freq, id_candle from public.processor_state WHERE id_tick IN (select id_tick from public.processor_state where id_tick IN " +
+                    "(select max(id_tick) from public.processor_state where id_tick <=" + idTick + " and idcontract =" + idContract+ ") limit 1 ) order by freq";
+            ResultSet rs = connection.createStatement().executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                ZonedDateTime time = rs.getTimestamp(1) ==null ? null : rs.getTimestamp(1).toLocalDateTime().atZone(Global.ZONE_ID);
+                 Candle candle = new Candle(time,
+                        rs.getDouble(2), rs.getDouble(3),
+                        rs.getDouble(4), rs.getDouble(5),
+                        rs.getLong(6), rs.getInt(7));
+                 candle.setId(rs.getLong(8));
+                idCandlesByFreq.put(rs.getInt(7),candle);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return idCandlesByFreq;
+    }
+
+    public List<Candle> getHistoricalCandles(Long idcontract, int freq, Long maxIdCandle, boolean clone) {
         List<Candle> candles = new ArrayList<>();
+        if(maxIdCandle == null)
+            maxIdCandle = Long.MAX_VALUE;
         long id = clone ? idcontract -1000 : idcontract;
         try {
             String sql = "SELECT \n" +
@@ -187,7 +233,8 @@ public class Database {
                     "trigger_down, trigger_up,\n" +
                     "abnormal_height_level, big_candle, close_average,\n" +
                     "created_on, updated_on, volume \n" +
-                    "FROM public.candle WHERE idcontract =" + id + " and freq =" + freq + " order by timestamp desc limit " + Global.MAX_LENGTH_CANDLE;
+                    "FROM public.candle WHERE idcontract =" + id + " and freq =" + freq + " and id < " + maxIdCandle + " order by timestamp desc limit " + Global.MAX_LENGTH_CANDLE;
+          System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 candles.add(new Candle(rs.getLong(1), appController.getGenerators().get( rs.getLong(2)).getContract(), rs.getInt(3), rs.getLong(4),
