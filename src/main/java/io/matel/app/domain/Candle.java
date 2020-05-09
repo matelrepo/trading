@@ -90,12 +90,12 @@ public class Candle implements  Cloneable {
     }
 
 
-    public Candle(ZonedDateTime timestamp, double lastPrice, Double open, Double high, Double low, double close, ContractBasic contract, int freq, boolean isCandleComputed) {
-        if(isCandleComputed){
-            this.open = open;
-            this.high = high;
-            this.low = low;
-        }else {
+    public Candle(ZonedDateTime timestamp, double lastPrice, Double open, Double high, Double low, double close, ContractBasic contract, int freq) {
+//        if(isCandleComputed){
+//            this.open = open;
+//            this.high = high;
+//            this.low = low;
+//        }else {
             if (lastPrice > 0) {
                 double tickSize = contract.getTickSize();
                 int rounding = contract.getRounding();
@@ -116,7 +116,7 @@ public class Candle implements  Cloneable {
                 this.high = close;
                 this.low = close;
             }
-        }
+     //   }
             this.close = close;
             this.timestamp = timestamp;
             this.idcontract = contract.getIdcontract();

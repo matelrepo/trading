@@ -2,6 +2,7 @@ package io.matel.app;
 
 
 import io.matel.app.config.Global;
+import io.matel.app.config.tools.Utils;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.EventType;
@@ -25,10 +26,10 @@ public class Processor extends FlowMerger {
         processorState = new ProcessorState(contract.getIdcontract(), freq);
     }
 
-    public void process(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, boolean isCandleComputed) {
+    public void process(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, boolean computing) {
         if (Global.COMPUTE_DEEP_HISTORICAL && freq < 240 && timestamp.until(dateNow, ChronoUnit.DAYS) > 80) {
         } else {
-            merge(timestamp, idTick, open, high, low, close, isCandleComputed);
+            merge(timestamp, idTick, open, high, low, close, computing);
             if(flow.get(0).isNewCandle())
                 processorState.setEvent(EventType.NONE);
             processorState.setOpen(flow.get(0).getOpen());
@@ -39,18 +40,20 @@ public class Processor extends FlowMerger {
             processorState.setIdCandle(flow.get(0).getId());
             if (flow.size() > 4) {
                 processorState.setTimestamp(timestamp);
-                algorythm(isCandleComputed);
+                algorythm(computing);
             }
 
-            if (Global.ONLINE || Global.RANDOM)
+            if(!computing)
+            if (Global.ONLINE || Global.RANDOM || Global.HISTO) {
                 wsController.sendLiveCandle(flow.get(0));
+            }
         }
     }
 
-    public void algorythm(boolean isCandleComputed) {
+    public void algorythm(boolean computing) {
         processorState.setTradable(false);
-        if ((isCandleComputed && freq == 1380) || freq == 0)
-            offset = isCandleComputed ? 1 : 0;
+      //  if ((computing && freq == 1380) || freq == 0)
+            offset = freq==0 ? 1 : 0;
 
         processorState.setMaxTrend(flow.get(2 - offset).getHigh() <= processorState.getMax());
         if (isMaxDetect() && !smallCandleNoiseRemoval) {
@@ -107,14 +110,14 @@ public class Processor extends FlowMerger {
             recordEvent(EventType.MIN_DETECT_CANCEL);
         }
 
-        flow.get(0).setCloseAverage(flow.stream().mapToDouble(x -> x.getClose()).summaryStatistics().getAverage());
-        flow.get(0).setAbnormalHeightLevel(flow.stream().map(x -> (x.getHigh() - x.getLow()))
+        flow.get(0).setCloseAverage(Utils.round(flow.stream().mapToDouble(x -> x.getClose()).summaryStatistics().getAverage(),contract.getRounding()));
+        flow.get(0).setAbnormalHeightLevel(Utils.round(flow.stream().map(x -> (x.getHigh() - x.getLow()))
                 .collect(Collector.of(
                         DoubleStatistics::new,
                         DoubleStatistics::accept,
                         DoubleStatistics::combine,
                         d -> d.getAverage() + 2 * d.getStandardDeviation()
-                )));
+                )),contract.getRounding()));
 
 
         if ((flow.get(0).getHigh() - flow.get(0).getLow()) > flow.get(0).getAbnormalHeightLevel()) {

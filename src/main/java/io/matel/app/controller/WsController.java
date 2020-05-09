@@ -28,7 +28,10 @@ public class WsController {
         if (candle != null) {
             String path = "/get/candle-live/" + candle.getIdcontract() + "/" + candle.getFreq();
             template.convertAndSend(path, candle);
+//            if(candle.getFreq()==15) {
+//                System.out.println("Websocket");
 //             System.out.println(candle.toString());
+//            }
         }
     }
 
@@ -49,7 +52,7 @@ public class WsController {
             String path = "/get/events";
             template.convertAndSend(path, processorState);
             if (processorState.isTradable()){
-                mailService.sendEmail(processorState, contract);
+                mailService.sendMessage(processorState, contract);
                 System.out.println("New event -> " + processorState.getEvent() + " " + processorState.toString());
                 String test = "src/main/resources/audio/" + processorState.getFreq() + processorState.getEvent() + ".mp3";
                 String test2 = "src/main/resources/audio/c" + contract.getIdcontract() + ".mp3";

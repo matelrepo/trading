@@ -5,7 +5,6 @@ import io.matel.app.config.Global;
 import io.matel.app.config.tools.MailService;
 import io.matel.app.controller.WsController;
 import io.matel.app.database.Database;
-import io.matel.app.repo.ProcessorStateRepo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +64,7 @@ public class AppLauncher implements CommandLineRunner {
     public void startLive() {
         try {
             Database database = appController.createDatabase("matel", Global.PORT, "matel");
-            contractController.setContracts(contractController.initContracts());
+            contractController.setContracts(contractController.initContracts(true));
 
             numContracts = contractController.getContracts().size();
             LOGGER.info(contractController.getContracts().size() + " contracts found");
@@ -85,7 +84,7 @@ public class AppLauncher implements CommandLineRunner {
 
             if (Global.READ_ONLY_TICKS) {
                 LOGGER.warn(">>> Read only lock! <<<");
-                mailService.sendMessage(">>> Read only lock! <<<");
+                mailService.sendMessage(">>> Read only lock! <<<", "", true);
             }
 
             LOGGER.info("Loading historical candles...");
@@ -115,27 +114,7 @@ public class AppLauncher implements CommandLineRunner {
 
 
                         if (Global.COMPUTE_DEEP_HISTORICAL) {
-                            Database tickDatabase = appController.createDatabase("cleanm", Global.PORT, "atmuser");
-                            long minIdTick = 0;
-                            int count = 0;
-
-                            while (minIdTick >= 0) {
-                                count++;
-                                minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data18", minIdTick);
-                            }
-                            minIdTick = 0;
-                            count = 0;
-                            while (minIdTick >= 0) {
-                                count++;
-                                minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data19", minIdTick);
-                            }
-                            minIdTick = 0;
-                            count = 0;
-                            while (minIdTick >= 0) {
-                                count++;
-                                minIdTick = tickDatabase.getTicksByTable(error.idcontract, false, "trading.data20", minIdTick);
-                            }
-                            tickDatabase.close();
+                            appController.simulateHistorical(error.idcontract, null);
 
                             generator.getDatabase().getSaverController().saveNow(generator, true);
 //                            generator.getProcessors().forEach((freq, proc)->{
@@ -148,6 +127,10 @@ public class AppLauncher implements CommandLineRunner {
                             appController.loadHistoricalData(generator, null);
                             appController.computeTicks(generator, error.lastCandleId);
                             generator.getDatabase().getSaverController().saveNow(generator, true);
+                            generator.getProcessors().forEach((freq, proc)->{
+                                if(proc.getFlow().size()>0)
+                                    generator.getGeneratorState().setLastPrice(proc.getFlow().get(0).getClose());
+                            });
                         }
                         generator.setDatabase(database);
                         semaphore.release();

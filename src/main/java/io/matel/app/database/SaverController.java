@@ -62,11 +62,11 @@ public class SaverController {
                 this.ticksBuffer.add(tick);
 
             if (ticksBuffer.size() > 0 && (ticksBuffer.size() > Global.MAX_TICKS_SIZE_SAVING || tick == null || save)) {
-                LOGGER.info(ZonedDateTime.now() + "- Regular batch ticks saving (" + ticksBuffer.size() + ")");
                 count = database.saveTicks(this.ticksBuffer);
                 ticksBuffer.clear();
             }
         }
+        LOGGER.info(ZonedDateTime.now() + "- Regular batch ticks saving (" + count + ")");
         return count;
     }
 

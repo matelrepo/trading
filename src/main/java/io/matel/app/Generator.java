@@ -86,21 +86,18 @@ public class Generator implements IbClient, ProcessorListener {
 
     public void connectMarketData() throws ExecutionException, InterruptedException {
         Random rand = new Random();
-        contract = contractRepo.findByIdcontract(contract.getIdcontract());
+        long idcontract = contract.getCloneid()<0 ? contract.getIdcontract() : contract.getIdcontract() -1000;
+       // contract = contractRepo.findByIdcontract(contract.getIdcontract());
 //        contractController.initContracts(false);
         if (this.generatorState.getMarketDataStatus() > 0 && Global.ONLINE)
             disconnectMarketData(false);
 
-        Double close = database.findTopCloseFromTickByIdContractOrderByTimeStampDesc(contract.getIdcontract());
-        if (close == null)
-            close = database.findTopCloseFromCandleByIdContractOrderByTimeStampDesc(contract.getIdcontract());
+//        Double close = database.findTopCloseFromTickByIdContractOrderByTimeStampDesc(idcontract);
+//        if (close == null)
+//            close = database.findTopCloseFromCandleByIdContractOrderByTimeStampDesc(idcontract);
 
         if (Global.RANDOM) {
             generatorState.setRandomGenerator(true);
-            if (close != null)
-                generatorState.setLastPrice(close);
-            else
-                generatorState.setLastPrice(Global.STARTING_PRICE);
         }
 
         this.generatorState.setMarketDataStatus(2);
@@ -124,8 +121,7 @@ public class Generator implements IbClient, ProcessorListener {
                     runSize(contract.getIdcontract(), 8, volumeTotal);
 
                     try {
-//                        System.out.println(generatorState.getSpeed());
-                        Thread.sleep(1000);
+                        Thread.sleep(generatorState.getSpeed());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -146,14 +142,14 @@ public class Generator implements IbClient, ProcessorListener {
         t.setName(contract.getSymbol() + "." + contract.getCurrency() + "." + contract.getIdcontract());
         t.start();
 
-        if (close != null) {
-            if (generatorState.getLastPrice() < 0) {
-                Double price = close;
-                if (price != null) {
-                    generatorState.setLastPrice(price);
-                }
-            }
-        }
+//        if (close != null) {
+//            if (generatorState.getLastPrice() < 0) {
+//                Double price = close;
+//                if (price != null) {
+//                    generatorState.setLastPrice(price);
+//                }
+//            }
+//        }
     }
 
 
@@ -220,7 +216,7 @@ public class Generator implements IbClient, ProcessorListener {
             double newPrice = reformatPrice(price, field);
             if (newPrice > 0 && newPrice != generatorState.getLastPrice()) {
                 Tick tick = new Tick(global.getIdTick(true), contract.getIdcontract(), ZonedDateTime.now().withZoneSameInstant(Global.ZONE_ID), newPrice);
-                processPrice(tick, true, true);
+                processPrice(tick, true, true, false);
                 wsController.sendLiveGeneratorState(generatorState);
             }
         } else if ((price > 0 && (field == 1 || field == 2) && contract.getFlowType().equals("TRADES"))) {
@@ -242,7 +238,7 @@ public class Generator implements IbClient, ProcessorListener {
 //        });
 //    }
 
-    public void processPrice(Tick tick, boolean countConsecutiveUpDown, boolean savingTick) {
+    public void processPrice(Tick tick, boolean countConsecutiveUpDown, boolean savingTick, boolean computing) {
         updateGeneratorState(tick);
         flowLive.add(0, tick);
         if (flowLive.size() > Global.MAX_LENGTH_TICKS)
@@ -250,10 +246,10 @@ public class Generator implements IbClient, ProcessorListener {
         if (countConsecutiveUpDown)
             consecutiveUpDownCounter(tick);
         processors.forEach((freq, processor) -> {
-            processor.process(tick.getTimestamp(), tick.getId(), null, null, null, tick.getClose(), false);
+            processor.process(tick.getTimestamp(), tick.getId(), null, null, null, tick.getClose(), computing);
         });
 
-        if(checkpoint){
+        if(checkpoint && (Global.COMPUTE_DEEP_HISTORICAL || Global.hasCompletedLoading)){
             synchronized (this) {
                 processors.forEach((freq, proc) -> {
                     if(freq>0) {
@@ -349,6 +345,10 @@ public class Generator implements IbClient, ProcessorListener {
 
     public ContractBasic getContract() {
         return contract;
+    }
+
+    public void setContract(ContractBasic contract){
+        this.contract = contract;
     }
 
     public void setGeneratorState() {

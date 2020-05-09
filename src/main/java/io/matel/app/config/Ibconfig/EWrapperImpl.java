@@ -239,12 +239,12 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void contractDetails(int reqId, ContractDetails contractDetails) {
-ContractBasic contract = appController.getGenerators().get(Long.valueOf(reqId)).getContract();
+    ContractBasic contract = appController.getGenerators().get(Long.valueOf(reqId)).getContract();
         if(contract.getConid()==null) {
             contract.setConid(contractDetails.conid());
             contractRepository.save(contract);
         }
-//System.out.println(contract.toString());
+        System.out.println("contractDetails " + contract.toString());
     }
 
     @Override

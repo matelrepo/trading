@@ -38,6 +38,7 @@ public class ProcessorState implements  Cloneable {
     private boolean isTradable = false;
     private double open, high, low, close;
 
+
     @Enumerated(EnumType.STRING)
     private EventType event;
 
@@ -351,8 +352,16 @@ public class ProcessorState implements  Cloneable {
         return value;
     }
 
+    public void setValue(double value){
+        this.value = value;
+    }
+
     public double getTarget(){
         return target;
+    }
+
+    public void setTarget(double target){
+        this.target = target;
     }
 
     public void setEvent(EventType event) {

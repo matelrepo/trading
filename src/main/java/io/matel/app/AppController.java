@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PreDestroy;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,10 +26,6 @@ import java.util.concurrent.ExecutionException;
 
 @Controller
 public class AppController {
-
-    @Autowired
-    ContractRepository contractRepository;
-
 
     @Autowired
     BeanFactory beanFactory;
@@ -135,12 +132,39 @@ public class AppController {
     }
 
     public void computeTicks(Generator generator, long minIdTick){
+        LOGGER.info("Computing ticks");
         long id = generator.getContract().getCloneid()<0 ? generator.getContract().getIdcontract() : generator.getContract().getCloneid();
-            generator.getDatabase().getTicksByTable(id, false, "public.tick", minIdTick);
+            generator.getDatabase().getTicksByTable(id, false, "public.tick", minIdTick, true, false);
     }
 
     public void connectMarketData(ContractBasic contract) throws ExecutionException, InterruptedException {
         generators.get(contract.getIdcontract()).connectMarketData();
+    }
+
+    public void simulateHistorical(long idcontract, Long idTick){
+        LOGGER.info("computing historical");
+        Database tickDatabase = createDatabase("cleanm", Global.PORT, "atmuser");
+        long minIdTick = idTick == null ? 0 : idTick;
+        int count = 0;
+
+        while (minIdTick >= 0) {
+            count++;
+            minIdTick = tickDatabase.getTicksByTable(idcontract, false, "trading.data18", minIdTick, false, true);
+        }
+         minIdTick = idTick == null ? 0 : idTick;
+        count = 0;
+        while (minIdTick >= 0) {
+            count++;
+            minIdTick = tickDatabase.getTicksByTable(idcontract, false, "trading.data19", minIdTick,false, true);
+        }
+         minIdTick = idTick == null ? 0 : idTick;
+        count = 0;
+        while (minIdTick >= 0) {
+            count++;
+            minIdTick = tickDatabase.getTicksByTable(idcontract, false, "trading.data20", minIdTick, false, true);
+        }
+        tickDatabase.close();
+
     }
 
     public void disconnectAllMarketData(boolean save){
@@ -180,7 +204,7 @@ public class AppController {
     }
 
     @PreDestroy
-    public void savingOnClose(){
+    public void saveNow(){
       database.getSaverController().saveBatchTicks(true);
     }
 }

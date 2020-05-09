@@ -1,5 +1,6 @@
 package io.matel.app.state;
 
+import io.matel.app.config.Global;
 import io.matel.app.config.tools.Utils;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -19,14 +20,17 @@ public class GeneratorState {
     @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
     private ZonedDateTime timestamp = ZonedDateTime.now();
 
-    private int speed = 2000;
+    @Transient
+    private long speed = 500L;
+    @Transient
+    private double speedMultiplier = 10;
     private boolean isRandomGenerator = true;
 
     private int triggerUp =0;
     private int triggerDown = 0;
     private int color =0;
 
-    private double lastPrice = -1; //ok
+    private double lastPrice = Global.STARTING_PRICE; //ok
     private double dailyMark = 10000; //ok
     private double weeklyMark = 10000; //ok
     private double monthlyMark = 10000; //ok
@@ -96,12 +100,11 @@ public class GeneratorState {
         this.timestamp = timestamp;
     }
 
-    public int getSpeed() {
-        return speed;
+    public long getSpeed() {
+        return this.speed;
     }
 
-    public void setSpeed(int speed) {
-        System.out.println("coucou " + speed);
+    public void setSpeed(long speed) {
         this.speed = speed;
     }
 
@@ -255,7 +258,7 @@ public class GeneratorState {
                 "idcontract=" + idcontract +
                 ", idtick=" + idtick +
                 ", timestamp=" + timestamp +
-                ", speed=" + speed +
+                ", speed=?" + 5000 +
                 ", isRandomGenerator=" + isRandomGenerator +
                 ", ask=" + ask +
                 ", bid=" + bid +
@@ -302,4 +305,11 @@ public class GeneratorState {
         this.updatedOn = updatedOn;
     }
 
+    public double getSpeedMultiplier() {
+        return speedMultiplier;
+    }
+
+    public void setSpeedMultiplier(double speedMultiplier) {
+        this.speedMultiplier = speedMultiplier;
+    }
 }

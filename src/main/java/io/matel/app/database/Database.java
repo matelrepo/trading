@@ -3,6 +3,7 @@ package io.matel.app.database;
 import io.matel.app.AppController;
 import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
+import io.matel.app.domain.EventType;
 import io.matel.app.domain.Tick;
 import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.*;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -201,10 +204,10 @@ public class Database {
         if(idTick==null)
             idTick=Long.MAX_VALUE;
         try {
-            String sql = "select timestamp, open, high, low, close, idcontract, freq, id_candle from public.processor_state WHERE id_tick IN (select id_tick from public.processor_state where id_tick IN " +
+            String sql = "select timestamp, open, high, low, close, idcontract, freq, id_candle, color from public.processor_state WHERE id_tick IN (select id_tick from public.processor_state where id_tick IN " +
                     "(select max(id_tick) from public.processor_state where id_tick <=" + idTick + " and idcontract =" + idContract+ ") limit 1 ) order by freq";
             ResultSet rs = connection.createStatement().executeQuery(sql);
-            System.out.println(sql);
+   //         System.out.println(sql);
             while (rs.next()) {
                 ZonedDateTime time = rs.getTimestamp(1) ==null ? null : rs.getTimestamp(1).toLocalDateTime().atZone(Global.ZONE_ID);
                  Candle candle = new Candle(time,
@@ -212,12 +215,62 @@ public class Database {
                         rs.getDouble(4), rs.getDouble(5),
                         rs.getLong(6), rs.getInt(7));
                  candle.setId(rs.getLong(8));
+                 candle.setColor(rs.getInt(9));
                 idCandlesByFreq.put(rs.getInt(7),candle);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return idCandlesByFreq;
+    }
+
+    public Map<Integer, ProcessorState > getProcessorStateTable(Long idTick, long idContract) {
+        Map<Integer, ProcessorState> processorStates = new ConcurrentHashMap<>();
+        if(idTick==null)
+            idTick=Long.MAX_VALUE;
+        try {
+            String sql = "select * from public.processor_state WHERE id_tick IN (select id_tick from public.processor_state where id_tick IN " +
+                    "(select max(id_tick) from public.processor_state where id_tick <=" + idTick + " and idcontract =" + idContract+ ") limit 1 ) order by freq";
+            ResultSet rs = connection.createStatement().executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                ZonedDateTime time = rs.getTimestamp(25) ==null ? null : rs.getTimestamp(25).toLocalDateTime().atZone(Global.ZONE_ID);
+                ProcessorState state = new ProcessorState(rs.getLong(11), rs.getInt(7));
+                state.setId(rs.getLong(1));
+                state.setCheckpoint(rs.getBoolean(2));
+                state.setClose(rs.getDouble(3));
+                state.setColor(rs.getInt(4));
+                state.setEvent(EventType.valueOf(rs.getString(5)));
+                state.setActiveEvents(rs.getString(6));
+                state.setHigh(rs.getDouble(8));
+                state.setIdCandle(rs.getLong(9));
+                state.setIdTick(rs.getLong(10));
+                state.setTradable(rs.getBoolean(12));
+                if(rs.getObject(13)==null){
+                    state.setLastDayOfQuarter(null);
+                }else{
+                    state.setLastDayOfQuarter( rs.getDate(13).toLocalDate());
+                }
+                state.setLow(rs.getDouble(14));
+                state.setMax(rs.getDouble(15));
+                state.setMaxTrend(rs.getBoolean(16));
+                state.setMaxValid(rs.getDouble(17));
+                state.setMaxValue(rs.getDouble(18));
+                state.setMin(rs.getDouble(19));
+                state.setMinTrend(rs.getBoolean(20));
+                state.setMinValid(rs.getDouble(21));
+                state.setMinValue(rs.getDouble(22));
+                state.setOpen(rs.getDouble(23));
+                state.setTarget(rs.getDouble(24));
+                state.setTimestamp(time);
+                state.setValue(rs.getDouble(26));
+
+                processorStates.put(rs.getInt(7),state);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return processorStates;
     }
 
     public List<Candle> getHistoricalCandles(Long idcontract, int freq, Long maxIdCandle, boolean clone) {
@@ -234,7 +287,7 @@ public class Database {
                     "abnormal_height_level, big_candle, close_average,\n" +
                     "created_on, updated_on, volume \n" +
                     "FROM public.candle WHERE idcontract =" + id + " and freq =" + freq + " and id < " + maxIdCandle + " order by timestamp desc limit " + Global.MAX_LENGTH_CANDLE;
-          System.out.println(sql);
+    //      System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 candles.add(new Candle(rs.getLong(1), appController.getGenerators().get( rs.getLong(2)).getContract(), rs.getInt(3), rs.getLong(4),
@@ -251,9 +304,11 @@ public class Database {
         return candles;
     }
 
-    public long getTicksByTable(long idcontract, boolean saveTick, String table, long idTick) {
+    public long getTicksByTable(long idcontract, boolean saveTick, String table, long idTick, boolean computing, boolean clone) {
         int count =0;
         long maxIdTick =0;
+        ZonedDateTime previousDate = null;
+        long idcon = clone ? idcontract + 1000 : idcontract;
         try {
             String sql ="";
             if(table.equals("public.tick")){
@@ -262,15 +317,30 @@ public class Database {
             }else{
                  sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM " + table + " WHERE contract =" + idcontract + " and id>" + idTick + " order by date LIMIT 250000";
             }
-       //     System.out.println(sql);
+            System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
+
+
             while (rs.next()) {
                 try {
-                    Tick tick = new Tick(rs.getLong(1), rs.getLong(4),
+                    Tick tick = new Tick(rs.getLong(1), idcon,
                             ZonedDateTime.ofInstant(rs.getTimestamp(5).toInstant(), Global.ZONE_ID), rs.getDouble(2));
                     if(tick.getId() > maxIdTick) maxIdTick = tick.getId();
-                    appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false, saveTick);
-               count++;
+                    appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false, saveTick, computing);
+                    if(Global.HISTO && Global.hasCompletedLoading) {
+                        if(previousDate != null) {
+                            try {
+                                long speed = (long) (Math.min(Math.max(Duration.between( previousDate, tick.getTimestamp() ).toMillis(),1),5000)
+                                        / appController.getGenerators().get(tick.getIdcontract()).getGeneratorState().getSpeedMultiplier());
+                                System.out.println(previousDate + " " + tick.getTimestamp() + " " + speed + " " + appController.getGenerators().get(tick.getIdcontract()).getGeneratorState().getSpeedMultiplier());
+                                Thread.sleep(speed);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        previousDate = tick.getTimestamp();
+                    }
+                    count++;
                 } catch (NullPointerException e) {
                     LOGGER.warn("Error null pointer in database");
 
@@ -450,7 +520,21 @@ public class Database {
         return count;
     }
 
-
+    public int updateCandles(long idcontract, double adjustment){
+        try (Statement statement = this.connection.createStatement()) {
+            String sql = "UPDATE public.tick SET close = close + ? WHERE idcontract =?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setDouble(1,adjustment);
+            preparedStatement.setLong(2, idcontract);
+            int num = preparedStatement.executeUpdate();
+            preparedStatement.close();
+            connection.commit();
+            return num;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 
 }
 

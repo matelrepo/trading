@@ -9,7 +9,6 @@ import io.matel.app.config.connection.user.UserRepository;
 import io.matel.app.config.tools.MailService;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.repo.ContractRepository;
 import io.matel.app.ContractController;
 import io.matel.app.state.GeneratorState;
 import io.matel.app.state.ProcessorState;
@@ -31,9 +30,6 @@ public class HttpController {
     private static final Logger LOGGER = LogManager.getLogger(ActiveUserEvent.class);
     private WsController wsController;
     private AppController appController;
-
-    @Autowired
-    ContractRepository contractRepository;
 
     @Autowired
     ContractController contractController;
@@ -64,7 +60,7 @@ public class HttpController {
         if(contractController.getContracts().size()>0){
             contracts = contractController.getContracts().stream().filter(con -> con.getCategory().equals(category)).collect(Collectors.toList());
         }else {
-            contracts = contractRepository.findByActiveAndTypeOrderByIdcontract(true, type).stream().filter(con -> con.getCategory().equals(category)).collect(Collectors.toList());
+            contracts = contractController.findByActiveAndTypeOrderByIdcontract(true, type).stream().filter(con -> con.getCategory().equals(category)).collect(Collectors.toList());
         }
         LOGGER.info("Sending (" + contracts.size() + ") contracts " + type );
         return contracts;
@@ -100,7 +96,7 @@ public class HttpController {
 
     @PostMapping("/send-email")
     public void sendEmail(){
-        mailService.sendEmail(null, null);
+        mailService.sendMessage(null, null);
     }
 
     @PostMapping("/contracts/clone/{id}")
@@ -117,54 +113,7 @@ public class HttpController {
 
     @PostMapping("/connect-all")
     public void connectALL(){
-        System.out.println("coucou");
         appController.connectAllMarketData();
-    }
-
-    @PostMapping("/contract/{id}/{factor}")
-    public boolean updateContract(@PathVariable String id, @PathVariable String factor, @RequestBody ContractBasic con) throws InterruptedException {
-//        long idcontract = Long.valueOf(id);
-//        double adjfactor = Double.valueOf(factor);
-//        appController.getGenerators().get(idcontract).disconnectMarketData(true);
-//        ContractBasic contract = appController.getGenerators().get(idcontract).getContract();
-//        contract.setExpiration(con.getExpiration());
-//        contract.setFirstNotice(con.getFirstNotice());
-//        System.out.println(contract.toString());
-//        contractRepository.save(contract);
-//        saverController.saveNow(contract.getIdcontract());
-//        Thread t1 = new Thread(()->{
-//            String message = "Updating ticks (" + idcontract + ") with factor: " + adjfactor;
-//            Ticket ticket = new Ticket(message, "pending");
-//            LOGGER.info(message);
-//            wsController.sendNotification(ticket);
-//            tickRepository.updateHistoricalTicks(adjfactor, idcontract);
-//            message = "Ticks updated (" + idcontract + ") with factor: " + adjfactor;
-//            ticket = new Ticket(message, "completed");
-//            LOGGER.info(message);
-//            wsController.sendNotification(ticket);
-//        });
-//
-//        t1.start();
-//
-//       Thread t2 = new Thread(()->{
-//            String message = "Updating candles (" + idcontract + ") with factor: " + adjfactor;
-//            Ticket ticket = new Ticket(message, "pending");
-//            LOGGER.info(message);
-//            wsController.sendNotification(ticket);
-//           candleRepository.updateHistoricalCandles(adjfactor, idcontract);
-//            message = "Candles updated (" + idcontract + ") with factor: " + adjfactor;
-//            ticket = new Ticket(message, "completed");
-//            LOGGER.info(message);
-//            wsController.sendNotification(ticket);
-//        });
-//
-//        t2.start();
-//
-//        t1.join();
-//        t2.join();
-//        appController.loadHistoricalCandles(idcontract,true);
-//        LOGGER.info("Task completed");
-        return true;
     }
 
     @PostMapping("/connect/{id}")
@@ -188,10 +137,33 @@ public class HttpController {
         appController.getGenerators().get(idcontract).getGeneratorState().setSpeed(speed);
     }
 
+    @PostMapping("/speed-multiplier/{id}/{_speed}")
+    public void increaseSpeedMultiplier(@PathVariable String id, @PathVariable String _speed){
+        long idcontract = Long.valueOf(id);
+        int speed = Integer.valueOf(_speed);
+        appController.getGenerators().get(idcontract).getGeneratorState().setSpeedMultiplier(speed);
+    }
+
     @PostMapping("/activate-email")
     public void setupGlobalAlert(@RequestBody String _email){
         boolean email = Boolean.valueOf(_email);
         Global.send_email = email;
+    }
+
+
+    @PostMapping("/save-contract/{adj}")
+    public void saveContract(@RequestBody ContractBasic _contract, @PathVariable String adj){
+        double adjustment = Double.valueOf(adj);
+        contractController.saveContract(_contract);
+        appController.getGenerators().get(_contract.getIdcontract()).setContract(_contract);
+        contractController.initContracts(false);
+        if(adjustment !=0){
+            appController.saveNow();
+            int result = appController.getDatabase().updateCandles(_contract.getIdcontract(), adjustment);
+            mailService.sendMessage("(" +_contract.getIdcontract() +") " + _contract.getSymbol() + " adjustment",
+                    "UPDATE trading.data20 set close = close + " + adjustment +";", true);
+            LOGGER.info("Maintenance update database for contract " + _contract.getIdcontract() +" >>> " + result + " entries");
+        }
     }
 //
 //    @PostMapping("/event-alert/{_id}/{_freq}/{type}")

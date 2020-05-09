@@ -21,7 +21,7 @@ public class MailService {
         this.javaMailSender = javaMailSender;
     }
 
-    public void sendEmail(ProcessorState processorState, ContractBasic contract)
+    public void sendMessage(ProcessorState processorState, ContractBasic contract)
             throws MailException {
         if (Global.send_email) {
             SimpleMailMessage mail = new SimpleMailMessage();
@@ -29,20 +29,25 @@ public class MailService {
             if(processorState != null && contract != null) {
                 mail.setSubject("(" + processorState.getIdcontract() + ") " + contract.getSymbol() + " >> (" + processorState.getFreq() + ") " + processorState.getEvent());
                 mail.setText((new StringBuilder("Value=")).append(processorState.getValue()).append(" Target=").append(processorState.getTarget()).toString());
-            }else{
-                mail.setSubject("test");
-                mail.setText("hey");
             }
             javaMailSender.send(mail);
         }
     }
 
-    public void sendMessage(String str) throws MailException{
+    public void sendMessage(String subject, String body, boolean urgent) throws MailException{
         if (Global.send_email) {
             SimpleMailMessage mail = new SimpleMailMessage();
-            mail.setTo("mcolsenet@gmail.com");
-                mail.setSubject(str);
-                mail.setText("");
+            if(urgent){
+                String[] adress = new String[2];
+                adress[0] = "mcolsenet@gmail.com";
+                adress[1] = "matel222@hotmail.com";
+                mail.setTo(adress);
+            }else{
+                mail.setTo("mcolsenet@gmail.com");
+
+            }
+                mail.setSubject(subject);
+                mail.setText(body);
             javaMailSender.send(mail);
         }
     }

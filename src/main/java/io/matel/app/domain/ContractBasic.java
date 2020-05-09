@@ -39,19 +39,18 @@ public class ContractBasic implements Cloneable {
     private String multiplier;
 
     private LocalDate expiration;
-    
     private LocalDate firstNotice;
 
     @Column(nullable = false)
-    private boolean active;
+    private boolean active =true;
 
-    @Column(nullable = false, columnDefinition= "TEXT")
-    private String flowType = "MID";
+    @Column(nullable = false)
+    private String flowType = "TRADES";
 
     @Column(nullable = false)
     private int fusion;
 
-    private String type;
+    private String type ="LIVE";
     private String category;
 
     private long cloneid = -1;
@@ -59,7 +58,7 @@ public class ContractBasic implements Cloneable {
     public ContractBasic(){}
 
     public ContractBasic(long idcontract, String title, String secType, String exchange, String currency, String symbol, double tickSize, int rounding, String multiplier,
-                         LocalDate expiration, LocalDate firstNotice, boolean active, String flowType, int fusion) {
+                         LocalDate expiration, LocalDate firstNotice, String flowType, int fusion, String category) {
         this.idcontract = idcontract;
         this.title = title;
         this.secType = secType;
@@ -71,9 +70,9 @@ public class ContractBasic implements Cloneable {
         this.multiplier = multiplier;
         this.expiration = expiration;
         this.firstNotice = firstNotice;
-        this.active = active;
         this.flowType = flowType;
         this.fusion = fusion;
+        this.category = category;
     }
 
     public Object clone()throws CloneNotSupportedException{
@@ -225,10 +224,6 @@ public class ContractBasic implements Cloneable {
 
     public String getCategory() {
         return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     public Integer getConid() {
