@@ -3,6 +3,7 @@ package io.matel.app;
 import io.matel.app.config.Ibconfig.DataService;
 import io.matel.app.config.Global;
 import io.matel.app.config.tools.MailService;
+import io.matel.app.controller.ContractController;
 import io.matel.app.controller.WsController;
 import io.matel.app.database.Database;
 import org.apache.logging.log4j.LogManager;
@@ -114,7 +115,7 @@ public class AppLauncher implements CommandLineRunner {
 
 
                         if (Global.COMPUTE_DEEP_HISTORICAL) {
-                            appController.simulateHistorical(error.idcontract, null);
+                            appController.simulateHistorical(error.idcontract, null, false);
 
                             generator.getDatabase().getSaverController().saveNow(generator, true);
 //                            generator.getProcessors().forEach((freq, proc)->{

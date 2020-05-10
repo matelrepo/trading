@@ -141,7 +141,7 @@ public class AppController {
         generators.get(contract.getIdcontract()).connectMarketData();
     }
 
-    public void simulateHistorical(long idcontract, Long idTick){
+    public void simulateHistorical(long idcontract, Long idTick, boolean clone){
         LOGGER.info("computing historical");
         Database tickDatabase = createDatabase("cleanm", Global.PORT, "atmuser");
         long minIdTick = idTick == null ? 0 : idTick;
@@ -149,19 +149,19 @@ public class AppController {
 
         while (minIdTick >= 0) {
             count++;
-            minIdTick = tickDatabase.getTicksByTable(idcontract, false, "trading.data18", minIdTick, false, true);
+            minIdTick = tickDatabase.getTicksByTable(idcontract, false, "trading.data18", minIdTick, false, clone);
         }
          minIdTick = idTick == null ? 0 : idTick;
         count = 0;
         while (minIdTick >= 0) {
             count++;
-            minIdTick = tickDatabase.getTicksByTable(idcontract, false, "trading.data19", minIdTick,false, true);
+            minIdTick = tickDatabase.getTicksByTable(idcontract, false, "trading.data19", minIdTick,false, clone);
         }
          minIdTick = idTick == null ? 0 : idTick;
         count = 0;
         while (minIdTick >= 0) {
             count++;
-            minIdTick = tickDatabase.getTicksByTable(idcontract, false, "trading.data20", minIdTick, false, true);
+            minIdTick = tickDatabase.getTicksByTable(idcontract, false, "trading.data20", minIdTick, false, clone);
         }
         tickDatabase.close();
 

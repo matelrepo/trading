@@ -204,7 +204,7 @@ public class Database {
         if(idTick==null)
             idTick=Long.MAX_VALUE;
         try {
-            String sql = "select timestamp, open, high, low, close, idcontract, freq, id_candle, color from public.processor_state WHERE id_tick IN (select id_tick from public.processor_state where id_tick IN " +
+            String sql = "select timestamp_candle, open, high, low, close, idcontract, freq, id_candle, color from public.processor_state WHERE id_tick IN (select id_tick from public.processor_state where id_tick IN " +
                     "(select max(id_tick) from public.processor_state where id_tick <=" + idTick + " and idcontract =" + idContract+ ") limit 1 ) order by freq";
             ResultSet rs = connection.createStatement().executeQuery(sql);
    //         System.out.println(sql);
@@ -232,10 +232,11 @@ public class Database {
             String sql = "select * from public.processor_state WHERE id_tick IN (select id_tick from public.processor_state where id_tick IN " +
                     "(select max(id_tick) from public.processor_state where id_tick <=" + idTick + " and idcontract =" + idContract+ ") limit 1 ) order by freq";
             ResultSet rs = connection.createStatement().executeQuery(sql);
-            System.out.println(sql);
+         //   System.out.println(sql);
             while (rs.next()) {
                 ZonedDateTime time = rs.getTimestamp(25) ==null ? null : rs.getTimestamp(25).toLocalDateTime().atZone(Global.ZONE_ID);
-                ProcessorState state = new ProcessorState(rs.getLong(11), rs.getInt(7));
+                ZonedDateTime time_candle = rs.getTimestamp(26) ==null ? null : rs.getTimestamp(26).toLocalDateTime().atZone(Global.ZONE_ID);
+                ProcessorState state = new ProcessorState(rs.getLong(10), rs.getInt(7));
                 state.setId(rs.getLong(1));
                 state.setCheckpoint(rs.getBoolean(2));
                 state.setClose(rs.getDouble(3));
@@ -263,7 +264,8 @@ public class Database {
                 state.setOpen(rs.getDouble(23));
                 state.setTarget(rs.getDouble(24));
                 state.setTimestamp(time);
-                state.setValue(rs.getDouble(26));
+                state.setValue(rs.getDouble(27));
+                state.setTimestamp_candle(time_candle);
 
                 processorStates.put(rs.getInt(7),state);
             }
@@ -298,6 +300,7 @@ public class Database {
                         rs.getTimestamp(18).toLocalDateTime().atZone(Global.ZONE_ID),
                         rs.getTimestamp(19).toLocalDateTime().atZone(Global.ZONE_ID),
                         rs.getInt(20)));
+              //  System.out.println("candle >>>> " + candles.toString());
             }
         } catch (SQLException e) {
         }
@@ -326,13 +329,14 @@ public class Database {
                     Tick tick = new Tick(rs.getLong(1), idcon,
                             ZonedDateTime.ofInstant(rs.getTimestamp(5).toInstant(), Global.ZONE_ID), rs.getDouble(2));
                     if(tick.getId() > maxIdTick) maxIdTick = tick.getId();
+                 //   System.out.println("Tick >>> " + tick.toString());
                     appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false, saveTick, computing);
                     if(Global.HISTO && Global.hasCompletedLoading) {
                         if(previousDate != null) {
                             try {
                                 long speed = (long) (Math.min(Math.max(Duration.between( previousDate, tick.getTimestamp() ).toMillis(),1),5000)
                                         / appController.getGenerators().get(tick.getIdcontract()).getGeneratorState().getSpeedMultiplier());
-                                System.out.println(previousDate + " " + tick.getTimestamp() + " " + speed + " " + appController.getGenerators().get(tick.getIdcontract()).getGeneratorState().getSpeedMultiplier());
+                           //     System.out.println(previousDate + " " + tick.getTimestamp() + " " + speed + " " + appController.getGenerators().get(tick.getIdcontract()).getGeneratorState().getSpeedMultiplier());
                                 Thread.sleep(speed);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
@@ -369,8 +373,8 @@ public class Database {
         try (Statement statement = this.connection.createStatement()) {
             String sql = "INSERT INTO public.processor_state " +
                     "(close, color, event, events, freq, high, id_candle, id_tick, idcontract,is_tradable,last_day_of_quarter, low, max, max_trend, max_valid," +
-                    "max_value, min, min_trend, min_valid, min_value, open, target, timestamp,value, checkpoint)" +
-                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    "max_value, min, min_trend, min_valid, min_value, open, target, timestamp,value, checkpoint, timestamp_candle)" +
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             for (ProcessorState state : states) {
                 preparedStatement.setDouble(1, state.getClose());
@@ -407,6 +411,11 @@ public class Database {
                 }
                 preparedStatement.setDouble(24, state.getValue());
                 preparedStatement.setBoolean(25, state.isCheckpoint());
+                if(state.getTimestamp_candle()!=null) {
+                    preparedStatement.setTimestamp(26, new Timestamp(state.getTimestamp_candle().toEpochSecond() * 1000));
+                }else{
+                    preparedStatement.setTimestamp(26,null);
+                }
 
                 preparedStatement.addBatch();
                 count++;

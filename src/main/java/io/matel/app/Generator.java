@@ -5,6 +5,7 @@ import com.ib.client.TickAttrib;
 import io.matel.app.config.Ibconfig.DataService;
 import io.matel.app.config.Ibconfig.IbClient;
 import io.matel.app.config.Global;
+import io.matel.app.controller.ContractController;
 import io.matel.app.controller.WsController;
 import io.matel.app.database.Database;
 import io.matel.app.domain.ContractBasic;
@@ -217,7 +218,6 @@ public class Generator implements IbClient, ProcessorListener {
             if (newPrice > 0 && newPrice != generatorState.getLastPrice()) {
                 Tick tick = new Tick(global.getIdTick(true), contract.getIdcontract(), ZonedDateTime.now().withZoneSameInstant(Global.ZONE_ID), newPrice);
                 processPrice(tick, true, true, false);
-                wsController.sendLiveGeneratorState(generatorState);
             }
         } else if ((price > 0 && (field == 1 || field == 2) && contract.getFlowType().equals("TRADES"))) {
             switch (field) {
@@ -240,6 +240,8 @@ public class Generator implements IbClient, ProcessorListener {
 
     public void processPrice(Tick tick, boolean countConsecutiveUpDown, boolean savingTick, boolean computing) {
         updateGeneratorState(tick);
+        if(Global.hasCompletedLoading && generatorState.getSpeedMultiplier()<=10)
+        wsController.sendLiveGeneratorState(generatorState);
         flowLive.add(0, tick);
         if (flowLive.size() > Global.MAX_LENGTH_TICKS)
             flowLive.remove(Global.MAX_LENGTH_TICKS);

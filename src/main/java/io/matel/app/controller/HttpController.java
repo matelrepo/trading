@@ -9,7 +9,6 @@ import io.matel.app.config.connection.user.UserRepository;
 import io.matel.app.config.tools.MailService;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.ContractController;
 import io.matel.app.state.GeneratorState;
 import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;

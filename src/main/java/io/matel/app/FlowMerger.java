@@ -45,7 +45,6 @@ public class FlowMerger {
 
 
     public FlowMerger(ContractBasic contract, int freq) {
-        System.out.println(contract.toString());
         this.contract = contract;
         this.freq = freq;
         base = 60000L * freq <= 0 ? 60000L : 60000L * freq; // Special freq = 1380, 6900,35000
@@ -206,7 +205,8 @@ public class FlowMerger {
     }
 
     public void setFlow(List<Candle> candles) {
-        flow = candles;
+        if(candles!=null)
+            flow = candles;
         if (flow.size() > 0) {
             previousDate = flow.get(0).getTimestamp();
             previousPrice = flow.get(0).getClose();

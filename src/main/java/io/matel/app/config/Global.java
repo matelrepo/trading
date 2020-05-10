@@ -23,6 +23,8 @@ public class Global {
     public static final int MAX_TICKS_SIZE_SAVING = 1000;
     public static final int MAX_CANDLES_SIZE_SAVING = 5000;
     public static final int[] FREQUENCIES = {0, 1, 5, 15, 60, 240, 480, 1380, 6900, 35000, 100000, 300000};
+   // public static final int[] FREQUENCIES = {1380};
+
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Paris");
 
     public static boolean send_email = true;

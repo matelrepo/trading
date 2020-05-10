@@ -19,6 +19,7 @@ public class Processor extends FlowMerger {
     private int offset = 0; // Used for offset candle if frequency >0
     private ZonedDateTime dateNow = ZonedDateTime.now();
     private List<ProcessorListener> listeners = new ArrayList<>();
+    private int cpt =0;
 
 
     public Processor(ContractBasic contract, int freq) {
@@ -32,6 +33,9 @@ public class Processor extends FlowMerger {
             merge(timestamp, idTick, open, high, low, close, computing);
             if(flow.get(0).isNewCandle())
                 processorState.setEvent(EventType.NONE);
+
+            processorState.setTimestamp_candle(flow.get(0).getTimestamp());
+            processorState.setTimestamp(timestamp);
             processorState.setOpen(flow.get(0).getOpen());
             processorState.setHigh(flow.get(0).getHigh());
             processorState.setLow(flow.get(0).getLow());
@@ -39,13 +43,12 @@ public class Processor extends FlowMerger {
             processorState.setIdTick(flow.get(0).getIdtick());
             processorState.setIdCandle(flow.get(0).getId());
             if (flow.size() > 4) {
-                processorState.setTimestamp(timestamp);
                 algorythm(computing);
             }
 
             if(!computing)
             if (Global.ONLINE || Global.RANDOM || Global.HISTO) {
-                wsController.sendLiveCandle(flow.get(0));
+                    wsController.sendLiveCandle(flow.get(0));
             }
         }
     }

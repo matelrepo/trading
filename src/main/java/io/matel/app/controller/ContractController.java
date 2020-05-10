@@ -1,5 +1,7 @@
-package io.matel.app;
+package io.matel.app.controller;
 
+import io.matel.app.AppController;
+import io.matel.app.Generator;
 import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
@@ -40,8 +42,8 @@ public class ContractController {
 
     public List<ContractBasic> initContracts(boolean createGenerator) {
         List<ContractBasic> list = new ArrayList<>();
-       //   list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
-        list.add(contractRepository.findByIdcontract(2));
+          list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
+        //list.add(contractRepository.findByIdcontract(8));
        //    list.add(contractRepository.findByIdcontract(98));
 
         setContracts(list);
@@ -62,7 +64,7 @@ public class ContractController {
                 contract = c;
         }
         try {
-            AtomicLong tickThreshold = new AtomicLong(125848603L);
+            AtomicLong tickThreshold = new AtomicLong(133998632L);
              con = (ContractBasic)  contract.clone();
             con.setIdcontract(idcontract+1000);
             con.setTitle(con.getTitle() + " CLONE");
@@ -83,10 +85,13 @@ public class ContractController {
                     appController.getCandlesByIdContractByFreq(generator.getContract().getIdcontract(), freq, idCandles.get(freq).getId(), true);
                     idCandles.get(freq).setIdcontract(generator.getContract().getIdcontract());
                     processor.getFlow().add(0,idCandles.get(freq));
+//                    System.out.println(idCandles.get(freq).toString());
                     processor.setProcessorState(idStates.get(freq));
+                    processor.setFlow(null);
                 }
             });
-            generator.getGeneratorState().setLastPrice(idCandles.get(1).getClose());
+            generator.getGeneratorState().setLastPrice(idCandles.get(Global.FREQUENCIES[Global.FREQUENCIES.length-1]).getClose());
+            Global.hasCompletedLoading = true;
             if(Global.ONLINE || Global.RANDOM) {
                 try {
                     appController.connectMarketData(generator.getContract());
@@ -96,8 +101,7 @@ public class ContractController {
                     e.printStackTrace();
                 }
             }else if(Global.HISTO){
-
-                appController.simulateHistorical(generator.getContract().getIdcontract()-1000, tickThreshold.get());
+                appController.simulateHistorical(generator.getContract().getIdcontract()-1000, tickThreshold.get(), true);
             }
             //appController.computeTicks(genera
                 // tor, 0);

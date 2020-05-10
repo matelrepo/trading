@@ -22,7 +22,12 @@ public class ProcessorState implements  Cloneable {
     private long idCandle;
     private long idcontract;
     private int freq;
+
+    @Column(nullable = false , columnDefinition="TIMESTAMP WITH TIME ZONE")
     private ZonedDateTime timestamp;
+    @Column(nullable = false , columnDefinition="TIMESTAMP WITH TIME ZONE")
+    private ZonedDateTime timestamp_candle;
+
     private int color = 0;
     private boolean minTrend = false;
     private boolean maxTrend = false;
@@ -145,9 +150,6 @@ public class ProcessorState implements  Cloneable {
         return timestamp;
     }
 
-    public void setTimestamp(ZonedDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
 
     public int getColor() {
         return color;
@@ -398,5 +400,17 @@ public class ProcessorState implements  Cloneable {
                 ", activeEvents=" + activeEvents +
                 ", events='" + events + '\'' +
                 '}';
+    }
+
+    public ZonedDateTime getTimestamp_candle() {
+        return timestamp_candle;
+    }
+
+    public void setTimestamp_candle(ZonedDateTime timestamp_candle) {
+        this.timestamp_candle = timestamp_candle;
+    }
+
+        public void setTimestamp(ZonedDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 }
