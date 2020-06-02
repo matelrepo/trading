@@ -10,7 +10,7 @@ import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "candle",
-        indexes = {@Index(name = "index_date",  columnList="timestamp", unique = false),
+        indexes = {@Index(name = "index_date",  columnList="timestampTick", unique = false),
                 @Index(name = "index_idcontract_freq",  columnList="idcontract, freq", unique = false)})
 public class Candle implements  Cloneable {
 
@@ -26,7 +26,10 @@ public class Candle implements  Cloneable {
     private long idtick;
 
     @Column(nullable = false , columnDefinition="TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime timestamp;
+    private ZonedDateTime timestampCandle;
+
+    @Column(nullable = false , columnDefinition="TIMESTAMP WITH TIME ZONE")
+    private ZonedDateTime timestampTick;
 
     @Column(nullable = false)
     private double open;
@@ -56,14 +59,19 @@ public class Candle implements  Cloneable {
     private int triggerDown;
 
     private boolean newCandle;
-//    private long speed = -1;
     private int progress = 0;
 
     private double closeAverage;
     private double abnormalHeightLevel;
     private boolean bigCandle;
 
+    private boolean smallCandleNoiseRemoval = false;
 
+    public String getContractType() {
+        return contractType;
+    }
+
+    private String contractType;
     private boolean checkpoint = false;
 
     @Column(nullable = false)
@@ -79,29 +87,35 @@ public class Candle implements  Cloneable {
 
     public Candle() { }
 
-    public Candle(ZonedDateTime timestamp, double open, double high, double low, double close, long idcontract, int freq) {
-        this.timestamp = timestamp;
+    public Candle(ZonedDateTime timestampCandle, ZonedDateTime timestampTick, double open, double high, double low, double close, long idcontract, int freq) {
+        this.timestampCandle = timestampCandle;
+        this.timestampTick = timestampTick;
         this.open = open;
         this.high = high;
         this.low = low;
         this.close = close;
         this.idcontract = idcontract;
         this.freq = freq;
+        if(idcontract>=10000){
+            contractType = "DAILY";
+        }else{
+            contractType = "LIVE";
+        }
     }
 
 
-    public Candle(ZonedDateTime timestamp, double lastPrice, Double open, Double high, Double low, double close, ContractBasic contract, int freq) {
-//        if(isCandleComputed){
-//            this.open = open;
-//            this.high = high;
-//            this.low = low;
-//        }else {
+    public Candle(ZonedDateTime timestampCandle, ZonedDateTime timestampTick, double lastPrice, Double open, Double high, Double low, double close, ContractBasic contract, int freq) {
             if (lastPrice > 0) {
                 double tickSize = contract.getTickSize();
                 int rounding = contract.getRounding();
                 boolean isUpTick = close > lastPrice;
                 double adjust = isUpTick ? -tickSize : tickSize;
                 this.open = Utils.round(close + adjust, rounding);
+                if(contract.getIdcontract()>=10000){
+                    contractType = "DAILY";
+                }else{
+                    contractType = "LIVE";
+                }
 
                 if (lastPrice >= close) {
                     this.high = this.open;
@@ -116,16 +130,15 @@ public class Candle implements  Cloneable {
                 this.high = close;
                 this.low = close;
             }
-     //   }
             this.close = close;
-            this.timestamp = timestamp;
+            this.timestampCandle = timestampCandle;
+            this.timestampTick = timestampTick;
             this.idcontract = contract.getIdcontract();
             this.freq = freq;
             this.newCandle = true;
-
     }
 
-    public Candle(long id, ContractBasic contract, int freq, long idtick, ZonedDateTime timestamp,
+    public Candle(long id, ContractBasic contract, int freq, long idtick, ZonedDateTime timestampCandle, ZonedDateTime timestampTick,
                   double open, double high, double low, double close,
                   int color, boolean newCandle, int progress,
                   int triggerDown, int triggerUp,
@@ -136,7 +149,8 @@ public class Candle implements  Cloneable {
         this.idcontract = contract.getIdcontract();
         this.freq = freq;
         this.idtick = idtick;
-        this.timestamp = timestamp;
+        this.timestampCandle = timestampCandle;
+        this.timestampTick = timestampTick;
         this.open = Utils.round(open,contract.getRounding());
         this.high = Utils.round(high, contract.getRounding());
         this.low = Utils.round(low, contract.getRounding()) ;
@@ -152,6 +166,11 @@ public class Candle implements  Cloneable {
         this.createdOn = createdOn;
         this.updatedOn = updatedOn;
         this.volume = volume;
+        if(idcontract>=10000){
+            contractType = "DAILY";
+        }else{
+            contractType = "LIVE";
+        }
     }
 
 
@@ -291,21 +310,30 @@ public class Candle implements  Cloneable {
         this.volume = volume;
     }
 
-    public ZonedDateTime getTimestamp() {
-        return timestamp;
+    public ZonedDateTime getTimestampCandle() {
+        return timestampCandle;
     }
 
-    public void setTimestamp(ZonedDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setTimestampCandle(ZonedDateTime timestampCandle) {
+        this.timestampCandle = timestampCandle;
     }
 
-//    public ZonedDateTime getChildTimestamp() {
-//        return childTimestamp;
-//    }
-//
-//    public void setChildTimestamp(ZonedDateTime childTimestamp) {
-//        this.childTimestamp = childTimestamp;
-//    }
+    public ZonedDateTime getTimestampTick() {
+        return timestampTick;
+    }
+
+    public void setTimestampTick(ZonedDateTime timestampTick) {
+        this.timestampTick = timestampTick;
+    }
+
+
+    public boolean isSmallCandleNoiseRemoval() {
+        return smallCandleNoiseRemoval;
+    }
+
+    public void setSmallCandleNoiseRemoval(boolean smallCandleNoiseRemoval) {
+        this.smallCandleNoiseRemoval = smallCandleNoiseRemoval;
+    }
 
 
     @Override
@@ -313,7 +341,8 @@ public class Candle implements  Cloneable {
         return "Candle{" +
                 "id=" + id +
                 ", idtick=" + idtick +
-                ", timestamp=" + timestamp +
+                ", timestampCandle=" + timestampCandle +
+                ", timestampTick=" + timestampTick +
                 ", open=" + open +
                 ", high=" + high +
                 ", low=" + low +

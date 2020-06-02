@@ -51,26 +51,36 @@ public class HttpController {
         this.appController = appController;
     }
 
-    @GetMapping("/contracts/{type}/{category_}")
-    public List<ContractBasic> getContracts(@PathVariable String type, @PathVariable String category_ ){
+    @GetMapping("/contracts/{type}/{category_}/{filter}")
+    public List<ContractBasic> getContracts(@PathVariable String type, @PathVariable String category_ ,@PathVariable String filter){
         List<ContractBasic> contracts = null;
         final String category = category_.toUpperCase();
         System.out.println(category);
-        if(contractController.getContracts().size()>0){
-            contracts = contractController.getContracts().stream().filter(con -> con.getCategory().equals(category)).collect(Collectors.toList());
-        }else {
-            contracts = contractController.findByActiveAndTypeOrderByIdcontract(true, type).stream().filter(con -> con.getCategory().equals(category)).collect(Collectors.toList());
+        if(category_.equals("DAILY")){
+            if(contractController.getDailyContracts().size()>0){
+                contracts = contractController.getDailyContracts().stream().filter(con -> con.getCategory().equals(category)).filter(name->name.getSymbol().startsWith(filter.toUpperCase())).limit(10).collect(Collectors.toList());
+            System.out.println(contracts.size());
+            }else {
+//                contracts = contractController.findByActiveAndTypeOrderByIdcontract(true, type).stream().filter(con -> con.getCategory().equals(category)).collect(Collectors.toList());
+            }
+        }else{
+            if(contractController.getContracts().size()>0){
+                contracts = contractController.getContracts().stream().filter(con -> con.getCategory().equals(category)).collect(Collectors.toList());
+            }else {
+                contracts = contractController.findByActiveAndTypeOrderByIdcontract(true, type).stream().filter(con -> con.getCategory().equals(category)).collect(Collectors.toList());
+            }
         }
+
         LOGGER.info("Sending (" + contracts.size() + ") contracts " + type );
         return contracts;
     }
 
 
-    @GetMapping("/histo-candles/{id}/{frequency}")
-    public List<Candle> getHistoricalCandles(@PathVariable String id, @PathVariable String frequency){
+    @GetMapping("/histo-candles/{id}/{code}/{frequency}")
+    public List<Candle> getHistoricalCandles(@PathVariable String id, @PathVariable String code, @PathVariable String frequency){
         long idcontract = Long.valueOf(id);
         int freq = Integer.valueOf(frequency);
-        return appController.getCandlesByIdContractByFreq(idcontract, freq,null,false);
+        return appController.getCandlesByIdContractByFreq(idcontract, code, freq,null,false, Global.MAX_LENGTH_CANDLE);
     }
 
 

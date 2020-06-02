@@ -1,13 +1,15 @@
 package io.matel.app.config;
 
+import io.matel.app.DailyCompute;
 import io.matel.app.database.Database;
 import io.matel.app.Generator;
 import io.matel.app.Processor;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.state.ProcessorState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.Semaphore;
 
 @Component
 public class BeanFactory {
@@ -33,5 +35,10 @@ public class BeanFactory {
         final Database database = (Database) applicationContext.getBean("Database", databaseName, port, username);
     return database;
     }
+
+//    public DailyCompute createDailyCompute(){
+//        final DailyCompute dailyCompute = (DailyCompute) applicationContext.getBean("DailyCompute");
+//        return dailyCompute;
+//    }
 
 }

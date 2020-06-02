@@ -2,8 +2,6 @@ package io.matel.app.state;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.matel.app.domain.EventType;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -24,9 +22,9 @@ public class ProcessorState implements  Cloneable {
     private int freq;
 
     @Column(nullable = false , columnDefinition="TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime timestamp;
+    private ZonedDateTime timestampTick;
     @Column(nullable = false , columnDefinition="TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime timestamp_candle;
+    private ZonedDateTime timestampCandle;
 
     private int color = 0;
     private boolean minTrend = false;
@@ -62,6 +60,8 @@ public class ProcessorState implements  Cloneable {
     }
 
     private boolean checkpoint = false;
+    private double averageClose=0;
+    private double abnormalHeight =0;
 
     public ProcessorState(long idcontract, int freq) {
         this.idcontract = idcontract;
@@ -146,8 +146,8 @@ public class ProcessorState implements  Cloneable {
         return freq;
     }
 
-    public ZonedDateTime getTimestamp() {
-        return timestamp;
+    public ZonedDateTime getTimestampTick() {
+        return timestampTick;
     }
 
 
@@ -378,7 +378,7 @@ public class ProcessorState implements  Cloneable {
                 ", idCandle=" + idCandle +
                 ", idcontract=" + idcontract +
                 ", freq=" + freq +
-                ", timestamp=" + timestamp +
+                ", timestamp=" + timestampTick +
                 ", color=" + color +
                 ", minTrend=" + minTrend +
                 ", maxTrend=" + maxTrend +
@@ -402,15 +402,31 @@ public class ProcessorState implements  Cloneable {
                 '}';
     }
 
-    public ZonedDateTime getTimestamp_candle() {
-        return timestamp_candle;
+    public ZonedDateTime getTimestampCandle() {
+        return timestampCandle;
     }
 
-    public void setTimestamp_candle(ZonedDateTime timestamp_candle) {
-        this.timestamp_candle = timestamp_candle;
+    public void setTimestampCandle(ZonedDateTime timestamp_candle) {
+        this.timestampCandle = timestamp_candle;
     }
 
-        public void setTimestamp(ZonedDateTime timestamp) {
-        this.timestamp = timestamp;
+        public void setTimestampTick(ZonedDateTime timestamp) {
+        this.timestampTick = timestamp;
+    }
+
+    public double getAverageClose() {
+        return averageClose;
+    }
+
+    public void setAverageClose(double averageClose) {
+        this.averageClose = averageClose;
+    }
+
+    public double getAbnormalHeight() {
+        return abnormalHeight;
+    }
+
+    public void setAbnormalHeight(double abnormalHeight) {
+        this.abnormalHeight = abnormalHeight;
     }
 }

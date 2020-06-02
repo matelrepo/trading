@@ -27,7 +27,7 @@ public class ContractBasic implements Cloneable {
     private String currency;
 
     @Column(nullable = false)
-    private String symbol;
+    private String symbol = "";
 
     @Column(nullable = false)
     private double tickSize;
@@ -56,6 +56,7 @@ public class ContractBasic implements Cloneable {
     private long cloneid = -1;
 
     public ContractBasic(){}
+
 
     public ContractBasic(long idcontract, String title, String secType, String exchange, String currency, String symbol, double tickSize, int rounding, String multiplier,
                          LocalDate expiration, LocalDate firstNotice, String flowType, int fusion, String category) {

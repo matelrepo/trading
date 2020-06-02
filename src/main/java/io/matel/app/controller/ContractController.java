@@ -1,5 +1,6 @@
 package io.matel.app.controller;
 
+import com.ib.client.Contract;
 import io.matel.app.AppController;
 import io.matel.app.Generator;
 import io.matel.app.config.Global;
@@ -11,8 +12,10 @@ import io.matel.app.state.ProcessorState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -31,22 +34,38 @@ public class ContractController {
     AppController appController;
     private List<ContractBasic> contracts = new ArrayList<>();
 
-
-    public List<ContractBasic> getContracts() {
-        return contracts;
+    public List<ContractBasic> getDailyContracts() {
+        return dailyContracts;
     }
 
-    public void setContracts(List<ContractBasic> contracts) {
-        this.contracts = contracts;
+    private List<ContractBasic> dailyContracts = new ArrayList<>();
+    private Map<String, ContractBasic> dailyContractsBySymbol = new HashMap<>();
+    //private ContractBasic defaultContract = new ContractBasic(1, "", "STK", "SMART", "USD", "symbol", 0.01, 2, "1", null, null, "TRADES",0, "DAILYCON");
+
+    public synchronized long getLastIdContract(List<ContractBasic> contracts){
+        long maxId =0;
+        for (ContractBasic contract : contracts) {
+            if(contract.getIdcontract()> maxId)
+                maxId = contract.getIdcontract();
+        }
+        return maxId;
     }
 
-    public List<ContractBasic> initContracts(boolean createGenerator) {
+    public List<ContractBasic> initContracts(boolean createGenerator) throws NullPointerException {
         List<ContractBasic> list = new ArrayList<>();
           list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
-        //list.add(contractRepository.findByIdcontract(8));
-       //    list.add(contractRepository.findByIdcontract(98));
+          dailyContracts = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "DAILY");
+        for (ContractBasic dailyContract : dailyContracts) {
+            dailyContractsBySymbol.put(dailyContract.getSymbol(), dailyContract);
+        }
+        //list.add(contractRepository.findByIdcontract(18084));
 
-        setContracts(list);
+//        setContracts(list);
+        //contracts = list;
+        //System.out.println(dailyContracts.size());
+        contracts= list;
+//        System.out.println(contracts.get(0).toString());
+      //  contracts.addAll(dailyContracts);
         if(createGenerator) {
             list.forEach(contract -> {
                 createGenerator(contract);
@@ -82,7 +101,7 @@ public class ContractController {
             generator.getProcessors().forEach((freq, processor) -> {
                 processor.resetFlow();
                 if (freq > 0) {
-                    appController.getCandlesByIdContractByFreq(generator.getContract().getIdcontract(), freq, idCandles.get(freq).getId(), true);
+                    appController.getCandlesByIdContractByFreq(generator.getContract().getIdcontract(), generator.getContract().getSymbol(), freq, idCandles.get(freq).getId(), true, Global.MAX_LENGTH_CANDLE);
                     idCandles.get(freq).setIdcontract(generator.getContract().getIdcontract());
                     processor.getFlow().add(0,idCandles.get(freq));
 //                    System.out.println(idCandles.get(freq).toString());
@@ -90,7 +109,7 @@ public class ContractController {
                     processor.setFlow(null);
                 }
             });
-            generator.getGeneratorState().setLastPrice(idCandles.get(Global.FREQUENCIES[Global.FREQUENCIES.length-1]).getClose());
+            generator.getGeneratorState().setLastPrice(idCandles.get(generator.getFrequencies()[generator.getFrequencies().length-1]).getClose());
             Global.hasCompletedLoading = true;
             if(Global.ONLINE || Global.RANDOM) {
                 try {
@@ -120,12 +139,24 @@ public class ContractController {
             contracts.remove(contract);
     }
 
+    public Contract contractBasic2ContractIB(ContractBasic contract){
+        Contract con = new Contract();
+        con.symbol(contract.getSymbol());
+        con.secType(contract.getSecType());
+        con.currency(contract.getCurrency());
+        con.exchange(contract.getExchange());
+        con.multiplier(contract.getMultiplier());
+        if(contract.getExpiration()!= null)
+            con.lastTradeDateOrContractMonth(contract.getExpiration().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+        return con;
+    }
 
-    public Generator createGenerator(ContractBasic contract) {
+
+    public synchronized  Generator createGenerator(ContractBasic contract) {
         return appController.createGenerator(contract);
     }
 
-    public void createProcessor(ContractBasic contract) {
+    public synchronized void createProcessor(ContractBasic contract)  {
         appController.createProcessors(contract);
     }
 
@@ -136,4 +167,17 @@ public class ContractController {
     public void saveContract(ContractBasic contract){
         contractRepository.save(contract);
     }
+
+    public List<ContractBasic> getContracts() {
+        return contracts;
+    }
+
+    public void setContracts(List<ContractBasic> contracts) {
+        this.contracts = contracts;
+    }
+
+    public synchronized Map<String, ContractBasic> getDailyContractsBySymbol() {
+        return dailyContractsBySymbol;
+    }
+
 }

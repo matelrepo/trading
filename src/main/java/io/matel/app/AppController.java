@@ -4,6 +4,7 @@ import io.matel.app.config.Ibconfig.DataService;
 import io.matel.app.config.BeanFactory;
 import io.matel.app.config.Global;
 import io.matel.app.config.connection.activeuser.ActiveUserEvent;
+import io.matel.app.controller.ContractController;
 import io.matel.app.database.Database;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import javax.annotation.PreDestroy;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,13 +33,16 @@ public class AppController {
     @Autowired
     DataService dataService;
 
-    @Autowired
-    GeneratorStateRepo generatorStateRepo;
+//    @Autowired
+//    GeneratorStateRepo generatorStateRepo;
 
     Database database;
 
     @Autowired
     Global global;
+
+    @Autowired
+    ContractController contractController;
 
      private  Map<Long, Long> processorStatesIdTickByIdContract;
     private static final Logger LOGGER = LogManager.getLogger(AppLauncher.class);
@@ -65,29 +68,36 @@ public class AppController {
     private Map<Long, GeneratorState> generatorsState = new ConcurrentHashMap<>();
     private Map<String, ActiveUserEvent> activeUsers = new ConcurrentHashMap<>();  //By SessionId
 
-    public boolean loadHistoricalCandlesFromDbb(Long idcontract, boolean reset, boolean clone) {
+    public boolean loadHistoricalCandlesFromDbb(Long idcontract, String code,  boolean reset, boolean clone, int numCandles) {
         generators.get(idcontract).getProcessors().forEach((freq, processor) -> {
             if (reset) processor.resetFlow();
             if (freq > 0) {
-                getCandlesByIdContractByFreq(idcontract, freq, null, clone);
+                getCandlesByIdContractByFreq(idcontract, code, freq, null, clone,  numCandles);
 
             }
         });
         return true;
     }
 
-    public List<Candle> getCandlesByIdContractByFreq(long idcontract, int freq, Long maxIdCandle, boolean clone) {
-        List<Candle> candles=null;
+    public List<Candle> getCandlesByIdContractByFreq(long idcontract, String code, int freq, Long maxIdCandle, boolean clone, int numCandles) {
+        List<Candle> candles= new ArrayList<>();
         try {
-            if (generators.get(idcontract).getProcessors().get(freq).getFlow().size() > 0) {
-                candles = generators.get(idcontract).getProcessors().get(freq).getFlow();
-            } else {
-                candles = generators.get(idcontract).getDatabase().getHistoricalCandles(idcontract, freq, maxIdCandle, clone);
-                if (candles.size() > 0) {
-                    generators.get(idcontract).getProcessors().get(freq).setFlow(candles);
+            if(generators.get(idcontract) != null) {
+                if (generators.get(idcontract).getProcessors().get(freq).getFlow().size() > 0) {
+                    candles = generators.get(idcontract).getProcessors().get(freq).getFlow();
+                } else {
+                    candles = generators.get(idcontract).getDatabase().getHistoricalCandles(idcontract, freq, maxIdCandle, clone, numCandles);
+                    if (candles.size() > 0) {
+                        generators.get(idcontract).getProcessors().get(freq).setFlow(candles);
+                    }
                 }
+            }else{
+                contractController.createGenerator(contractController.getDailyContractsBySymbol().get(code));
+                contractController.createProcessor(contractController.getDailyContractsBySymbol().get(code));
             }
-        }catch(NullPointerException e){ }
+        }catch(NullPointerException e){
+            return candles;
+        }
         return candles;
     }
 
@@ -103,31 +113,43 @@ public class AppController {
     public Generator createGenerator(ContractBasic contract) {
         Generator generator = beanFactory.createBeanGenerator(contract, Global.RANDOM);
         generators.put(contract.getIdcontract(), generator);
-        if(contract.getConid()==null)
-        dataService.reqContractDetails(contract);
+        if(contract.getConid()==null && Global.ONLINE) dataService.reqContractDetails(contract);
         generator.setGeneratorState();
         generatorsState.put(contract.getIdcontract(), generator.getGeneratorState());
         return generator;
     }
 
-    public void createProcessors(ContractBasic contract) {
-        Map<Integer, ProcessorState> procData = new HashMap<>();
-        for (int frequency : Global.FREQUENCIES) {
-            if (frequency >=0) {
-                Processor processor = beanFactory.createBeanProcessor(contract, frequency);
-                processor.addListener(generators.get(contract.getIdcontract()));
-                generators.get(contract.getIdcontract()).getProcessors().put(frequency, processor);
+    public void createProcessors(ContractBasic contract)  {
+        try {
+            for (int frequency : generators.get(contract.getIdcontract()).getFrequencies()) {
+                if (frequency >= 0) {
+                    Processor processor = beanFactory.createBeanProcessor(contract, frequency);
+                    processor.addListener(generators.get(contract.getIdcontract()));
+                    generators.get(contract.getIdcontract()).getProcessors().put(frequency, processor);
+                }
             }
+        }catch(NullPointerException e){
+            e.printStackTrace();
         }
     }
 
-    public void loadHistoricalData(Generator generator, Long maxIdCandle){
+    public void loadHistoricalData(Generator generator, int numCandles){
+        try {
         long id = generator.getContract().getCloneid()<0 ? generator.getContract().getIdcontract() : generator.getContract().getCloneid();
-        loadHistoricalCandlesFromDbb(generator.getContract().getIdcontract(), false,generator.getContract().getCloneid()>0);
-        List<ProcessorState> states = new ArrayList<>();
-        states = processorStateRepo.findByIdTick(getProcessorStatesIdTickByIdContract().get(id));
-        states.forEach(state ->{
-            generator.getProcessors().get(state.getFreq()).setProcessorState(state);
+        loadHistoricalCandlesFromDbb(generator.getContract().getIdcontract(),  generator.getContract().getSymbol(),false,generator.getContract().getCloneid()>0,  numCandles);
+            List<ProcessorState> states;
+            states = processorStateRepo.findByIdTick(getProcessorStatesIdTickByIdContract().get(id));
+            states.forEach(state -> {
+                generator.getProcessors().get(state.getFreq()).setProcessorState(state);
+            });
+       }catch(NullPointerException e){
+           e.getMessage();
+       }
+    }
+
+    public void setHistoricalCandles(Generator gen, Long maxId, boolean clone, int numCandles){
+        gen.getProcessors().forEach((freq, proc)->{
+            proc.setFlow(getCandlesByIdContractByFreq(gen.getContract().getIdcontract(), gen.getContract().getSymbol(), freq, maxId, clone, numCandles));
         });
     }
 

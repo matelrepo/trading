@@ -22,6 +22,10 @@ public class SaverController {
     private List<ProcessorState> insertProcessorState = new ArrayList<>();
     private Database database;
 
+    public List<Candle> getInsertCandlesBuffer(){
+        return insertCandlesBuffer;
+    }
+
     public SaverController(Database database) {
         this.database = database;
     }
@@ -36,7 +40,8 @@ public class SaverController {
         if (gen != null) idcontract = gen.getContract().getIdcontract();
 
         int numTicks = saveBatchTicks(saveNow);
-        //LOGGER.info("Saving now " + numTicks + " ticks for contract " + idcontract);
+        System.out.println(Thread.currentThread().getName());
+        LOGGER.info("Saving now " + numTicks + " ticks for contract " + idcontract);
         if (numTicks > 0 || saveNow) {
             int numCandles = saveBatchCandles();
             //LOGGER.info("Saving now " + numCandles + " candles for contract " + idcontract);
@@ -63,10 +68,10 @@ public class SaverController {
 
             if (ticksBuffer.size() > 0 && (ticksBuffer.size() > Global.MAX_TICKS_SIZE_SAVING || tick == null || save)) {
                 count = database.saveTicks(this.ticksBuffer);
+                LOGGER.info(ZonedDateTime.now() + "- Regular batch ticks saving (" + count + ")");
                 ticksBuffer.clear();
             }
         }
-        LOGGER.info(ZonedDateTime.now() + "- Regular batch ticks saving (" + count + ")");
         return count;
     }
 
@@ -79,7 +84,7 @@ public class SaverController {
             if (processorState != null) {
                 this.insertProcessorState.add(processorState);
             }
-        if (!Global.READ_ONLY_CANDLES && (Global.hasCompletedLoading || Global.COMPUTE_DEEP_HISTORICAL)) {
+        if (!Global.READ_ONLY_PROCESSOR_STATE && (Global.hasCompletedLoading || Global.COMPUTE_DEEP_HISTORICAL)) {
             if (insertProcessorState.size() > 0 && (insertProcessorState.size() > Global.MAX_CANDLES_SIZE_SAVING * 4 || processorState == null || saveNow)) {
                 LOGGER.info(ZonedDateTime.now() + "- Regular batch processor state saving (" + insertProcessorState.size() + ")");
                 count = database.saveProcessorStates(this.insertProcessorState);

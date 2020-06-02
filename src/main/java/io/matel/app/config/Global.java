@@ -6,11 +6,12 @@ import java.time.ZoneId;
 
 @Configuration
 public class Global {
-    public static final boolean ONLINE = false;
+    public static final boolean ONLINE = true;
     public static final boolean RANDOM = false;
     public static final boolean HISTO = false;
-    public static final boolean READ_ONLY_TICKS = true;
+    public static final boolean READ_ONLY_TICKS = false;
     public static final boolean READ_ONLY_CANDLES = true;
+    public static final boolean READ_ONLY_PROCESSOR_STATE = true;
     public static final boolean COMPUTE_DEEP_HISTORICAL = false;
 
     public static final String PORT = "5432";
@@ -22,8 +23,6 @@ public class Global {
     public static final int MAX_LENGTH_CANDLE = 100;
     public static final int MAX_TICKS_SIZE_SAVING = 1000;
     public static final int MAX_CANDLES_SIZE_SAVING = 5000;
-    public static final int[] FREQUENCIES = {0, 1, 5, 15, 60, 240, 480, 1380, 6900, 35000, 100000, 300000};
-   // public static final int[] FREQUENCIES = {1380};
 
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Paris");
 

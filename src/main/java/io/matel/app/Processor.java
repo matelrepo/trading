@@ -27,15 +27,15 @@ public class Processor extends FlowMerger {
         processorState = new ProcessorState(contract.getIdcontract(), freq);
     }
 
-    public void process(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, boolean computing) {
-        if (Global.COMPUTE_DEEP_HISTORICAL && freq < 240 && timestamp.until(dateNow, ChronoUnit.DAYS) > 80) {
+    public void process(ZonedDateTime timestampTick, long idTick, Double open, Double high, Double low, double close, int volume, boolean computing) {
+        if (Global.COMPUTE_DEEP_HISTORICAL && freq < 240 && timestampTick.until(dateNow, ChronoUnit.DAYS) > 365) {
         } else {
-            merge(timestamp, idTick, open, high, low, close, computing);
+            merge(timestampTick, idTick, open, high, low, close, volume, computing);
             if(flow.get(0).isNewCandle())
                 processorState.setEvent(EventType.NONE);
 
-            processorState.setTimestamp_candle(flow.get(0).getTimestamp());
-            processorState.setTimestamp(timestamp);
+            processorState.setTimestampCandle(flow.get(0).getTimestampTick());
+            processorState.setTimestampTick(timestampTick);
             processorState.setOpen(flow.get(0).getOpen());
             processorState.setHigh(flow.get(0).getHigh());
             processorState.setLow(flow.get(0).getLow());
@@ -46,6 +46,7 @@ public class Processor extends FlowMerger {
                 algorythm(computing);
             }
 
+          //  System.out.println(flow.get(0).toString());
             if(!computing)
             if (Global.ONLINE || Global.RANDOM || Global.HISTO) {
                     wsController.sendLiveCandle(flow.get(0));
@@ -55,7 +56,8 @@ public class Processor extends FlowMerger {
 
     public void algorythm(boolean computing) {
         processorState.setTradable(false);
-      //  if ((computing && freq == 1380) || freq == 0)
+        processorState.setCheckpoint(false);
+        //  if ((computing && freq == 1380) || freq == 0)
             offset = freq==0 ? 1 : 0;
 
         processorState.setMaxTrend(flow.get(2 - offset).getHigh() <= processorState.getMax());
@@ -72,14 +74,14 @@ public class Processor extends FlowMerger {
                 processorState.setMax(processorState.getMaxValue());
             }
 
-            processorState.setTradable(this.getColorMin(processorState.isMaxTrend(), processorState.isMinTrend()) < 0 && processorState.getColor() >= 0);
+            processorState.setTradable(this.getColorMax(processorState.isMaxTrend(), processorState.isMinTrend()) < 0 && processorState.getColor() >= 0);
             processorState.setColor(this.getColorMax(processorState.isMaxTrend(), processorState.isMinTrend()));
             recordEvent(EventType.MAX_CONFIRM);
         }
 
 
         if (processorState.activeEvents().get(EventType.MAX_DETECT) && flow.get(0).getHigh() > processorState.getMaxValue()) {
-            processorState.setTradable(this.getColorMin(processorState.isMaxTrend(), processorState.isMinTrend()) < 0 && processorState.getColor() >= 0);
+            processorState.setTradable(this.getColorMax(processorState.isMaxTrend(), processorState.isMinTrend()) < 0 && processorState.getColor() >= 0);
             recordEvent(EventType.MAX_DETECT_CANCEL);
         }
 
@@ -112,15 +114,19 @@ public class Processor extends FlowMerger {
 //                System.out.println("MININUM CANC " + freq);
             recordEvent(EventType.MIN_DETECT_CANCEL);
         }
+        double averageClose =Utils.round(flow.stream().mapToDouble(x -> x.getClose()).summaryStatistics().getAverage(),contract.getRounding());
+        flow.get(0).setCloseAverage(averageClose);
+        processorState.setAverageClose(averageClose);
 
-        flow.get(0).setCloseAverage(Utils.round(flow.stream().mapToDouble(x -> x.getClose()).summaryStatistics().getAverage(),contract.getRounding()));
-        flow.get(0).setAbnormalHeightLevel(Utils.round(flow.stream().map(x -> (x.getHigh() - x.getLow()))
+        double abnormalLevel = Utils.round(flow.stream().map(x -> (x.getHigh() - x.getLow()))
                 .collect(Collector.of(
                         DoubleStatistics::new,
                         DoubleStatistics::accept,
                         DoubleStatistics::combine,
                         d -> d.getAverage() + 2 * d.getStandardDeviation()
-                )),contract.getRounding()));
+                )),contract.getRounding());
+        flow.get(0).setAbnormalHeightLevel(abnormalLevel);
+        processorState.setAbnormalHeight(abnormalLevel);
 
 
         if ((flow.get(0).getHigh() - flow.get(0).getLow()) > flow.get(0).getAbnormalHeightLevel()) {
@@ -212,13 +218,13 @@ public class Processor extends FlowMerger {
     private void recordEvent(EventType type) {
         processorState.setType(type);
         if (freq > 0 && (type == EventType.MIN_CONFIRM || type == EventType.MAX_CONFIRM)) {
+           // System.out.println(processorState.getEvent());
             processorState.setCheckpoint(true);
             listeners.forEach(listener -> {
                 listener.notifyEvent(processorState);
             });
         }
         wsController.sendEvent(processorState, contract);
-        processorState.setCheckpoint(false);
     }
 
     public ProcessorState getProcessorState() {

@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.*;
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -204,13 +202,14 @@ public class Database {
         if(idTick==null)
             idTick=Long.MAX_VALUE;
         try {
-            String sql = "select timestamp_candle, open, high, low, close, idcontract, freq, id_candle, color from public.processor_state WHERE id_tick IN (select id_tick from public.processor_state where id_tick IN " +
+            String sql = "select timestamp_candle, open, high, low, close, idcontract, freq, id_candle, color, timestamp_tick from public.processor_state WHERE id_tick IN (select id_tick from public.processor_state where id_tick IN " +
                     "(select max(id_tick) from public.processor_state where id_tick <=" + idTick + " and idcontract =" + idContract+ ") limit 1 ) order by freq";
             ResultSet rs = connection.createStatement().executeQuery(sql);
    //         System.out.println(sql);
             while (rs.next()) {
-                ZonedDateTime time = rs.getTimestamp(1) ==null ? null : rs.getTimestamp(1).toLocalDateTime().atZone(Global.ZONE_ID);
-                 Candle candle = new Candle(time,
+                ZonedDateTime _timestampCandle = rs.getTimestamp(1) ==null ? null : rs.getTimestamp(1).toLocalDateTime().atZone(Global.ZONE_ID);
+                ZonedDateTime _timestampTick = rs.getTimestamp(8) ==null ? null : rs.getTimestamp(8).toLocalDateTime().atZone(Global.ZONE_ID);
+                 Candle candle = new Candle(_timestampCandle, _timestampTick,
                         rs.getDouble(2), rs.getDouble(3),
                         rs.getDouble(4), rs.getDouble(5),
                         rs.getLong(6), rs.getInt(7));
@@ -263,9 +262,11 @@ public class Database {
                 state.setMinValue(rs.getDouble(22));
                 state.setOpen(rs.getDouble(23));
                 state.setTarget(rs.getDouble(24));
-                state.setTimestamp(time);
+                state.setTimestampTick(time);
                 state.setValue(rs.getDouble(27));
-                state.setTimestamp_candle(time_candle);
+                state.setTimestampCandle(time_candle);
+                state.setAverageClose(rs.getDouble(28));
+                state.setAbnormalHeight(rs.getDouble(29));
 
                 processorStates.put(rs.getInt(7),state);
             }
@@ -275,34 +276,42 @@ public class Database {
         return processorStates;
     }
 
-    public List<Candle> getHistoricalCandles(Long idcontract, int freq, Long maxIdCandle, boolean clone) {
+    public List<Candle> getHistoricalCandles(Long idcontract, int freq, Long maxIdCandle, boolean clone, int numCandles) {
         List<Candle> candles = new ArrayList<>();
+        String contractType;
+        if (idcontract>=10000){
+            contractType = "DAILY";
+        }else{
+            contractType = "LIVE";
+        }
         if(maxIdCandle == null)
             maxIdCandle = Long.MAX_VALUE;
         long id = clone ? idcontract -1000 : idcontract;
         try {
             String sql = "SELECT \n" +
-                    "id, idcontract, freq, idtick, timestamp,\n" +
+                    "id, idcontract, freq, idtick, timestamp_candle,\n" +
                     "open, high, low, close, \n" +
                     "color, new_candle, progress,\n" +
                     "trigger_down, trigger_up,\n" +
                     "abnormal_height_level, big_candle, close_average,\n" +
-                    "created_on, updated_on, volume \n" +
-                    "FROM public.candle WHERE idcontract =" + id + " and freq =" + freq + " and id < " + maxIdCandle + " order by timestamp desc limit " + Global.MAX_LENGTH_CANDLE;
-    //      System.out.println(sql);
+                    "created_on, updated_on, volume, timestamp_tick, small_candle_noise_removal \n" +
+                    "FROM public.candle WHERE idcontract =" + id + " and freq =" + freq + " and id < " + maxIdCandle + " and contract_type ='" + contractType + "' order by timestamp_tick desc limit " + numCandles;
+            //System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
-                candles.add(new Candle(rs.getLong(1), appController.getGenerators().get( rs.getLong(2)).getContract(), rs.getInt(3), rs.getLong(4),
-                        rs.getTimestamp(5).toLocalDateTime().atZone(Global.ZONE_ID),
+              Candle candle =  new Candle(rs.getLong(1), appController.getGenerators().get( rs.getLong(2)).getContract(), rs.getInt(3), rs.getLong(4),
+                        rs.getTimestamp(5).toLocalDateTime().atZone(Global.ZONE_ID),rs.getTimestamp(21).toLocalDateTime().atZone(Global.ZONE_ID),
                         rs.getDouble(6), rs.getDouble(7), rs.getDouble(8), rs.getDouble(9),
                         rs.getInt(10), rs.getBoolean(11), rs.getInt(12),
                         rs.getInt(13), rs.getInt(14), rs.getDouble(15), rs.getBoolean(16), rs.getDouble(17),
                         rs.getTimestamp(18).toLocalDateTime().atZone(Global.ZONE_ID),
                         rs.getTimestamp(19).toLocalDateTime().atZone(Global.ZONE_ID),
-                        rs.getInt(20)));
-              //  System.out.println("candle >>>> " + candles.toString());
+                        rs.getInt(20));
+              candle.setSmallCandleNoiseRemoval(rs.getBoolean(22));
+                candles.add(candle);
             }
-        } catch (SQLException e) {
+        } catch (SQLException  | NullPointerException e) {
+            e.printStackTrace();
         }
         return candles;
     }
@@ -320,7 +329,7 @@ public class Database {
             }else{
                  sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM " + table + " WHERE contract =" + idcontract + " and id>" + idTick + " order by date LIMIT 250000";
             }
-            System.out.println(sql);
+           // System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
 
 
@@ -373,8 +382,8 @@ public class Database {
         try (Statement statement = this.connection.createStatement()) {
             String sql = "INSERT INTO public.processor_state " +
                     "(close, color, event, events, freq, high, id_candle, id_tick, idcontract,is_tradable,last_day_of_quarter, low, max, max_trend, max_valid," +
-                    "max_value, min, min_trend, min_valid, min_value, open, target, timestamp,value, checkpoint, timestamp_candle)" +
-                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    "max_value, min, min_trend, min_valid, min_value, open, target, timestamp_tick,value, checkpoint, timestamp_candle, average_close, abnormal_height)" +
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             for (ProcessorState state : states) {
                 preparedStatement.setDouble(1, state.getClose());
@@ -404,18 +413,21 @@ public class Database {
                 preparedStatement.setDouble(20, state.getMinValue());
                 preparedStatement.setDouble(21, state.getOpen());
                 preparedStatement.setDouble(22, state.getTarget());
-                if(state.getTimestamp()!=null) {
-                    preparedStatement.setTimestamp(23, new Timestamp(state.getTimestamp().toEpochSecond() * 1000));
+                if(state.getTimestampTick()!=null) {
+                    preparedStatement.setTimestamp(23, new Timestamp(state.getTimestampTick().toEpochSecond() * 1000));
                 }else{
                     preparedStatement.setTimestamp(23,null);
                 }
                 preparedStatement.setDouble(24, state.getValue());
                 preparedStatement.setBoolean(25, state.isCheckpoint());
-                if(state.getTimestamp_candle()!=null) {
-                    preparedStatement.setTimestamp(26, new Timestamp(state.getTimestamp_candle().toEpochSecond() * 1000));
+                if(state.getTimestampCandle()!=null) {
+                    preparedStatement.setTimestamp(26, new Timestamp(state.getTimestampCandle().toEpochSecond() * 1000));
                 }else{
                     preparedStatement.setTimestamp(26,null);
                 }
+                preparedStatement.setDouble(27, state.getAverageClose());
+                preparedStatement.setDouble(28, state.getAbnormalHeight());
+
 
                 preparedStatement.addBatch();
                 count++;
@@ -485,20 +497,20 @@ public class Database {
         int count = 0;
         try (Statement statement = this.connection.createStatement()) {
             String sql = "INSERT INTO public.candle " +
-                    "(id, idcontract, freq, idtick, timestamp,\n" +
+                    "(id, idcontract, freq, idtick, timestamp_candle,\n" +
                     "open, high, low, close,\n" +
                     "color, new_candle, progress,\n" +
                     "trigger_down, trigger_up,\n" +
                     "abnormal_height_level, big_candle, close_average,\n" +
-                    "volume, created_on, updated_on, checkpoint)" +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+                    "volume, created_on, updated_on, checkpoint, timestamp_tick, small_candle_noise_removal, contract_type)" +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             for (Candle candle : candles) {
                 preparedStatement.setLong(1, candle.getId());
                 preparedStatement.setLong(2, candle.getIdcontract());
                 preparedStatement.setInt(3, candle.getFreq());
                 preparedStatement.setLong(4, candle.getIdtick());
-                preparedStatement.setTimestamp(5, new Timestamp(candle.getTimestamp().toEpochSecond()*1000));
+                preparedStatement.setTimestamp(5, new Timestamp(candle.getTimestampCandle().toEpochSecond()*1000));
                 preparedStatement.setDouble(6, candle.getOpen());
                 preparedStatement.setDouble(7, candle.getHigh());
                 preparedStatement.setDouble(8, candle.getLow());
@@ -515,6 +527,10 @@ public class Database {
                 preparedStatement.setTimestamp(19, new Timestamp(ZonedDateTime.now().toEpochSecond()*1000));
                 preparedStatement.setTimestamp(20, new Timestamp(ZonedDateTime.now().toEpochSecond()*1000));
                 preparedStatement.setBoolean(21, candle.isCheckpoint());
+                preparedStatement.setTimestamp(22, new Timestamp(candle.getTimestampTick().toEpochSecond()*1000));
+                preparedStatement.setBoolean(23, candle.isSmallCandleNoiseRemoval());
+                preparedStatement.setString(24,candle.getContractType());
+
 
 
                 preparedStatement.addBatch();
@@ -525,6 +541,7 @@ public class Database {
             connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println(e.getNextException());
         }
         return count;
     }

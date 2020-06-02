@@ -1,9 +1,9 @@
 package io.matel.app.config.Ibconfig;
 
 
-import com.ib.client.Contract;
 import io.matel.app.AppController;
 import io.matel.app.config.Global;
+import io.matel.app.controller.ContractController;
 import io.matel.app.domain.ContractBasic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DataService {
     private static final Logger LOGGER = LogManager.getLogger(DataService.class);
 
-    private Map<Long, IbClient> openConnectionsContract = new ConcurrentHashMap<>();
+    private Map<Long, IbClient> liveMarketDataHandler = new ConcurrentHashMap<>();
     public static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
     private int numMktDataLines = 0;
@@ -32,6 +31,9 @@ public class DataService {
 
     @Autowired
     AppController appController;
+
+    @Autowired
+    ContractController contractController;
 
     public  DataService(@Lazy EWrapperImpl eWrapper){
         this.eWrapper = eWrapper;
@@ -46,8 +48,8 @@ public class DataService {
         eWrapper.getClient().eConnect(host, port, clientId);
     }
 
-    public Map<Long, IbClient> getOpenConnectionsContract() {
-        return openConnectionsContract;
+    public Map<Long, IbClient> getLiveMarketDataHandler() {
+        return liveMarketDataHandler;
     }
 
 //    public void reconnectAllMktData(){
@@ -72,47 +74,37 @@ public class DataService {
 //
 //    }
 
-    public void reqContractDetails(ContractBasic contract){
-        Contract con = new Contract();
-        con.symbol(contract.getSymbol());
-        con.secType(contract.getSecType());
-        con.currency(contract.getCurrency());
-        con.exchange(contract.getExchange());
-        con.multiplier(contract.getMultiplier());
-        if(contract.getExpiration()!= null)
-            con.lastTradeDateOrContractMonth(contract.getExpiration().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-        eWrapper.getClient().reqContractDetails((int) contract.getIdcontract(), con);
+    public void reqHistoricalData(ContractBasic contract){
+        eWrapper.getClient().reqHistoricalData(12000, contractController.contractBasic2ContractIB(contract),
+                "","10 D", "1 min", "TRADES",0,1,false,null );
     }
 
-    public void cancelMktData(ContractBasic contract, boolean cancelRepo){
+    public void reqContractDetails(ContractBasic contract){
+        eWrapper.getClient().reqContractDetails((int) contract.getIdcontract(), contractController.contractBasic2ContractIB(contract));
+    }
+
+    public void cancelMktData(ContractBasic contract, boolean cancelRepo) throws InterruptedException{
+        Thread.sleep(50);
         LOGGER.info("Cancelling market data for contract " + contract.getIdcontract());
         eWrapper.getClient().cancelMktData((int) contract.getIdcontract());
         if(cancelRepo)
-        openConnectionsContract.remove(contract.getIdcontract());
+        liveMarketDataHandler.remove(contract.getIdcontract());
         numMktDataLines--;
     }
 
-    public void connectPortfolioUpdate(boolean connect){
+    public void connectPortfolioUpdate(boolean connect)   {
         eWrapper.getClient().reqAccountUpdates(connect, Global.ACCOUNT_NUMBER);
     }
 
 
     public void reqMktData(ContractBasic contract, IbClient handler) throws InterruptedException {
+        Thread.sleep(50);
         LOGGER.info("Requesting market data for contract " + contract.getIdcontract());
         eWrapper.getClient().reqMarketDataType(3);
         if (Global.ONLINE) {
-            openConnectionsContract.put(contract.getIdcontract(), handler);
-            Contract con = new Contract();
-            con.symbol(contract.getSymbol());
-            con.secType(contract.getSecType());
-            con.currency(contract.getCurrency());
-            con.exchange(contract.getExchange());
-            con.multiplier(contract.getMultiplier());
-            if(contract.getExpiration()!= null)
-            con.lastTradeDateOrContractMonth(contract.getExpiration().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-            eWrapper.getClient().reqMktData((int) contract.getIdcontract(), con, "", false, false, null);
+            liveMarketDataHandler.put(contract.getIdcontract(), handler);
+            eWrapper.getClient().reqMktData((int) contract.getIdcontract(), contractController.contractBasic2ContractIB(contract), "", false, false, null);
             numMktDataLines++;
-            Thread.sleep(50);
         }
     }
 

@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,6 +38,8 @@ public class EWrapperImpl implements EWrapper {
 
     @Autowired
     ContractRepository contractRepository;
+
+    private double lastClose =0;
 
     private boolean hasConnectedAlready = false;
 
@@ -111,7 +112,7 @@ public class EWrapperImpl implements EWrapper {
     @Override
     public void connectionClosed() {
         try {
-            Thread.sleep(60000);
+            Thread.sleep(120000);
             init();
             dataService.connect();
         } catch (InterruptedException e) {
@@ -138,13 +139,27 @@ public class EWrapperImpl implements EWrapper {
     }
 
     @Override
+    public void historicalData(int reqId, Bar bar) {
+        if(bar.close()!= lastClose) {
+            System.out.println("HistoricalData. " + reqId + " - Time: " + bar.time() + ", Open: " + bar.open() + ", High: " + bar.high() + ", Low: " + bar.low()
+                    + ", Close: " + bar.close() + ", Volume: " + bar.volume() + ", Count: " + bar.count() + ", WAP: " + bar.wap());
+            lastClose = bar.close();
+        }
+    }
+
+    @Override
+    public void historicalDataEnd(int reqId, String startDateStr, String endDateStr) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
     public void tickPrice(int tickerId, int field, double price, TickAttrib attrib) {
-        dataService.getOpenConnectionsContract().get(Long.valueOf(tickerId)).tickPrice(tickerId, field, price, attrib);
+        dataService.getLiveMarketDataHandler().get(Long.valueOf(tickerId)).tickPrice(tickerId, field, price, attrib);
     }
 
     @Override
     public void tickSize(int tickerId, int field, int size) {
-        dataService.getOpenConnectionsContract().get(Long.valueOf(tickerId)).tickSize(tickerId, field,size);
+        dataService.getLiveMarketDataHandler().get(Long.valueOf(tickerId)).tickSize(tickerId, field,size);
     }
 
     @Override
@@ -301,12 +316,6 @@ public class EWrapperImpl implements EWrapper {
     }
 
     @Override
-    public void historicalData(int reqId, Bar bar) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void scannerParameters(String xml) {
         // TODO Auto-generated method stub
 
@@ -454,12 +463,6 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void symbolSamples(int reqId, ContractDescription[] contractDescriptions) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void historicalDataEnd(int reqId, String startDateStr, String endDateStr) {
         // TODO Auto-generated method stub
 
     }

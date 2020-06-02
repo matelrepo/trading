@@ -1,0 +1,1 @@
+<LOGINRESPONSE xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Message="Login Successful" Token="0327D7R1VDUE" DataFormat="CSV" Header="false" Suffix="false" xmlns="http://ws.eoddata.com/Data" />

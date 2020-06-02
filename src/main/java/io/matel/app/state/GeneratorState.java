@@ -18,7 +18,7 @@ public class GeneratorState {
     private long idtick;
 
     @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime timestamp = ZonedDateTime.now();
+    private ZonedDateTime timestamp = ZonedDateTime.now().minusMinutes(5);
 
     @Transient
     private long speed = 500L;
@@ -58,6 +58,8 @@ public class GeneratorState {
     private int dailyVolume =0; //ok
     private double high=Double.MIN_VALUE; //ok
     private double low=Double.MAX_VALUE; //ok
+
+    @Transient
     private int marketDataStatus = 0;
 
 
@@ -258,16 +260,29 @@ public class GeneratorState {
                 "idcontract=" + idcontract +
                 ", idtick=" + idtick +
                 ", timestamp=" + timestamp +
-                ", speed=?" + 5000 +
+                ", speed=" + speed +
+                ", speedMultiplier=" + speedMultiplier +
                 ", isRandomGenerator=" + isRandomGenerator +
-                ", ask=" + ask +
-                ", bid=" + bid +
-                ", volume=" + tickQuantity +
-                ", totalVolume=" + dailyVolume +
-                ", lastPrice=" + lastPrice +
                 ", triggerUp=" + triggerUp +
                 ", triggerDown=" + triggerDown +
                 ", color=" + color +
+                ", lastPrice=" + lastPrice +
+                ", dailyMark=" + dailyMark +
+                ", weeklyMark=" + weeklyMark +
+                ", monthlyMark=" + monthlyMark +
+                ", yearlyMark=" + yearlyMark +
+                ", changeValue=" + changeValue +
+                ", changePerc=" + changePerc +
+                ", previousVolume=" + previousVolume +
+                ", ask=" + ask +
+                ", bid=" + bid +
+                ", askQuantity=" + askQuantity +
+                ", bidQuantity=" + bidQuantity +
+                ", tickQuantity=" + tickQuantity +
+                ", dailyVolume=" + dailyVolume +
+                ", high=" + high +
+                ", low=" + low +
+      //          ", marketDataStatus=" + marketDataStatus +
                 ", updatedOn=" + updatedOn +
                 '}';
     }

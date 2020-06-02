@@ -31,6 +31,12 @@ import java.util.concurrent.ExecutionException;
 public class Generator implements IbClient, ProcessorListener {
     private static final Logger LOGGER = LogManager.getLogger(Generator.class);
 
+
+    public int[] getFrequencies() {
+        return frequencies;
+    }
+
+
     @Autowired
     Global global;
 
@@ -64,6 +70,8 @@ public class Generator implements IbClient, ProcessorListener {
     private GeneratorState generatorState;
     private Database database;
     private ZonedDateTime dateNow = ZonedDateTime.now();
+    private final int[] frequencies;
+
 
     public Database getDatabase() {
         if(database ==null)
@@ -79,6 +87,13 @@ public class Generator implements IbClient, ProcessorListener {
     public Generator(ContractBasic contract, boolean random) {
         this.contract = contract;
         generatorState = new GeneratorState(contract.getIdcontract(), random, 3000);
+        if(contract.getType().equals("DAILY")){
+            frequencies = new int[]{1380, 6900, 35000, 100000, 300000};
+//            frequencies = new int[]{1380};
+
+        }else {
+            frequencies = new int[]{0, 1, 5, 15, 60, 240, 480, 1380, 6900, 35000, 100000, 300000};
+        }
     }
 
     public void initDatabase() {
@@ -186,13 +201,13 @@ public class Generator implements IbClient, ProcessorListener {
             }
         }
 
-        if (field != 8 && field != 74 && field != 5 && field != 71 && field != 3 && field != 70 && field != 0 && field != 69)
-            System.out.println("Size: " + field + " " + size);
+//        if (field != 8 && field != 74 && field != 5 && field != 71 && field != 3 && field != 70 && field != 0 && field != 69)
+//            System.out.println("Size: " + field + " " + size);
 
     }
 
     private void updateGeneratorState(Tick tick) {
-        this.generatorState.setMarketDataStatus(1);
+       // this.generatorState.setMarketDataStatus(1);
         double price = tick.getClose();
         generatorState.setIdtick(tick.getId());
         generatorState.setColor(price > generatorState.getLastPrice() ? 1 : -1);
@@ -248,13 +263,14 @@ public class Generator implements IbClient, ProcessorListener {
         if (countConsecutiveUpDown)
             consecutiveUpDownCounter(tick);
         processors.forEach((freq, processor) -> {
-            processor.process(tick.getTimestamp(), tick.getId(), null, null, null, tick.getClose(), computing);
+            processor.process(tick.getTimestamp(), tick.getId(), null, null, null, tick.getClose(),  tick.getVolume(), computing);
         });
 
         if(checkpoint && (Global.COMPUTE_DEEP_HISTORICAL || Global.hasCompletedLoading)){
             synchronized (this) {
                 processors.forEach((freq, proc) -> {
                     if(freq>0) {
+                        //proc.getProcessorState().setCheckpoint(true);
                         if (proc.getFlow().size() > 0)
                             proc.getFlow().get(0).setCheckpoint(true);
                         try {
@@ -269,7 +285,7 @@ public class Generator implements IbClient, ProcessorListener {
         }
 
         if (savingTick) {
-            int count = database.getSaverController().saveBatchTicks(flowLive.get(0), false);
+            int count = getDatabase().getSaverController().saveBatchTicks(flowLive.get(0), false);
             if (count > 0)
                 appController.getGeneratorsState().forEach((id, state) -> {
                     generatorStateRepo.save(state);
@@ -326,7 +342,11 @@ public class Generator implements IbClient, ProcessorListener {
                 database.getSaverController().saveBatchTicks(true);
             }
             if (contract.getIdcontract() > 1) {
-                this.dataService.cancelMktData(contract, true);
+                try {
+                    this.dataService.cancelMktData(contract, true);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             } else {
                 this.dataService.connectPortfolioUpdate(false);
             }
@@ -360,7 +380,7 @@ public class Generator implements IbClient, ProcessorListener {
         }
     }
 
-    @Scheduled(fixedRate = 2400000)
+    @Scheduled(fixedRate = 60000)
     public void clock() {
         try {
             if (ZonedDateTime.now().minusMinutes(1).isAfter(generatorState.getTimestamp())) {
@@ -368,7 +388,6 @@ public class Generator implements IbClient, ProcessorListener {
                     generatorState.setMarketDataStatus(2);
             } else {
                 generatorState.setMarketDataStatus(1);
-
             }
         } catch (NullPointerException e) {
             e.getMessage();
@@ -377,7 +396,7 @@ public class Generator implements IbClient, ProcessorListener {
 
     @Override
     public void notifyEvent(ProcessorState state) {
-        if (Global.COMPUTE_DEEP_HISTORICAL && state.getTimestamp().until(dateNow, ChronoUnit.DAYS) > 80) {
+        if (Global.COMPUTE_DEEP_HISTORICAL && state.getTimestampTick().until(dateNow, ChronoUnit.DAYS) > 80) {
         } else {
  checkpoint = true;
         }
