@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -17,7 +18,7 @@ public class Tick {
     private long id;
 
     @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime timestamp;
+    private OffsetDateTime timestamp;
 
     @Column(nullable = false)
     private double close;
@@ -34,6 +35,9 @@ public class Tick {
     @Column(nullable = false)
     private int volume =0;
 
+    @Transient
+    private boolean discarded;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
     private ZonedDateTime createdOn;
@@ -44,9 +48,9 @@ public class Tick {
 
     public Tick(){}
 
-    public Tick(long idtick,long idcontract , ZonedDateTime timestamp, double close) {
+    public Tick(long idtick,long idcontract , OffsetDateTime timestamp, double close) {
         this.id = idtick;
-        this.timestamp = timestamp.withZoneSameLocal(Global.ZONE_ID);
+        this.timestamp = timestamp;
         this.close = close;
         this.idcontract = idcontract;
     }
@@ -59,11 +63,11 @@ public class Tick {
         this.id = id;
     }
 
-    public ZonedDateTime getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(ZonedDateTime timestamp) {
+    public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -99,13 +103,13 @@ public class Tick {
         this.triggerDown = triggerDown;
     }
 
-//    public boolean isDiscarded() {
-//        return discarded;
-//    }
-//
-//    public void setDiscarded(boolean discarded) {
-//        this.discarded = discarded;
-//    }
+    public boolean isDiscarded() {
+        return discarded;
+    }
+
+    public void setDiscarded(boolean discarded) {
+        this.discarded = discarded;
+    }
 
     @Override
     public String toString() {

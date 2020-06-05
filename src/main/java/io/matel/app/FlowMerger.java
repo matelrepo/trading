@@ -39,7 +39,9 @@ public class FlowMerger {
     protected Candle previousCandle;
     protected LocalDate lastDayOfQuarter;
     private long lastIdcandleDatabase;
-    boolean smallCandleNoiseRemoval = false;
+     boolean smallCandleNoiseRemoval = false;
+    private boolean readOnlyCandle = true;
+    private boolean readOnlyProcessorState = true;
 
     public static SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
@@ -50,12 +52,12 @@ public class FlowMerger {
         base = 60000L * freq <= 0 ? 60000L : 60000L * freq; // Special freq = 1380, 6900,35000
     }
 
-    public synchronized void newCandle(ZonedDateTime timestampCandle, ZonedDateTime timestampTick,long idTick, Double open, Double high, Double low, double close, int volume, boolean computing) {
+    public synchronized void newCandle(ZonedDateTime timestampCandle, ZonedDateTime timestampTick,long idTick, Double open, Double high, Double low, double close, int volume) {
         if (flow.size() > 1) {
             smallCandleNoiseRemoval = flow.get(0).getLow() >= flow.get(1).getLow() && flow.get(0).getHigh() <= flow.get(1).getHigh() && freq > 0;
             if (smallCandleNoiseRemoval || flow.get(0).isSmallCandleNoiseRemoval()) {
                 flow.get(0).setSmallCandleNoiseRemoval(true);
-                updateCandle(timestampTick, idTick, open, high, low, close, volume, computing);
+                updateCandle(timestampTick, idTick, open, high, low, close, volume);
 
             }
         }
@@ -83,7 +85,7 @@ public class FlowMerger {
         }
     }
 
-    private void updateCandle(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, int volume, boolean computing) {
+    private void updateCandle(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, int volume) {
         if (flow.size() > 0) {
             flow.get(0).setNewCandle(false);
             flow.get(0).setIdtick(idTick);
@@ -116,9 +118,9 @@ public class FlowMerger {
         }
     }
 
-    protected void merge(ZonedDateTime timestampTick, long idTick, Double open, Double high, Double low, double close, int volume, boolean computing) {
+    protected void merge(ZonedDateTime timestampTick, long idTick, Double open, Double high, Double low, double close, int volume) {
         if (previousCandle == null) {
-            newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume, computing);
+            newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume);
             if (freq == 100000)
                 lastDayOfQuarter = Utils.getEndDayOfTheQuarter(timestampTick.getYear(), timestampTick.getMonth().getValue());
         } else if (freq > 840) {
@@ -127,14 +129,14 @@ public class FlowMerger {
                         if (lastDayOfQuarter != null) {
                             if (timestampTick.toLocalDate().compareTo(lastDayOfQuarter) > 0) { // new quarter
                                 flow.get(0).setSmallCandleNoiseRemoval(false);
-                                newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume, computing);
+                                newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume);
                                 lastDayOfQuarter = Utils.getEndDayOfTheQuarter(timestampTick.getYear(), timestampTick.getMonth().getValue());
                                 processorState.setLastDayOfQuarter(lastDayOfQuarter);
                             } else {
-                                updateCandle(timestampTick, idTick, open, high, low, close, volume, computing);
+                                updateCandle(timestampTick, idTick, open, high, low, close, volume);
                             }
                         } else {
-                            newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume, computing);
+                            newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume);
                             lastDayOfQuarter = Utils.getEndDayOfTheQuarter(timestampTick.getYear(), timestampTick.getMonth().getValue());
                             processorState.setLastDayOfQuarter(lastDayOfQuarter);
                         }
@@ -144,27 +146,27 @@ public class FlowMerger {
                             if (flow.size() > 0)
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setYearlyMark(flow.get(0).getClose());
                             flow.get(0).setSmallCandleNoiseRemoval(false);
-                            newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume, computing);
+                            newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume);
                         } else
-                            updateCandle(timestampTick, idTick, open, high, low, close, volume, computing);
+                            updateCandle(timestampTick, idTick, open, high, low, close, volume);
                         break;
                     case 35000:
                         if (timestampTick.getDayOfMonth() < previousCandle.getTimestampTick().getDayOfMonth()) {
                             if (flow.size() > 0)
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setMonthlyMark(flow.get(0).getClose());
                             flow.get(0).setSmallCandleNoiseRemoval(false);
-                            newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume, computing);
+                            newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume);
                         } else
-                            updateCandle(timestampTick, idTick, open, high, low, close, volume, computing);
+                            updateCandle(timestampTick, idTick, open, high, low, close, volume);
                         break;
                     case 6900:
                         if (timestampTick.getDayOfWeek().getValue() < previousCandle.getTimestampTick().getDayOfWeek().getValue() ||
                                 (timestampTick.getDayOfWeek().getValue() == previousCandle.getTimestampTick().getDayOfWeek().getValue() &&  Period.between(timestampTick.toLocalDate(), previousCandle.getTimestampTick().toLocalDate()).getDays()<-1)) {
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setWeeklyMark(flow.get(0).getClose());
                             flow.get(0).setSmallCandleNoiseRemoval(false);
-                            newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume, computing);
+                            newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume);
                         } else
-                            updateCandle(timestampTick, idTick, open, high, low, close, volume, computing);
+                            updateCandle(timestampTick, idTick, open, high, low, close, volume);
                         break;
                     case 1380:
                         if (timestampTick.getDayOfMonth() != previousCandle.getTimestampTick().getDayOfMonth()) {
@@ -176,9 +178,9 @@ public class FlowMerger {
                                 appController.getGenerators().get(contract.getIdcontract()).getGeneratorState().setChangeValue(0);
                                 flow.get(0).setSmallCandleNoiseRemoval(false);
                             }
-                            newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume, computing);
+                            newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume);
                         } else
-                            updateCandle(timestampTick, idTick, open, high, low, close, volume, computing);
+                            updateCandle(timestampTick, idTick, open, high, low, close, volume);
                         break;
                 }
                // previousCandle = flow.get(0);
@@ -188,9 +190,9 @@ public class FlowMerger {
                 stampReference = currentStamp - currentStamp % (base);
                 ZonedDateTime refDate = ZonedDateTime.ofInstant(Instant.ofEpochSecond(stampReference / 1000), Global.ZONE_ID);
                 flow.get(0).setSmallCandleNoiseRemoval(false);
-                newCandle(refDate,timestampTick, idTick, open, high, low, close, volume, computing);
+                newCandle(refDate,timestampTick, idTick, open, high, low, close, volume);
             } else {
-                updateCandle(timestampTick, idTick, open, high, low, close, volume, computing);
+                updateCandle(timestampTick, idTick, open, high, low, close, volume);
                 double progress = Utils.round((double) (currentStamp % (base)) / base, 2) * 100;
                 flow.get(0).setProgress((int) progress);
             }

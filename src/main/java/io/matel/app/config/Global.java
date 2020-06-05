@@ -43,6 +43,7 @@ public class Global {
 
 
     public synchronized long getIdTick(boolean increment) {
+       // System.out.println(idTick);
         if (increment) {
             return ++idTick;
         } else {

@@ -44,7 +44,7 @@ public class Database {
 
 
     public void close() {
-//        LOGGER.info("Closing database " + databaseName);
+       // LOGGER.info("Closing database " + databaseName);
         try {
             connection.close();
         } catch (SQLException e) {
@@ -128,12 +128,12 @@ public class Database {
         Map<Long, Long> idTicks = new HashMap<>();
         try {
             String sql = "SELECT idcontract, max(id_tick) FROM public.processor_state GROUP BY idcontract";
-        //    System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 idTicks.put(rs.getLong(1), rs.getLong(2));
             }
         } catch (SQLException e) {
+            e.printStackTrace();
         }
         return idTicks;
     }
@@ -284,8 +284,8 @@ public class Database {
         }else{
             contractType = "LIVE";
         }
-        if(maxIdCandle == null)
-            maxIdCandle = Long.MAX_VALUE;
+//        if(maxIdCandle == null)
+//            maxIdCandle = Long.MAX_VALUE;
         long id = clone ? idcontract -1000 : idcontract;
         try {
             String sql = "SELECT \n" +
@@ -316,7 +316,7 @@ public class Database {
         return candles;
     }
 
-    public long getTicksByTable(long idcontract, boolean saveTick, String table, long idTick, boolean computing, boolean clone) {
+    public long getTicksByTable(long idcontract, String table, long idTick, boolean clone) {
         int count =0;
         long maxIdTick =0;
         ZonedDateTime previousDate = null;
@@ -329,7 +329,7 @@ public class Database {
             }else{
                  sql = "SELECT id, close, created, contract, date, trigger_down, trigger_up, updated FROM " + table + " WHERE contract =" + idcontract + " and id>" + idTick + " order by date LIMIT 250000";
             }
-           // System.out.println(sql);
+            System.out.println(sql);
             ResultSet rs = connection.createStatement().executeQuery(sql);
 
 
@@ -339,7 +339,7 @@ public class Database {
                             ZonedDateTime.ofInstant(rs.getTimestamp(5).toInstant(), Global.ZONE_ID), rs.getDouble(2));
                     if(tick.getId() > maxIdTick) maxIdTick = tick.getId();
                  //   System.out.println("Tick >>> " + tick.toString());
-                    appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, false, saveTick, computing);
+                    appController.getGenerators().get(tick.getIdcontract()).processPrice(tick, true, true, false, false);
                     if(Global.HISTO && Global.hasCompletedLoading) {
                         if(previousDate != null) {
                             try {

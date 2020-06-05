@@ -60,13 +60,13 @@ public class SaverController {
         return saveBatchTicks(null, saveNow);
     }
 
-    public synchronized int saveBatchTicks(Tick tick, boolean save) {
+    public synchronized int saveBatchTicks(Tick tick, boolean saveNow) {
         int count = 0;
         if (!Global.READ_ONLY_TICKS) {
             if (tick != null)
                 this.ticksBuffer.add(tick);
 
-            if (ticksBuffer.size() > 0 && (ticksBuffer.size() > Global.MAX_TICKS_SIZE_SAVING || tick == null || save)) {
+            if (ticksBuffer.size() > 0 && (ticksBuffer.size() > Global.MAX_TICKS_SIZE_SAVING || tick == null || saveNow)) {
                 count = database.saveTicks(this.ticksBuffer);
                 LOGGER.info(ZonedDateTime.now() + "- Regular batch ticks saving (" + count + ")");
                 ticksBuffer.clear();

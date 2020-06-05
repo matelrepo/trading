@@ -6,6 +6,7 @@ import io.matel.app.config.Global;
 import io.matel.app.config.tools.Utils;
 import io.matel.app.controller.ContractController;
 import io.matel.app.domain.ContractBasic;
+import io.matel.app.domain.HistoricalDataType;
 import io.matel.app.domain.Tick;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,9 @@ public class DailyCompute {
 
     @Autowired
     AppLauncher appLauncher;
+
+    @Autowired
+    HistoricalDataController historicalDataController;
 
     private Semaphore semaphore = new Semaphore(10);
     private ExecutorService executor = Executors.newFixedThreadPool(100);
@@ -70,20 +74,20 @@ public class DailyCompute {
                             System.out.println("Saving contract");
                         }
                         ContractBasic contract = contractController.getDailyContractsBySymbol().get(code);
-                        Generator generator = contractController.createGenerator(contract);
-                        contractController.createProcessor(contract);
+                        Generator generator = appController.createGenerator(contract, HistoricalDataType.DATABASE);
+                        //contractController.createProcessor(contract);
                        // appController.loadHistoricalData(generator,1);
                         for (JsonNode node : dataNode) {
                            // dailyList.add(new Daily(code,node, false));
                                 double multiplier = node.get("adjusted_close").asDouble() / node.get("close").asDouble();
                                 Tick tick1 = new Tick(global.getIdTick(true), contract.getIdcontract(),LocalDate.parse(node.get("date").asText()).atStartOfDay(Global.ZONE_ID), Utils.round(node.get("open").asDouble()*multiplier,contract.getRounding()));
-                                generator.processPrice(tick1,false, true, true);
+                                generator.processPrice(tick1,false, false, false,false);
                                 Tick tick2 = new Tick(global.getIdTick(true), contract.getIdcontract(),LocalDate.parse(node.get("date").asText()).atStartOfDay(Global.ZONE_ID).plusSeconds(1), Utils.round(node.get("high").asDouble()*multiplier,contract.getRounding()));
-                                generator.processPrice(tick2,false, true, true);
+                                generator.processPrice(tick2,false, false,false,false);
                                 Tick tick3 = new Tick(global.getIdTick(true), contract.getIdcontract(),LocalDate.parse(node.get("date").asText()).atStartOfDay(Global.ZONE_ID).plusSeconds(2), Utils.round(node.get("low").asDouble()*multiplier,contract.getRounding()));
-                                generator.processPrice(tick3,false, true, true);
+                                generator.processPrice(tick3,false, false,false,false);
                                 Tick tick4 = new Tick(global.getIdTick(true), contract.getIdcontract(),LocalDate.parse(node.get("date").asText()).atStartOfDay(Global.ZONE_ID).plusSeconds(3), Utils.round(node.get("close").asDouble()*multiplier,contract.getRounding()));
-                                generator.processPrice(tick4,false, true, true);
+                                generator.processPrice(tick4,false, false,false,false);
                         }
                         generator.getDatabase().getSaverController().saveNow(generator, true);
                     } catch (IOException  | NullPointerException e) {
@@ -137,22 +141,22 @@ public class DailyCompute {
 //                                        contractController.saveContract(newContract);
 //                                    }
                                         ContractBasic contract = contractController.getDailyContractsBySymbol().get(code);
-                                        Generator generator = contractController.createGenerator(contract);
-                                        contractController.createProcessor(contract);
-                                        appController.loadHistoricalData(generator, 100);
+                                        Generator generator = appController.createGenerator(contract,HistoricalDataType.DATABASE);
+                                       // contractController.createProcessor(contract);
+                                        //historicalDataController.loadHistoricalData(generator, 100,1);
                                         double multiplier = node.get("adjusted_close").asDouble() / node.get("close").asDouble();
                                         Tick tick1 = new Tick(global.getIdTick(true), contract.getIdcontract(), LocalDate.parse(node.get("date").asText()).atStartOfDay(Global.ZONE_ID), node.get("open").asDouble() * multiplier);
                                         tick1.setVolume((int) node.get("volume").asInt()/4);
-                                        generator.processPrice(tick1, false, true, true);
+                                        generator.processPrice(tick1, false, false,false,false);
                                         Tick tick2 = new Tick(global.getIdTick(true), contract.getIdcontract(), LocalDate.parse(node.get("date").asText()).atStartOfDay(Global.ZONE_ID).plusSeconds(1), node.get("high").asDouble() * multiplier);
                                         tick2.setVolume((int) node.get("volume").asInt()/4);
-                                        generator.processPrice(tick2, false, true, true);
+                                        generator.processPrice(tick2, false, false,false,false);
                                         Tick tick3 = new Tick(global.getIdTick(true), contract.getIdcontract(), LocalDate.parse(node.get("date").asText()).atStartOfDay(Global.ZONE_ID).plusSeconds(2), node.get("low").asDouble() * multiplier);
                                         tick3.setVolume((int) node.get("volume").asInt()/4);
-                                        generator.processPrice(tick3, false, true, true);
+                                        generator.processPrice(tick3, false, false,false,false);
                                         Tick tick4 = new Tick(global.getIdTick(true), contract.getIdcontract(), LocalDate.parse(node.get("date").asText()).atStartOfDay(Global.ZONE_ID).plusSeconds(3), node.get("close").asDouble() * multiplier);
                                         tick4.setVolume((int) node.get("volume").asInt()/4);
-                                        generator.processPrice(tick4, false, true, true);
+                                        generator.processPrice(tick4, false, false,false,false);
                                         generator.getDatabase().getSaverController().saveNow(generator, true);
                                         semaphore.release();
                                  //   }).start();

@@ -66,6 +66,7 @@ public class Generator implements IbClient, ProcessorListener {
 
     private ContractBasic contract;
     private List<Tick> flowLive = new ArrayList<>();
+    private List<Tick> flowDelayed = new ArrayList<>();
     private Map<Integer, Processor> processors = new ConcurrentHashMap<>();
     private GeneratorState generatorState;
     private Database database;
@@ -74,8 +75,8 @@ public class Generator implements IbClient, ProcessorListener {
 
 
     public Database getDatabase() {
-        if(database ==null)
-            database = appController.getDatabase();
+        if (database == null)
+            database = appController.createDatabase("matel", Global.PORT, "matel");
         return database;
     }
 
@@ -87,11 +88,11 @@ public class Generator implements IbClient, ProcessorListener {
     public Generator(ContractBasic contract, boolean random) {
         this.contract = contract;
         generatorState = new GeneratorState(contract.getIdcontract(), random, 3000);
-        if(contract.getType().equals("DAILY")){
+        if (contract.getType().equals("DAILY")) {
             frequencies = new int[]{1380, 6900, 35000, 100000, 300000};
 //            frequencies = new int[]{1380};
 
-        }else {
+        } else {
             frequencies = new int[]{0, 1, 5, 15, 60, 240, 480, 1380, 6900, 35000, 100000, 300000};
         }
     }
@@ -102,8 +103,8 @@ public class Generator implements IbClient, ProcessorListener {
 
     public void connectMarketData() throws ExecutionException, InterruptedException {
         Random rand = new Random();
-        long idcontract = contract.getCloneid()<0 ? contract.getIdcontract() : contract.getIdcontract() -1000;
-       // contract = contractRepo.findByIdcontract(contract.getIdcontract());
+        long idcontract = contract.getCloneid() < 0 ? contract.getIdcontract() : contract.getIdcontract() - 1000;
+        // contract = contractRepo.findByIdcontract(contract.getIdcontract());
 //        contractController.initContracts(false);
         if (this.generatorState.getMarketDataStatus() > 0 && Global.ONLINE)
             disconnectMarketData(false);
@@ -195,10 +196,10 @@ public class Generator implements IbClient, ProcessorListener {
 
         if (field == 8 || field == 74) {
             generatorState.setDailyVolume((int) size);
-            if (flowLive.size() > 0) {
-                flowLive.get(0).setVolume(size - generatorState.getPreviousVolume());
-                generatorState.setPreviousVolume(size);
-            }
+//            if (flowLive.size() > 0) {
+//                flowLive.get(0).setVolume(size - generatorState.getPreviousVolume());
+//                generatorState.setPreviousVolume(size);
+//            }
         }
 
 //        if (field != 8 && field != 74 && field != 5 && field != 71 && field != 3 && field != 70 && field != 0 && field != 69)
@@ -207,7 +208,7 @@ public class Generator implements IbClient, ProcessorListener {
     }
 
     private void updateGeneratorState(Tick tick) {
-       // this.generatorState.setMarketDataStatus(1);
+        // this.generatorState.setMarketDataStatus(1);
         double price = tick.getClose();
         generatorState.setIdtick(tick.getId());
         generatorState.setColor(price > generatorState.getLastPrice() ? 1 : -1);
@@ -226,13 +227,38 @@ public class Generator implements IbClient, ProcessorListener {
     }
 
     private void runPrice(long tickerId, int field, double price, TickAttrib attrib) {
-
         if (price > 0 && (((field == 4 || field == 68) && contract.getFlowType().equals("TRADES"))
                 || ((field == 1 || field == 2) && contract.getFlowType().equals("MID")))) {
             double newPrice = reformatPrice(price, field);
             if (newPrice > 0 && newPrice != generatorState.getLastPrice()) {
                 Tick tick = new Tick(global.getIdTick(true), contract.getIdcontract(), ZonedDateTime.now().withZoneSameInstant(Global.ZONE_ID), newPrice);
-                processPrice(tick, true, true, false);
+               // System.out.println(">>>>>> " + tick.toString());
+                processPrice(tick, true, false, false, false);
+                if (flowLive.size() > 2) {
+                    if (!flowLive.get(2).isDiscarded()
+                            && ((flowLive.get(2).getTriggerDown() == 1 && flowLive.get(2).getTriggerUp() == 0 && flowLive.get(1).getTriggerDown() == 0 && flowLive.get(1).getTriggerUp() == 1
+                            && flowLive.get(0).getTriggerDown() == 1 && flowLive.get(0).getTriggerUp() == 0)
+                            || (flowLive.get(2).getTriggerDown() == 0 && flowLive.get(2).getTriggerUp() == 1 && flowLive.get(1).getTriggerDown() == 1
+                            && flowLive.get(1).getTriggerUp() == 0 && flowLive.get(0).getTriggerDown() == 0 && flowLive.get(0).getTriggerUp() == 1))
+                            && flowLive.get(0).getClose() == flowLive.get(2).getClose()) {
+                        flowLive.get(2).setDiscarded(true);
+                        flowLive.get(1).setDiscarded(true);
+
+                    } else {
+                        if (!flowLive.get(2).isDiscarded()) {
+                            flowDelayed.add(0, flowLive.get(2));
+                           // System.out.println(flowDelayed.get(0));
+                            if (flowDelayed.size() > Global.MAX_LENGTH_TICKS) {
+                                flowDelayed.remove(Global.MAX_LENGTH_TICKS);
+                            }
+                            int count = getDatabase().getSaverController().saveBatchTicks(flowDelayed.get(0), false);
+                            if (count > 0)
+                                appController.getGeneratorsState().forEach((id, state) -> {
+                                    generatorStateRepo.save(state);
+                                });
+                        }
+                    }
+                }
             }
         } else if ((price > 0 && (field == 1 || field == 2) && contract.getFlowType().equals("TRADES"))) {
             switch (field) {
@@ -246,31 +272,25 @@ public class Generator implements IbClient, ProcessorListener {
         }
     }
 
-//    public void process(Candle candle) throws InterruptedException {
-//        processors.forEach((freq, processor) -> {
-//            processor.process(candle.getTimestamp(), candle.getId(), candle.getOpen(),
-//                    candle.getHigh(), candle.getLow(), candle.getClose(), true);
-//        });
-//    }
 
-    public void processPrice(Tick tick, boolean countConsecutiveUpDown, boolean savingTick, boolean computing) {
-        updateGeneratorState(tick);
-        if(Global.hasCompletedLoading && generatorState.getSpeedMultiplier()<=10)
-        wsController.sendLiveGeneratorState(generatorState);
-        flowLive.add(0, tick);
-        if (flowLive.size() > Global.MAX_LENGTH_TICKS)
-            flowLive.remove(Global.MAX_LENGTH_TICKS);
+    public void processPrice(Tick tick, boolean countConsecutiveUpDown, boolean readOnlyTick, boolean readOnlyCandle, boolean readOnlyProcessorState) {
+        if (Global.hasCompletedLoading && generatorState.getSpeedMultiplier() <= 10)
+            wsController.sendLiveGeneratorState(generatorState);
+        if(!readOnlyTick) {
+            flowLive.add(0, tick);
+            if (flowLive.size() > Global.MAX_LENGTH_TICKS)
+                flowLive.remove(Global.MAX_LENGTH_TICKS);
+        }
         if (countConsecutiveUpDown)
             consecutiveUpDownCounter(tick);
         processors.forEach((freq, processor) -> {
-            processor.process(tick.getTimestamp(), tick.getId(), null, null, null, tick.getClose(),  tick.getVolume(), computing);
+            processor.process(tick.getTimestamp(), tick.getId(), null, null, null, tick.getClose(), tick.getVolume());
         });
-
-        if(checkpoint && (Global.COMPUTE_DEEP_HISTORICAL || Global.hasCompletedLoading)){
+        updateGeneratorState(tick);
+        if (checkpoint && (Global.COMPUTE_DEEP_HISTORICAL || Global.hasCompletedLoading)) {
             synchronized (this) {
                 processors.forEach((freq, proc) -> {
-                    if(freq>0) {
-                        //proc.getProcessorState().setCheckpoint(true);
+                    if (freq > 0) {
                         if (proc.getFlow().size() > 0)
                             proc.getFlow().get(0).setCheckpoint(true);
                         try {
@@ -282,14 +302,6 @@ public class Generator implements IbClient, ProcessorListener {
                 });
             }
             checkpoint = false;
-        }
-
-        if (savingTick) {
-            int count = getDatabase().getSaverController().saveBatchTicks(flowLive.get(0), false);
-            if (count > 0)
-                appController.getGeneratorsState().forEach((id, state) -> {
-                    generatorStateRepo.save(state);
-                });
         }
     }
 
@@ -321,15 +333,16 @@ public class Generator implements IbClient, ProcessorListener {
     }
 
     private void consecutiveUpDownCounter(Tick tick) {
-        if (flowLive.get(0).getClose() > generatorState.getLastPrice()) {
+        if (tick.getClose() > generatorState.getLastPrice()) {
             generatorState.setTriggerUp(generatorState.getTriggerUp() + 1);
             generatorState.setTriggerDown(0);
-        } else if (flowLive.get(0).getClose() < generatorState.getLastPrice()) {
+        } else if (tick.getClose() < generatorState.getLastPrice()) {
             generatorState.setTriggerUp(0);
             generatorState.setTriggerDown(generatorState.getTriggerDown() + 1);
         }
         tick.setTriggerUp(generatorState.getTriggerUp());
         tick.setTriggerDown(generatorState.getTriggerDown());
+        if(flowLive.size()>0)
         flowLive.set(0, tick);
     }
 
@@ -369,18 +382,19 @@ public class Generator implements IbClient, ProcessorListener {
         return contract;
     }
 
-    public void setContract(ContractBasic contract){
+    public void setContract(ContractBasic contract) {
         this.contract = contract;
     }
 
-    public void setGeneratorState() {
+    public GeneratorState setGeneratorState() {
         GeneratorState generatorState = generatorStateRepo.findByIdcontract(contract.getIdcontract());
         if (generatorState != null) {
             this.generatorState = generatorState;
         }
+        return generatorState;
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 180000)
     public void clock() {
         try {
             if (ZonedDateTime.now().minusMinutes(1).isAfter(generatorState.getTimestamp())) {
@@ -398,7 +412,7 @@ public class Generator implements IbClient, ProcessorListener {
     public void notifyEvent(ProcessorState state) {
         if (Global.COMPUTE_DEEP_HISTORICAL && state.getTimestampTick().until(dateNow, ChronoUnit.DAYS) > 80) {
         } else {
- checkpoint = true;
+            checkpoint = true;
         }
     }
 }

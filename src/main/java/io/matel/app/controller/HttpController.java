@@ -3,12 +3,14 @@ package io.matel.app.controller;
 
 import io.matel.app.AppController;
 import io.matel.app.AppLauncher;
+import io.matel.app.HistoricalDataController;
 import io.matel.app.config.Global;
 import io.matel.app.config.connection.activeuser.ActiveUserEvent;
 import io.matel.app.config.connection.user.UserRepository;
 import io.matel.app.config.tools.MailService;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
+import io.matel.app.domain.HistoricalDataType;
 import io.matel.app.state.GeneratorState;
 import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -36,6 +39,8 @@ public class HttpController {
     @Autowired
     MailService mailService;
 
+    @Autowired
+    HistoricalDataController historicalDataController;
 
     @Autowired
     Global global;
@@ -77,10 +82,16 @@ public class HttpController {
 
 
     @GetMapping("/histo-candles/{id}/{code}/{frequency}")
-    public List<Candle> getHistoricalCandles(@PathVariable String id, @PathVariable String code, @PathVariable String frequency){
+    public List<Candle> getHistoricalCandles(@PathVariable String id, @PathVariable String code, @PathVariable String frequency) throws ExecutionException, InterruptedException {
         long idcontract = Long.valueOf(id);
         int freq = Integer.valueOf(frequency);
-        return appController.getCandlesByIdContractByFreq(idcontract, code, freq,null,false, Global.MAX_LENGTH_CANDLE);
+       HistoricalDataType type = HistoricalDataType.DATABASE;
+       if(idcontract>=10000) {
+           type = HistoricalDataType.WEBSITE;
+            if(freq<1380)
+                type = HistoricalDataType.NONE;
+       }
+        return historicalDataController.loadHistoricalData(idcontract,code,freq, Global.MAX_LENGTH_CANDLE,Long.MAX_VALUE,false,type).get();
     }
 
 
@@ -165,7 +176,7 @@ public class HttpController {
         double adjustment = Double.valueOf(adj);
         contractController.saveContract(_contract);
         appController.getGenerators().get(_contract.getIdcontract()).setContract(_contract);
-        contractController.initContracts(false);
+        contractController.initContracts(false, HistoricalDataType.NONE);
         if(adjustment !=0){
             appController.saveNow();
             int result = appController.getDatabase().updateCandles(_contract.getIdcontract(), adjustment);

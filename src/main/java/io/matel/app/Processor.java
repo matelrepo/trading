@@ -27,10 +27,10 @@ public class Processor extends FlowMerger {
         processorState = new ProcessorState(contract.getIdcontract(), freq);
     }
 
-    public void process(ZonedDateTime timestampTick, long idTick, Double open, Double high, Double low, double close, int volume, boolean computing) {
+    public void process(ZonedDateTime timestampTick, long idTick, Double open, Double high, Double low, double close, int volume) {
         if (Global.COMPUTE_DEEP_HISTORICAL && freq < 240 && timestampTick.until(dateNow, ChronoUnit.DAYS) > 365) {
         } else {
-            merge(timestampTick, idTick, open, high, low, close, volume, computing);
+            merge(timestampTick, idTick, open, high, low, close, volume);
             if(flow.get(0).isNewCandle())
                 processorState.setEvent(EventType.NONE);
 
@@ -43,21 +43,18 @@ public class Processor extends FlowMerger {
             processorState.setIdTick(flow.get(0).getIdtick());
             processorState.setIdCandle(flow.get(0).getId());
             if (flow.size() > 4) {
-                algorythm(computing);
+                algorythm();
             }
 
-          //  System.out.println(flow.get(0).toString());
-            if(!computing)
             if (Global.ONLINE || Global.RANDOM || Global.HISTO) {
                     wsController.sendLiveCandle(flow.get(0));
             }
         }
     }
 
-    public void algorythm(boolean computing) {
+    public void algorythm() {
         processorState.setTradable(false);
         processorState.setCheckpoint(false);
-        //  if ((computing && freq == 1380) || freq == 0)
             offset = freq==0 ? 1 : 0;
 
         processorState.setMaxTrend(flow.get(2 - offset).getHigh() <= processorState.getMax());

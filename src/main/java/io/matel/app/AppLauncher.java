@@ -6,6 +6,7 @@ import io.matel.app.config.tools.MailService;
 import io.matel.app.controller.ContractController;
 import io.matel.app.controller.WsController;
 import io.matel.app.database.Database;
+import io.matel.app.domain.HistoricalDataType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,11 @@ import java.util.concurrent.*;
 public class AppLauncher implements CommandLineRunner {
 
     private static final Logger LOGGER = LogManager.getLogger(AppLauncher.class);
-    private ExecutorService executor = Executors.newFixedThreadPool(100);
+   // private ExecutorService executor = Executors.newFixedThreadPool(100);
     private AppController appController;
     private WsController wsController;
     private ConcurrentHashMap<Long, LoadingErrorHandler> errors = new ConcurrentHashMap();
-    private Semaphore semaphore = new Semaphore(Global.EXECUTOR_THREADS);
+    private Semaphore semaphore = new Semaphore(8);
     private Semaphore semaphoreDaily = new Semaphore(100);
 
     private int numContracts = 0;
@@ -43,8 +44,10 @@ public class AppLauncher implements CommandLineRunner {
     MailService mailService;
 
     @Autowired
-            DailyCompute dailyCompute;
+    DailyCompute dailyCompute;
 
+    @Autowired
+    HistoricalDataController historicalDataController;
 
     DataService dataService;
 
@@ -58,9 +61,9 @@ public class AppLauncher implements CommandLineRunner {
     public void run(String... args) {
 
         LOGGER.info("Starting with " + Global.EXECUTOR_THREADS + " cores");
-        if(Global.ONLINE){
+        if (Global.ONLINE) {
             dataService.connect();
-        }else{
+        } else {
             startLive();
         }
     }
@@ -68,8 +71,8 @@ public class AppLauncher implements CommandLineRunner {
 
     public void startLive() {
         try {
-            Database database = appController.createDatabase("matel", Global.PORT, "matel");
-            contractController.setContracts(contractController.initContracts(true));
+           Database database = appController.getDatabase();
+            contractController.setContracts(contractController.initContracts(true,HistoricalDataType.NONE));
 
 
             numContracts = contractController.getContracts().size();
@@ -88,7 +91,7 @@ public class AppLauncher implements CommandLineRunner {
 
             LOGGER.info("Setting up last id tick: " + global.getIdTick(false));
             LOGGER.info("Setting up last id candle: " + global.getIdCandle(false));
-            database.close();
+           // database.close();
 
             List<String> contractsSorted = new ArrayList<>(contractController.getDailyContractsBySymbol().keySet());
             Collections.sort(contractsSorted);
@@ -115,9 +118,8 @@ public class AppLauncher implements CommandLineRunner {
 //                dailyCompute.EODByExchange();
 //            }).start();
 
-            dataService.reqHistoricalData(contractController.getDailyContractsBySymbol().get("BL"));
 
-            int tmp = 0;
+            int tmp = 1;
             if (tmp > 0) {
                 if (Global.READ_ONLY_TICKS) {
                     LOGGER.warn(">>> Read only lock! <<<");
@@ -125,9 +127,11 @@ public class AppLauncher implements CommandLineRunner {
                 }
 
                 LOGGER.info("Loading historical candles...");
+                historicalDataController.findProcessorStateByContract();
                 appController.getGenerators().forEach((id, generator) -> {
                     try {
                         semaphore.acquire();
+                        //System.out.println(">>>>Semaphore available >>> " + semaphore.availablePermits() + " -> " +generator.getContract().getIdcontract());
                         try {
                             Thread.sleep(50);
                         } catch (InterruptedException e) {
@@ -151,8 +155,7 @@ public class AppLauncher implements CommandLineRunner {
 
 
                             if (Global.COMPUTE_DEEP_HISTORICAL) {
-                                appController.simulateHistorical(error.idcontract, null, false);
-
+                                historicalDataController.simulateHistorical(error.idcontract, null, false);
                                 generator.getDatabase().getSaverController().saveNow(generator, true);
 //                            generator.getProcessors().forEach((freq, proc)->{
 //                                processorStateRepo.save(proc.getProcessorState());
@@ -161,16 +164,33 @@ public class AppLauncher implements CommandLineRunner {
                             }
 
                             if (!Global.COMPUTE_DEEP_HISTORICAL && !error.errorDetected) {
-                                appController.loadHistoricalData(generator, Global.MAX_LENGTH_CANDLE);
-                                appController.computeTicks(generator, error.lastCandleId);
+                                List<Thread> t = new ArrayList<>();
+                                generator.getProcessors().forEach((freq, proc) -> {
+                                    t.add(0,new Thread(()->{
+                                        historicalDataController.loadHistoricalData(generator.getContract().getIdcontract(), generator.getContract().getSymbol(), freq, Global.MAX_LENGTH_CANDLE, Long.MAX_VALUE, true, HistoricalDataType.DATABASE);
+
+                                    }));
+                                    t.get(0).start();
+                                });
+
+                                t.forEach(thread->{
+                                    try {
+                                        thread.join();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+                                generator.getDatabase().close();
+                                generator.setDatabase(database);
+                                historicalDataController.setProcessorState(generator.getContract().getIdcontract());
+                                historicalDataController.computeTicks(generator, error.lastCandleId);
                                 generator.getDatabase().getSaverController().saveNow(generator, true);
                                 generator.getProcessors().forEach((freq, proc) -> {
                                     if (proc.getFlow().size() > 0)
                                         generator.getGeneratorState().setLastPrice(proc.getFlow().get(0).getClose());
                                 });
                             }
-                            generator.setDatabase(database);
-                            semaphore.release();
+                            //System.out.println("Semaphore available >>> " + semaphore.availablePermits());
 
 
                             try {
@@ -191,6 +211,7 @@ public class AppLauncher implements CommandLineRunner {
                             }
 
                             generator.saveGeneratorState();
+                            semaphore.release();
 
                         }).start();
                     } catch (InterruptedException e) {
@@ -198,21 +219,21 @@ public class AppLauncher implements CommandLineRunner {
                     }
                 });
             }
-            }catch(NullPointerException e){
-                e.printStackTrace();
-            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
 
     }
 
 
-public synchronized void releaseSemaphore(){
+    public synchronized void releaseSemaphore() {
         this.semaphoreDaily.release();
-}
+    }
 
     @Scheduled(fixedRate = 5000)
     public void clock() {
         this.wsController.sendPrices(appController.getGeneratorsState());
-      //  System.out.println(appController.getGeneratorsState());
+        //  System.out.println(appController.getGeneratorsState());
     }
 
 
