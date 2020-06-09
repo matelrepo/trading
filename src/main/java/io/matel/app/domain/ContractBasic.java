@@ -14,7 +14,7 @@ public class ContractBasic implements Cloneable {
     @Column(unique = true)
     private long idcontract;
 
-    private Integer conid;
+//    private Integer conid;
 
     private String title;
 
@@ -196,7 +196,7 @@ public class ContractBasic implements Cloneable {
     public String toString() {
         return "ContractBasic{" +
                 "idcontract=" + idcontract +
-                ", conid=" + conid +
+//                ", conid=" + conid +
                 ", title='" + title + '\'' +
                 ", secType='" + secType + '\'' +
                 ", exchange='" + exchange + '\'' +
@@ -227,13 +227,13 @@ public class ContractBasic implements Cloneable {
         return category;
     }
 
-    public Integer getConid() {
-        return conid;
-    }
-
-    public void setConid(Integer conid) {
-        this.conid = conid;
-    }
+//    public Integer getConid() {
+//        return conid;
+//    }
+//
+//    public void setConid(Integer conid) {
+//        this.conid = conid;
+//    }
 
 
     public long getCloneid() {

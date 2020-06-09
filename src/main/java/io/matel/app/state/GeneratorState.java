@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -18,7 +19,7 @@ public class GeneratorState {
     private long idtick;
 
     @Column(nullable = false, columnDefinition= "TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime timestamp = ZonedDateTime.now().minusMinutes(5);
+    private OffsetDateTime timestamp = OffsetDateTime.now().minusMinutes(5);
 
     @Transient
     private long speed = 500L;
@@ -94,11 +95,11 @@ public class GeneratorState {
         this.idtick = idtick;
     }
 
-    public ZonedDateTime getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(ZonedDateTime timestamp) {
+    public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
     }
 

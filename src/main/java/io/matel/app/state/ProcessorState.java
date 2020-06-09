@@ -5,6 +5,7 @@ import io.matel.app.domain.EventType;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,9 +23,9 @@ public class ProcessorState implements  Cloneable {
     private int freq;
 
     @Column(nullable = false , columnDefinition="TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime timestampTick;
+    private OffsetDateTime timestampTick;
     @Column(nullable = false , columnDefinition="TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime timestampCandle;
+    private OffsetDateTime timestampCandle;
 
     private int color = 0;
     private boolean minTrend = false;
@@ -146,7 +147,7 @@ public class ProcessorState implements  Cloneable {
         return freq;
     }
 
-    public ZonedDateTime getTimestampTick() {
+    public OffsetDateTime getTimestampTick() {
         return timestampTick;
     }
 
@@ -378,7 +379,8 @@ public class ProcessorState implements  Cloneable {
                 ", idCandle=" + idCandle +
                 ", idcontract=" + idcontract +
                 ", freq=" + freq +
-                ", timestamp=" + timestampTick +
+                ", timestampTick=" + timestampTick +
+                ", timestampCandle=" + timestampCandle +
                 ", color=" + color +
                 ", minTrend=" + minTrend +
                 ", maxTrend=" + maxTrend +
@@ -399,18 +401,21 @@ public class ProcessorState implements  Cloneable {
                 ", event=" + event +
                 ", activeEvents=" + activeEvents +
                 ", events='" + events + '\'' +
+                ", checkpoint=" + checkpoint +
+                ", averageClose=" + averageClose +
+                ", abnormalHeight=" + abnormalHeight +
                 '}';
     }
 
-    public ZonedDateTime getTimestampCandle() {
+    public OffsetDateTime getTimestampCandle() {
         return timestampCandle;
     }
 
-    public void setTimestampCandle(ZonedDateTime timestamp_candle) {
+    public void setTimestampCandle(OffsetDateTime timestamp_candle) {
         this.timestampCandle = timestamp_candle;
     }
 
-        public void setTimestampTick(ZonedDateTime timestamp) {
+        public void setTimestampTick(OffsetDateTime timestamp) {
         this.timestampTick = timestamp;
     }
 

@@ -40,7 +40,7 @@ public class SaverController {
         if (gen != null) idcontract = gen.getContract().getIdcontract();
 
         int numTicks = saveBatchTicks(saveNow);
-        System.out.println(Thread.currentThread().getName());
+      //  System.out.println(Thread.currentThread().getName());
         LOGGER.info("Saving now " + numTicks + " ticks for contract " + idcontract);
         if (numTicks > 0 || saveNow) {
             int numCandles = saveBatchCandles();

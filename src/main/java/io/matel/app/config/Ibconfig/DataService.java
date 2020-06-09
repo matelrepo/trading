@@ -75,13 +75,13 @@ public class DataService {
 //    }
 
     public void reqHistoricalData(ContractBasic contract){
-        eWrapper.getClient().reqHistoricalData(12000, contractController.contractBasic2ContractIB(contract),
-                "","10 D", "1 min", "TRADES",0,1,false,null );
+        eWrapper.getClient().reqHistoricalData((int) contract.getIdcontract(), contractController.contractBasic2ContractIB(contract),
+                "","20 D", "5 mins", "TRADES",0,1,false,null );
     }
 
-    public void reqContractDetails(ContractBasic contract){
-        eWrapper.getClient().reqContractDetails((int) contract.getIdcontract(), contractController.contractBasic2ContractIB(contract));
-    }
+//    public void reqContractDetails(ContractBasic contract){
+//        eWrapper.getClient().reqContractDetails((int) contract.getIdcontract(), contractController.contractBasic2ContractIB(contract));
+//    }
 
     public void cancelMktData(ContractBasic contract, boolean cancelRepo) throws InterruptedException{
         Thread.sleep(50);

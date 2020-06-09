@@ -48,7 +48,7 @@ public class WsController {
     }
 
     public void sendEvent(ProcessorState processorState, ContractBasic contract) {
-        if (Global.hasCompletedLoading && processorState.getFreq() > 60) {
+        if (Global.hasCompletedLoading && processorState.getFreq() > 60 && contract.getIdcontract()<10000) { //10000 EOD reader from website earch box
             String path = "/get/events";
             template.convertAndSend(path, processorState);
             if (processorState.isTradable()){

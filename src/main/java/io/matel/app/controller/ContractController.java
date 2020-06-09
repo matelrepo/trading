@@ -3,15 +3,12 @@ package io.matel.app.controller;
 import com.ib.client.Contract;
 import io.matel.app.AppController;
 import io.matel.app.Generator;
-import io.matel.app.HistoricalDataController;
 import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.domain.HistoricalDataType;
 import io.matel.app.repo.ContractRepository;
 import io.matel.app.repo.ProcessorStateRepo;
 import io.matel.app.state.ProcessorState;
-import org.hibernate.boot.model.source.spi.HibernateTypeSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -57,20 +54,21 @@ public class ContractController {
         return maxId;
     }
 
-    public List<ContractBasic> initContracts(boolean createGenerator, HistoricalDataType type) throws NullPointerException {
+    public List<ContractBasic> initContracts(boolean createGenerator) throws NullPointerException {
         List<ContractBasic> list = new ArrayList<>();
           list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
           dailyContracts = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "DAILY");
         for (ContractBasic dailyContract : dailyContracts) {
             dailyContractsBySymbol.put(dailyContract.getSymbol(), dailyContract);
         }
-      //  list.add(contractRepository.findByIdcontract(5));
+       // list.add(contractRepository.findByIdcontract(120));
+       // list.add(contractRepository.findByIdcontract(18));
+
 
         contracts= list;
         if(createGenerator) {
             list.forEach(contract -> {
-                appController.createGenerator(contract,type);
-                //createProcessor(contract);
+                appController.createGenerator(contract, true);
             });
         }
         return list;
@@ -89,7 +87,7 @@ public class ContractController {
             con.setIdcontract(idcontract+1000);
             con.setTitle(con.getTitle() + " CLONE");
             con.setCloneid(idcontract);
-           Generator generator = appController.createGenerator(con, HistoricalDataType.DATABASE);
+           Generator generator = appController.createGenerator(con, true);
             //createProcessor(con);
             contracts.add(con);
            // appController.loadHistoricalData(generator);
@@ -121,7 +119,7 @@ public class ContractController {
                     e.printStackTrace();
                 }
             }else if(Global.HISTO){
-                historicalDataController.simulateHistorical(generator.getContract().getIdcontract()-1000, tickThreshold.get(), true);
+                historicalDataController.computingDeepHistorical(generator.getContract().getIdcontract()-1000, tickThreshold.get(), true);
             }
             //appController.computeTicks(genera
                 // tor, 0);

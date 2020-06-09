@@ -3,7 +3,7 @@ package io.matel.app.controller;
 
 import io.matel.app.AppController;
 import io.matel.app.AppLauncher;
-import io.matel.app.HistoricalDataController;
+import io.matel.app.DailyCompute;
 import io.matel.app.config.Global;
 import io.matel.app.config.connection.activeuser.ActiveUserEvent;
 import io.matel.app.config.connection.user.UserRepository;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -44,6 +43,9 @@ public class HttpController {
 
     @Autowired
     Global global;
+
+    @Autowired
+    DailyCompute dailyCompute;
 
 
 
@@ -89,9 +91,9 @@ public class HttpController {
        if(idcontract>=10000) {
            type = HistoricalDataType.WEBSITE;
             if(freq<1380)
-                type = HistoricalDataType.NONE;
+                type = HistoricalDataType.IB;
        }
-        return historicalDataController.loadHistoricalData(idcontract,code,freq, Global.MAX_LENGTH_CANDLE,Long.MAX_VALUE,false,type).get();
+        return historicalDataController.loadHistoricalData(idcontract,code,freq, Global.MAX_LENGTH_CANDLE,Long.MAX_VALUE,false,type);
     }
 
 
@@ -170,13 +172,20 @@ public class HttpController {
         Global.send_email = email;
     }
 
+    @PostMapping("/update-eod-batch")
+    public void updateEOD(@RequestBody String _date){
+                    new Thread(()->{
+                dailyCompute.EODByExchange(_date);
+            }).start();
+    }
+
 
     @PostMapping("/save-contract/{adj}")
     public void saveContract(@RequestBody ContractBasic _contract, @PathVariable String adj){
         double adjustment = Double.valueOf(adj);
         contractController.saveContract(_contract);
         appController.getGenerators().get(_contract.getIdcontract()).setContract(_contract);
-        contractController.initContracts(false, HistoricalDataType.NONE);
+        contractController.initContracts(false);
         if(adjustment !=0){
             appController.saveNow();
             int result = appController.getDatabase().updateCandles(_contract.getIdcontract(), adjustment);

@@ -21,6 +21,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -62,6 +64,7 @@ public class Generator implements IbClient, ProcessorListener {
     ContractController contractController;
 
     private boolean checkpoint = false;
+    private OffsetDateTime checkpoint_stamp = null;
 
 
     private ContractBasic contract;
@@ -88,13 +91,9 @@ public class Generator implements IbClient, ProcessorListener {
     public Generator(ContractBasic contract, boolean random) {
         this.contract = contract;
         generatorState = new GeneratorState(contract.getIdcontract(), random, 3000);
-        if (contract.getType().equals("DAILY")) {
-            frequencies = new int[]{1380, 6900, 35000, 100000, 300000};
-//            frequencies = new int[]{1380};
+        frequencies = new int[]{0, 1, 5, 15, 60, 240, 480, 1380, 6900, 35000, 100000, 300000};
+        //frequencies = new int[]{1380, 300000};
 
-        } else {
-            frequencies = new int[]{0, 1, 5, 15, 60, 240, 480, 1380, 6900, 35000, 100000, 300000};
-        }
     }
 
     public void initDatabase() {
@@ -231,9 +230,9 @@ public class Generator implements IbClient, ProcessorListener {
                 || ((field == 1 || field == 2) && contract.getFlowType().equals("MID")))) {
             double newPrice = reformatPrice(price, field);
             if (newPrice > 0 && newPrice != generatorState.getLastPrice()) {
-                Tick tick = new Tick(global.getIdTick(true), contract.getIdcontract(), ZonedDateTime.now().withZoneSameInstant(Global.ZONE_ID), newPrice);
+                Tick tick = new Tick(global.getIdTick(true), contract.getIdcontract(), OffsetDateTime.ofInstant(Instant.now(), Global.ZONE_ID), newPrice);
                // System.out.println(">>>>>> " + tick.toString());
-                processPrice(tick, true, false, false, false);
+                processPrice(tick, true, false, false, false, frequencies);
                 if (flowLive.size() > 2) {
                     if (!flowLive.get(2).isDiscarded()
                             && ((flowLive.get(2).getTriggerDown() == 1 && flowLive.get(2).getTriggerUp() == 0 && flowLive.get(1).getTriggerDown() == 0 && flowLive.get(1).getTriggerUp() == 1
@@ -273,7 +272,7 @@ public class Generator implements IbClient, ProcessorListener {
     }
 
 
-    public void processPrice(Tick tick, boolean countConsecutiveUpDown, boolean readOnlyTick, boolean readOnlyCandle, boolean readOnlyProcessorState) {
+    public void processPrice(Tick tick, boolean countConsecutiveUpDown, boolean readOnlyTick, boolean readOnlyCandle, boolean readOnlyProcessorState, int[] frequencies) {
         if (Global.hasCompletedLoading && generatorState.getSpeedMultiplier() <= 10)
             wsController.sendLiveGeneratorState(generatorState);
         if(!readOnlyTick) {
@@ -283,9 +282,12 @@ public class Generator implements IbClient, ProcessorListener {
         }
         if (countConsecutiveUpDown)
             consecutiveUpDownCounter(tick);
-        processors.forEach((freq, processor) -> {
-            processor.process(tick.getTimestamp(), tick.getId(), null, null, null, tick.getClose(), tick.getVolume());
-        });
+        for (int frequency : frequencies) {
+            processors.get(frequency).process(tick.getTimestamp(), tick.getId(), null, null, null, tick.getClose(), tick.getVolume());
+        }
+//        processors.forEach((freq, processor) -> {
+//            processor.process(tick.getTimestamp(), tick.getId(), null, null, null, tick.getClose(), tick.getVolume());
+//        });
         updateGeneratorState(tick);
         if (checkpoint && (Global.COMPUTE_DEEP_HISTORICAL || Global.hasCompletedLoading)) {
             synchronized (this) {
@@ -294,7 +296,12 @@ public class Generator implements IbClient, ProcessorListener {
                         if (proc.getFlow().size() > 0)
                             proc.getFlow().get(0).setCheckpoint(true);
                         try {
-                            database.getSaverController().saveBatchProcessorState((ProcessorState) proc.getProcessorState().clone(), false);
+                            ProcessorState state = (ProcessorState) proc.getProcessorState().clone();
+                            if(state.getTimestampTick()==null)
+                                state.setTimestampTick(checkpoint_stamp);
+                            if(state.getTimestampCandle()==null)
+                                state.setTimestampCandle(checkpoint_stamp);
+                            database.getSaverController().saveBatchProcessorState(state, false);
                         } catch (CloneNotSupportedException e) {
                             e.printStackTrace();
                         }
@@ -397,7 +404,7 @@ public class Generator implements IbClient, ProcessorListener {
     @Scheduled(fixedRate = 180000)
     public void clock() {
         try {
-            if (ZonedDateTime.now().minusMinutes(1).isAfter(generatorState.getTimestamp())) {
+            if (OffsetDateTime.now().minusMinutes(1).isAfter(generatorState.getTimestamp())) {
                 if (generatorState.getMarketDataStatus() != 0)
                     generatorState.setMarketDataStatus(2);
             } else {
@@ -413,6 +420,7 @@ public class Generator implements IbClient, ProcessorListener {
         if (Global.COMPUTE_DEEP_HISTORICAL && state.getTimestampTick().until(dateNow, ChronoUnit.DAYS) > 80) {
         } else {
             checkpoint = true;
+            checkpoint_stamp = state.getTimestampTick();
         }
     }
 }

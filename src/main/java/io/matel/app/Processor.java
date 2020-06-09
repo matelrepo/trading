@@ -9,6 +9,7 @@ import io.matel.app.domain.EventType;
 import io.matel.app.state.ProcessorState;
 import io.matel.app.config.tools.DoubleStatistics;
 
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class Processor extends FlowMerger {
         processorState = new ProcessorState(contract.getIdcontract(), freq);
     }
 
-    public void process(ZonedDateTime timestampTick, long idTick, Double open, Double high, Double low, double close, int volume) {
+    public void process(OffsetDateTime timestampTick, long idTick, Double open, Double high, Double low, double close, int volume) {
         if (Global.COMPUTE_DEEP_HISTORICAL && freq < 240 && timestampTick.until(dateNow, ChronoUnit.DAYS) > 365) {
         } else {
             merge(timestampTick, idTick, open, high, low, close, volume);

@@ -4,6 +4,7 @@ import com.ib.client.*;
 import io.matel.app.AppController;
 import io.matel.app.AppLauncher;
 import io.matel.app.config.Global;
+import io.matel.app.controller.HistoricalDataController;
 import io.matel.app.controller.WsController;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.repo.ContractRepository;
@@ -12,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
+import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,7 +41,9 @@ public class EWrapperImpl implements EWrapper {
     @Autowired
     ContractRepository contractRepository;
 
-    private double lastClose =0;
+    @Autowired
+    HistoricalDataController historicalDataController;
+
 
     private boolean hasConnectedAlready = false;
 
@@ -78,8 +82,12 @@ public class EWrapperImpl implements EWrapper {
         } else {
             LOGGER.warn(">>> ERROR >>> " + id + " " + errorCode + " " + errorMsg);
             if(errorCode ==200){
-                System.out.println(appController.getGenerators().get(Long.valueOf(id)));
-                appController.getGenerators().get(Long.valueOf(id)).getGeneratorState().setMarketDataStatus(0);
+                try {
+                    System.out.println(appController.getGenerators().get(Long.valueOf(id)));
+                    appController.getGenerators().get(Long.valueOf(id)).getGeneratorState().setMarketDataStatus(0);
+                }catch(NullPointerException e){
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -140,16 +148,12 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void historicalData(int reqId, Bar bar) {
-        if(bar.close()!= lastClose) {
-            System.out.println("HistoricalData. " + reqId + " - Time: " + bar.time() + ", Open: " + bar.open() + ", High: " + bar.high() + ", Low: " + bar.low()
-                    + ", Close: " + bar.close() + ", Volume: " + bar.volume() + ", Count: " + bar.count() + ", WAP: " + bar.wap());
-            lastClose = bar.close();
-        }
+        historicalDataController.receiveHistoricalDataFromIB(reqId, bar);
     }
 
     @Override
     public void historicalDataEnd(int reqId, String startDateStr, String endDateStr) {
-        // TODO Auto-generated method stub
+historicalDataController.receiveHistoricalDataFromIBEnd();
     }
 
     @Override
@@ -254,12 +258,12 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void contractDetails(int reqId, ContractDetails contractDetails) {
-    ContractBasic contract = appController.getGenerators().get(Long.valueOf(reqId)).getContract();
-        if(contract.getConid()==null) {
-            contract.setConid(contractDetails.conid());
-            contractRepository.save(contract);
-        }
-        System.out.println("contractDetails " + contract.toString());
+//    ContractBasic contract = appController.getGenerators().get(Long.valueOf(reqId)).getContract();
+//        if(contract.getConid()==null) {
+//            contract.setConid(contractDetails.conid());
+//            contractRepository.save(contract);
+//        }
+//        System.out.println("contractDetails " + contract.toString());
     }
 
     @Override

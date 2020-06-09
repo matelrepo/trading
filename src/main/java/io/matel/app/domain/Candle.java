@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -26,10 +27,10 @@ public class Candle implements  Cloneable {
     private long idtick;
 
     @Column(nullable = false , columnDefinition="TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime timestampCandle;
+    private OffsetDateTime timestampCandle;
 
     @Column(nullable = false , columnDefinition="TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime timestampTick;
+    private OffsetDateTime timestampTick;
 
     @Column(nullable = false)
     private double open;
@@ -67,11 +68,11 @@ public class Candle implements  Cloneable {
 
     private boolean smallCandleNoiseRemoval = false;
 
-    public String getContractType() {
-        return contractType;
-    }
-
-    private String contractType;
+//    public String getContractType() {
+//        return contractType;
+//    }
+//
+//    private String contractType;
     private boolean checkpoint = false;
 
     @Column(nullable = false)
@@ -87,7 +88,7 @@ public class Candle implements  Cloneable {
 
     public Candle() { }
 
-    public Candle(ZonedDateTime timestampCandle, ZonedDateTime timestampTick, double open, double high, double low, double close, long idcontract, int freq) {
+    public Candle(OffsetDateTime timestampCandle, OffsetDateTime timestampTick, double open, double high, double low, double close, long idcontract, int freq) {
         this.timestampCandle = timestampCandle;
         this.timestampTick = timestampTick;
         this.open = open;
@@ -96,26 +97,28 @@ public class Candle implements  Cloneable {
         this.close = close;
         this.idcontract = idcontract;
         this.freq = freq;
-        if(idcontract>=10000){
-            contractType = "DAILY";
-        }else{
-            contractType = "LIVE";
-        }
+//        if(idcontract>=10000){
+//            contractType = "DAILY";
+//        }else{
+//            contractType = "LIVE";
+//        }
     }
 
 
-    public Candle(ZonedDateTime timestampCandle, ZonedDateTime timestampTick, double lastPrice, Double open, Double high, Double low, double close, ContractBasic contract, int freq) {
+    public Candle(OffsetDateTime timestampCandle, OffsetDateTime timestampTick, double lastPrice, Double open, Double high, Double low, double close, ContractBasic contract, int freq) {
             if (lastPrice > 0) {
                 double tickSize = contract.getTickSize();
                 int rounding = contract.getRounding();
                 boolean isUpTick = close > lastPrice;
                 double adjust = isUpTick ? -tickSize : tickSize;
+                if(freq>=1380)
+                    adjust =0;
                 this.open = Utils.round(close + adjust, rounding);
-                if(contract.getIdcontract()>=10000){
-                    contractType = "DAILY";
-                }else{
-                    contractType = "LIVE";
-                }
+//                if(contract.getIdcontract()>=10000){
+//                    contractType = "DAILY";
+//                }else{
+//                    contractType = "LIVE";
+//                }
 
                 if (lastPrice >= close) {
                     this.high = this.open;
@@ -138,7 +141,7 @@ public class Candle implements  Cloneable {
             this.newCandle = true;
     }
 
-    public Candle(long id, ContractBasic contract, int freq, long idtick, ZonedDateTime timestampCandle, ZonedDateTime timestampTick,
+    public Candle(long id, ContractBasic contract, int freq, long idtick, OffsetDateTime timestampCandle, OffsetDateTime timestampTick,
                   double open, double high, double low, double close,
                   int color, boolean newCandle, int progress,
                   int triggerDown, int triggerUp,
@@ -166,11 +169,11 @@ public class Candle implements  Cloneable {
         this.createdOn = createdOn;
         this.updatedOn = updatedOn;
         this.volume = volume;
-        if(idcontract>=10000){
-            contractType = "DAILY";
-        }else{
-            contractType = "LIVE";
-        }
+//        if(idcontract>=10000){
+//            contractType = "DAILY";
+//        }else{
+//            contractType = "LIVE";
+//        }
     }
 
 
@@ -310,19 +313,19 @@ public class Candle implements  Cloneable {
         this.volume = volume;
     }
 
-    public ZonedDateTime getTimestampCandle() {
+    public OffsetDateTime getTimestampCandle() {
         return timestampCandle;
     }
 
-    public void setTimestampCandle(ZonedDateTime timestampCandle) {
+    public void setTimestampCandle(OffsetDateTime timestampCandle) {
         this.timestampCandle = timestampCandle;
     }
 
-    public ZonedDateTime getTimestampTick() {
+    public OffsetDateTime getTimestampTick() {
         return timestampTick;
     }
 
-    public void setTimestampTick(ZonedDateTime timestampTick) {
+    public void setTimestampTick(OffsetDateTime timestampTick) {
         this.timestampTick = timestampTick;
     }
 

@@ -5,22 +5,16 @@ import io.matel.app.config.BeanFactory;
 import io.matel.app.config.Global;
 import io.matel.app.config.connection.activeuser.ActiveUserEvent;
 import io.matel.app.controller.ContractController;
+import io.matel.app.controller.HistoricalDataController;
 import io.matel.app.database.Database;
-import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.HistoricalDataType;
 import io.matel.app.repo.*;
 import io.matel.app.state.GeneratorState;
-import io.matel.app.state.ProcessorState;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PreDestroy;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -76,21 +70,23 @@ public class AppController {
         return beanFactory.createDatabaseJdbc(databaseName, port, username);
     }
 
-    public Generator createGenerator(ContractBasic contract, HistoricalDataType type) {
+    public synchronized Generator createGenerator(ContractBasic contract, boolean keep) {
         Generator generator = beanFactory.createBeanGenerator(contract, Global.RANDOM);
-        generators.put(contract.getIdcontract(), generator);
-        if(contract.getConid()==null && Global.ONLINE) dataService.reqContractDetails(contract);
         generator.setGeneratorState();
-        generatorsState.put(contract.getIdcontract(), generator.getGeneratorState());
+        if(keep) {
+            generators.put(contract.getIdcontract(), generator);
+            //if(contract.getConid()==null && Global.ONLINE) dataService.reqContractDetails(contract);
+            generatorsState.put(contract.getIdcontract(), generator.getGeneratorState());
+        }
 
         try {
-            for (int frequency : generators.get(contract.getIdcontract()).getFrequencies()) {
+            for (int frequency : generator.getFrequencies()) {
                 if (frequency >= 0) {
                     Processor processor = beanFactory.createBeanProcessor(contract, frequency);
                     processor.addListener(generators.get(contract.getIdcontract()));
-                    generators.get(contract.getIdcontract()).getProcessors().put(frequency, processor);
-                    if(type!=HistoricalDataType.NONE)
-                    historicalDataController.loadHistoricalData(contract.getIdcontract(),contract.getSymbol(),frequency,Global.MAX_LENGTH_CANDLE,Long.MAX_VALUE,true,type);
+                    generator.getProcessors().put(frequency, processor);
+                   // if(type!=HistoricalDataType.NONE)
+                    //historicalDataController.loadHistoricalData(contract.getIdcontract(),contract.getSymbol(),frequency,Global.MAX_LENGTH_CANDLE,Long.MAX_VALUE,true,type);
                     }
             }
         }catch(NullPointerException e){

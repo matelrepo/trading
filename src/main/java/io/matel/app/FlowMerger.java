@@ -10,10 +10,7 @@ import io.matel.app.config.tools.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +49,7 @@ public class FlowMerger {
         base = 60000L * freq <= 0 ? 60000L : 60000L * freq; // Special freq = 1380, 6900,35000
     }
 
-    public synchronized void newCandle(ZonedDateTime timestampCandle, ZonedDateTime timestampTick,long idTick, Double open, Double high, Double low, double close, int volume) {
+    public synchronized void newCandle(OffsetDateTime timestampCandle, OffsetDateTime timestampTick, long idTick, Double open, Double high, Double low, double close, int volume) {
         if (flow.size() > 1) {
             smallCandleNoiseRemoval = flow.get(0).getLow() >= flow.get(1).getLow() && flow.get(0).getHigh() <= flow.get(1).getHigh() && freq > 0;
             if (smallCandleNoiseRemoval || flow.get(0).isSmallCandleNoiseRemoval()) {
@@ -85,7 +82,7 @@ public class FlowMerger {
         }
     }
 
-    private void updateCandle(ZonedDateTime timestamp, long idTick, Double open, Double high, Double low, double close, int volume) {
+    private void updateCandle(OffsetDateTime timestamp, long idTick, Double open, Double high, Double low, double close, int volume) {
         if (flow.size() > 0) {
             flow.get(0).setNewCandle(false);
             flow.get(0).setIdtick(idTick);
@@ -118,7 +115,7 @@ public class FlowMerger {
         }
     }
 
-    protected void merge(ZonedDateTime timestampTick, long idTick, Double open, Double high, Double low, double close, int volume) {
+    protected void merge(OffsetDateTime timestampTick, long idTick, Double open, Double high, Double low, double close, int volume) {
         if (previousCandle == null) {
             newCandle(timestampTick, timestampTick, idTick, open, high, low, close, volume);
             if (freq == 100000)
@@ -188,7 +185,7 @@ public class FlowMerger {
             long currentStamp = timestampTick.toEpochSecond() * 1000;
             if ((currentStamp - currentStamp % (base)) != stampReference || freq == 0 || flow.size() == 0) {
                 stampReference = currentStamp - currentStamp % (base);
-                ZonedDateTime refDate = ZonedDateTime.ofInstant(Instant.ofEpochSecond(stampReference / 1000), Global.ZONE_ID);
+                OffsetDateTime refDate = OffsetDateTime.ofInstant(Instant.ofEpochSecond(stampReference / 1000), Global.ZONE_ID);
                 flow.get(0).setSmallCandleNoiseRemoval(false);
                 newCandle(refDate,timestampTick, idTick, open, high, low, close, volume);
             } else {
