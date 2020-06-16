@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.sql.*;
 import java.time.Duration;
 import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +34,6 @@ public class Database {
 
     public Database(String databaseName, String port, String username) {
         this.databaseName = databaseName;
-//        LOGGER.info("Creation database " + databaseName);
         connect(databaseName, port, username);
         saverController = new SaverController(this);
     }
@@ -46,7 +44,6 @@ public class Database {
 
 
     public void close() {
-       // LOGGER.info("Closing database " + databaseName);
         try {
             connection.close();
         } catch (SQLException e) {
@@ -554,12 +551,70 @@ public class Database {
         return count;
     }
 
-    public int updateCandles(long idcontract, double adjustment){
+    public int adjustTicks(long idcontract, double adjustment){
         try (Statement statement = this.connection.createStatement()) {
             String sql = "UPDATE public.tick SET close = close + ? WHERE idcontract =?";
+           // System.out.println(sql);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setDouble(1,adjustment);
             preparedStatement.setLong(2, idcontract);
+            int num = preparedStatement.executeUpdate();
+            preparedStatement.close();
+            connection.commit();
+            return num;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int adjustCandles(long idcontract, double adjustment){
+        try (Statement statement = this.connection.createStatement()) {
+            String sql = "UPDATE public.candle SET close = close + ?,open = open + ?,high = high + ?,low = low + ?, close_average = close_average + ? WHERE idcontract =?";
+            // System.out.println(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setDouble(1,adjustment);
+            preparedStatement.setDouble(2,adjustment);
+            preparedStatement.setDouble(3,adjustment);
+            preparedStatement.setDouble(4,adjustment);
+            preparedStatement.setDouble(5,adjustment);
+            preparedStatement.setLong(6, idcontract);
+
+
+            int num = preparedStatement.executeUpdate();
+            preparedStatement.close();
+            connection.commit();
+            return num;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int adjustProcessorState(long idcontract, double adjustment){
+        try (Statement statement = this.connection.createStatement()) {
+            String sql = "UPDATE public.processor_state SET close = close + ?, open = open + ?, high = high + ?, low = low + ?," +
+                    "max = max + ?, max_valid = max_valid + ?, max_value = max_value + ?, " +
+                    "min = min + ?, min_valid= min_valid + ?, min_value = min_value + ?," +
+                    "value = value + ?, target = target + ?, average_close = average_close + ?  WHERE idcontract =?";
+            // System.out.println(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setDouble(1,adjustment);
+            preparedStatement.setDouble(2,adjustment);
+            preparedStatement.setDouble(3,adjustment);
+            preparedStatement.setDouble(4,adjustment);
+            preparedStatement.setDouble(5,adjustment);
+            preparedStatement.setDouble(6,adjustment);
+            preparedStatement.setDouble(7,adjustment);
+            preparedStatement.setDouble(8,adjustment);
+            preparedStatement.setDouble(9,adjustment);
+            preparedStatement.setDouble(10,adjustment);
+            preparedStatement.setDouble(11,adjustment);
+            preparedStatement.setDouble(12,adjustment);
+            preparedStatement.setDouble(13,adjustment);
+            preparedStatement.setLong(14, idcontract);
+
+
             int num = preparedStatement.executeUpdate();
             preparedStatement.close();
             connection.commit();

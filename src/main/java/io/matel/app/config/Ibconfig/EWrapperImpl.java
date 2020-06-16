@@ -166,6 +166,26 @@ historicalDataController.receiveHistoricalDataFromIBEnd();
         dataService.getLiveMarketDataHandler().get(Long.valueOf(tickerId)).tickSize(tickerId, field,size);
     }
 
+
+    @Override
+    public void tickByTickAllLast(int reqId, int tickType, long time, double price, int size, TickAttribLast tickAttribLast, String exchange, String specialConditions) {
+    //    System.out.println(reqId + " " + tickType + " " + time + " " + price + " " + size + " " + exchange + " " + specialConditions);
+        dataService.getLiveMarketDataHandler().get(Long.valueOf(reqId)).tickByTickAllLast(reqId, tickType, time, price, size, tickAttribLast, exchange, specialConditions);
+    }
+
+    @Override
+    public void tickByTickBidAsk(int reqId, long time, double bidPrice, double askPrice, int bidSize, int askSize, TickAttribBidAsk tickAttribBidAsk) {
+     //   System.out.println(reqId + " " + time + " " + bidPrice + " " + askPrice + " " + bidSize + " " + askSize + tickAttribBidAsk.toString());
+        dataService.getLiveMarketDataHandler().get(Long.valueOf(reqId)).tickByTickBidAsk(reqId, time, bidPrice, askPrice, bidSize, askSize, tickAttribBidAsk);
+    }
+
+
+    @Override
+    public void tickByTickMidPoint(int reqId, long time, double midPoint) {
+        // TODO Auto-generated method stub
+
+    }
+
     @Override
     public void tickOptionComputation(int tickerId, int field, double impliedVol, double delta, double optPrice, double pvDividend, double gamma, double vega,
                                       double theta, double undPrice) {
@@ -573,22 +593,6 @@ historicalDataController.receiveHistoricalDataFromIBEnd();
 
     }
 
-    @Override
-    public void tickByTickAllLast(int reqId, int tickType, long time, double price, int size, TickAttribLast tickAttribLast, String exchange, String specialConditions) {
-
-    }
-
-    @Override
-    public void tickByTickBidAsk(int reqId, long time, double bidPrice, double askPrice, int bidSize, int askSize, TickAttribBidAsk tickAttribBidAsk) {
-
-    }
-
-
-    @Override
-    public void tickByTickMidPoint(int reqId, long time, double midPoint) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void orderBound(long orderId, int apiClientId, int apiOrderId) {

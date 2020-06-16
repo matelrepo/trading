@@ -8,6 +8,7 @@ import io.matel.app.controller.ContractController;
 import io.matel.app.controller.HistoricalDataController;
 import io.matel.app.database.Database;
 import io.matel.app.domain.ContractBasic;
+import io.matel.app.domain.GlobalSettings;
 import io.matel.app.domain.HistoricalDataType;
 import io.matel.app.repo.*;
 import io.matel.app.state.GeneratorState;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PreDestroy;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -46,7 +48,9 @@ public class AppController {
 
 
 
-
+@Autowired
+GlobalSettingsRepo globalSettingsRepo;
+Map<Long, Map<Integer, GlobalSettings>> globalSettings = new ConcurrentHashMap<>();
 
     @Autowired
     ProcessorStateRepo processorStateRepo;
@@ -64,6 +68,17 @@ public class AppController {
     private Map<Long, GeneratorState> generatorsState = new ConcurrentHashMap<>();
     private Map<String, ActiveUserEvent> activeUsers = new ConcurrentHashMap<>();  //By SessionId
 
+    public void setGlobalSettings(Long idcontract){
+        Map<Integer, GlobalSettings> settingsMap = new ConcurrentHashMap<>();
+         globalSettingsRepo.findAllByIdcontract(idcontract).forEach(set -> {
+             settingsMap.put(set.getFreq(), set);
+        });
+        globalSettings.put(idcontract,settingsMap);
+    }
+
+    public Map<Long, Map<Integer, GlobalSettings>>  getGlobalSettings(){
+        return globalSettings;
+    }
 
     public Database createDatabase(String databaseName, String port, String username) {
        // database = beanFactory.createDatabaseJdbc(databaseName, port, username);
@@ -75,6 +90,7 @@ public class AppController {
         generator.setGeneratorState();
         if(keep) {
             generators.put(contract.getIdcontract(), generator);
+            setGlobalSettings(contract.getIdcontract());
             //if(contract.getConid()==null && Global.ONLINE) dataService.reqContractDetails(contract);
             generatorsState.put(contract.getIdcontract(), generator.getGeneratorState());
         }

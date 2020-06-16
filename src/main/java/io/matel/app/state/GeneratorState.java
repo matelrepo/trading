@@ -38,7 +38,8 @@ public class GeneratorState {
     private double yearlyMark = 10000; //ok
     private double changeValue; //ok
     private double changePerc; //ok
-
+    @Transient
+private boolean liveQuote = true;
     private int previousVolume = 0;
 
     @Transient
@@ -327,5 +328,13 @@ public class GeneratorState {
 
     public void setSpeedMultiplier(double speedMultiplier) {
         this.speedMultiplier = speedMultiplier;
+    }
+
+    public boolean isLiveQuote() {
+        return liveQuote;
+    }
+
+    public void setLiveQuote(boolean liveQuote) {
+        this.liveQuote = liveQuote;
     }
 }

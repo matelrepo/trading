@@ -56,13 +56,12 @@ public class ContractController {
 
     public List<ContractBasic> initContracts(boolean createGenerator) throws NullPointerException {
         List<ContractBasic> list = new ArrayList<>();
-          list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
+       //   list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
           dailyContracts = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "DAILY");
         for (ContractBasic dailyContract : dailyContracts) {
             dailyContractsBySymbol.put(dailyContract.getSymbol(), dailyContract);
         }
-       // list.add(contractRepository.findByIdcontract(120));
-       // list.add(contractRepository.findByIdcontract(18));
+        list.add(contractRepository.findByIdcontract(5));
 
 
         contracts= list;
@@ -74,7 +73,7 @@ public class ContractController {
         return list;
     }
 
-    public ContractBasic cloneContract(int idcontract) {
+    public ContractBasic cloneContract(int idcontract, long idTick) {
         ContractBasic con =null;
         ContractBasic contract= null;
         for (ContractBasic c : contracts) {
@@ -82,7 +81,7 @@ public class ContractController {
                 contract = c;
         }
         try {
-            AtomicLong tickThreshold = new AtomicLong(133998632L);
+            AtomicLong tickThreshold = new AtomicLong(idTick);
              con = (ContractBasic)  contract.clone();
             con.setIdcontract(idcontract+1000);
             con.setTitle(con.getTitle() + " CLONE");

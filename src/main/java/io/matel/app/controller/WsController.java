@@ -1,8 +1,10 @@
 package io.matel.app.controller;
 
+import io.matel.app.AppController;
 import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
+import io.matel.app.domain.TimeSales;
 import io.matel.app.state.GeneratorState;
 import io.matel.app.state.ProcessorState;
 import io.matel.app.config.tools.MailService;
@@ -24,6 +26,9 @@ public class WsController {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    AppController appController;
+
     public void sendLiveCandle(Candle candle) {
         if (candle != null) {
             String path = "/get/candle-live/" + candle.getIdcontract() + "/" + candle.getFreq();
@@ -40,6 +45,11 @@ public class WsController {
         template.convertAndSend(path, genState);
     }
 
+    public void sendTimeSales(TimeSales timeSale) {
+        String path = ("/get/timesales/" + timeSale.getIdcontract());
+        template.convertAndSend(path, timeSale);
+    }
+
     public void sendPrices(Map<Long, GeneratorState> states) {
         if (states != null) {
             String path = "/get/prices";
@@ -48,12 +58,15 @@ public class WsController {
     }
 
     public void sendEvent(ProcessorState processorState, ContractBasic contract) {
-        if (Global.hasCompletedLoading && processorState.getFreq() > 60 && contract.getIdcontract()<10000) { //10000 EOD reader from website earch box
+        if (Global.hasCompletedLoading && contract.getIdcontract()<10000) { //10000 EOD reader from website search box
             String path = "/get/events";
             template.convertAndSend(path, processorState);
             if (processorState.isTradable()){
+                if(appController.getGlobalSettings().get(contract.getIdcontract()).get(processorState.getFreq()).isEmail()){
                 mailService.sendMessage(processorState, contract);
-                System.out.println("New event -> " + processorState.getEvent() + " " + processorState.toString());
+                }
+                if(appController.getGlobalSettings().get(contract.getIdcontract()).get(processorState.getFreq()).isVoice()){
+                    System.out.println("New event -> " + processorState.getEvent() + " " + processorState.toString());
                 String test = "src/main/resources/audio/" + processorState.getFreq() + processorState.getEvent() + ".mp3";
                 String test2 = "src/main/resources/audio/c" + contract.getIdcontract() + ".mp3";
 
@@ -74,6 +87,7 @@ public class WsController {
                 } catch (Exception e) {
                     System.out.println(e);
                 }
+            }
             }
 
 //        System.out.println("Event sent " + processorState.toString());

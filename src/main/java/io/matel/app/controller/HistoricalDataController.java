@@ -154,7 +154,7 @@ public class HistoricalDataController {
     }
 
     private void loadHistoricalFromEODHistorical(String code) {
-        String query ="https://eodhistoricaldata.com/api/eod/" + code + ".US?api_token=5ebab62db1bc49.83130691&from=2010-01-01&to=" + LocalDate.now() +"&fmt=json";
+        String query ="https://eodhistoricaldata.com/api/eod/" + code + ".US?api_token=5ebab62db1bc49.83130691&from=2005-01-01&to=" + LocalDate.now() +"&fmt=json";
         System.out.println(query);
         var httpRequest = HttpRequest.newBuilder()
                 .uri(URI.create(query))
@@ -212,7 +212,7 @@ public class HistoricalDataController {
             if (appController.getGenerators().get(idcontract) != null) {
              try {
                  if (appController.getGenerators().get(idcontract).getProcessors().get(freq).getFlow().size() > 0) {
-                     LOGGER.info("Historical data from memory for contract " + idcontract + " - freq " + freq);
+                    // LOGGER.info("Historical data from memory for contract " + idcontract + " - freq " + freq);
                      candles.complete(appController.getGenerators().get(idcontract).getProcessors().get(freq).getFlow());
                      sempahore.release();
                      return candles.get();
@@ -226,7 +226,7 @@ public class HistoricalDataController {
         switch (type) {
             case DATABASE:
                 candles.complete(loadHistoricalFromDBB(idcontract, numCandles, freq, maxIdCandle,setCandles));
-                LOGGER.info("Historical data from database for contract " + idcontract+ " - freq " + freq);
+              //  LOGGER.info("Historical data from database for contract " + idcontract+ " - freq " + freq);
                 break;
             case IB:
                 if(generator!=null)
@@ -279,13 +279,13 @@ public class HistoricalDataController {
 
 
     public void computeTicks(Generator generator, long minIdTick) {
-        LOGGER.info("Computing ticks");
+       // LOGGER.info("Computing ticks");
         long id = generator.getContract().getCloneid() < 0 ? generator.getContract().getIdcontract() : generator.getContract().getCloneid();
         generator.getDatabase().getTicksByTable(id, "public.tick", minIdTick, false);
     }
 
     public void computingDeepHistorical(long idcontract, Long idTick, boolean clone) {
-        LOGGER.info("computing historical");
+      //  LOGGER.info("computing historical");
         Database tickDatabase = appController.createDatabase("cleanm", Global.PORT, "atmuser");
         long minIdTick = idTick == null ? 0 : idTick;
         int count = 0;

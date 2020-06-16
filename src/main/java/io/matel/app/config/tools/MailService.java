@@ -29,6 +29,9 @@ public class MailService {
             if(processorState != null && contract != null) {
                 mail.setSubject("(" + processorState.getIdcontract() + ") " + contract.getSymbol() + " >> (" + processorState.getFreq() + ") " + processorState.getEvent());
                 mail.setText((new StringBuilder("Value=")).append(processorState.getValue()).append(" Target=").append(processorState.getTarget()).toString());
+            }else{
+                mail.setSubject("");
+                mail.setText("");
             }
             javaMailSender.send(mail);
         }

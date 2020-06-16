@@ -2,6 +2,8 @@ package io.matel.app;
 
 
 import com.ib.client.TickAttrib;
+import com.ib.client.TickAttribBidAsk;
+import com.ib.client.TickAttribLast;
 import io.matel.app.config.Ibconfig.DataService;
 import io.matel.app.config.Ibconfig.IbClient;
 import io.matel.app.config.Global;
@@ -10,20 +12,23 @@ import io.matel.app.controller.WsController;
 import io.matel.app.database.Database;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.Tick;
+import io.matel.app.domain.TimeSales;
 import io.matel.app.repo.ContractRepository;
 import io.matel.app.repo.GeneratorStateRepo;
 import io.matel.app.repo.ProcessorStateRepo;
+import io.matel.app.repo.TimeSalesRepo;
 import io.matel.app.state.GeneratorState;
 import io.matel.app.config.tools.Utils;
 import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
+import java.text.DateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,6 +68,9 @@ public class Generator implements IbClient, ProcessorListener {
     @Autowired
     ContractController contractController;
 
+    @Autowired
+    TimeSalesRepo timeSalesRepo;
+
     private boolean checkpoint = false;
     private OffsetDateTime checkpoint_stamp = null;
 
@@ -75,6 +83,11 @@ public class Generator implements IbClient, ProcessorListener {
     private Database database;
     private ZonedDateTime dateNow = ZonedDateTime.now();
     private final int[] frequencies;
+
+    Map<Long, TimeSales> tradeCount = new ConcurrentHashMap<>();
+    TimeSales timeSales = new TimeSales();
+    long counter_time=0;
+    long counter_id=0;
 
 
     public Database getDatabase() {
@@ -90,6 +103,7 @@ public class Generator implements IbClient, ProcessorListener {
 
     public Generator(ContractBasic contract, boolean random) {
         this.contract = contract;
+        timeSales.setIdcontract(contract.getIdcontract());
         generatorState = new GeneratorState(contract.getIdcontract(), random, 3000);
         frequencies = new int[]{0, 1, 5, 15, 60, 240, 480, 1380, 6900, 35000, 100000, 300000};
         //frequencies = new int[]{1380, 300000};
@@ -125,19 +139,30 @@ public class Generator implements IbClient, ProcessorListener {
                 while (generatorState.isRandomGenerator()) {
                     double price = 0;
                     if (Math.random() > 0.50) {
-                        price = generatorState.getLastPrice() + contract.getTickSize();
+                        price = Utils.round(generatorState.getLastPrice() + contract.getTickSize(), contract.getRounding());
+                        generatorState.setBid(generatorState.getLastPrice() );
+                        timeSales.setBid(generatorState.getLastPrice());
+                        generatorState.setAsk(price);
+                        timeSales.setAsk(price);
                     } else {
-                        price = generatorState.getLastPrice() - contract.getTickSize();
+                        price = Utils.round(generatorState.getLastPrice() - contract.getTickSize(),contract.getRounding());
+                        generatorState.setBid(price);
+                        generatorState.setAsk(generatorState.getLastPrice() );
+                        timeSales.setBid(price);
+                        timeSales.setAsk(generatorState.getLastPrice() );
                     }
-
+                  //  price = Utils.round(price, contract.getRounding());
                     runPrice(contract.getIdcontract(), 4, price, null);
-                    int volume = rand.nextInt(1000);
-                    runSize(contract.getIdcontract(), 5, volume);
+                   // int volume = rand.nextInt(10);
+                    int volume = 5;
+                    runSize(contract.getIdcontract(), 5, volume, price);
                     int volumeTotal = generatorState.getDailyVolume() + volume;
-                    runSize(contract.getIdcontract(), 8, volumeTotal);
+                  //  runSize(contract.getIdcontract(), 8, volumeTotal, price);
 
                     try {
-                        Thread.sleep(generatorState.getSpeed());
+                       // Thread.sleep(generatorState.getSpeed());
+                        Thread.sleep(2000);
+
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -146,6 +171,8 @@ public class Generator implements IbClient, ProcessorListener {
                 try {
                     if (contract.getIdcontract() > 1) {
                         dataService.reqMktData(contract, this);
+                        if(contract.getIdcontract()==9)
+                        dataService.reqTickByTickData(contract, this);
                     } else {
                         dataService.connectPortfolioUpdate(true);
                     }
@@ -176,10 +203,86 @@ public class Generator implements IbClient, ProcessorListener {
 
     @Override
     public void tickSize(int tickerId, int field, int size) {
-        runSize(tickerId, field, size);
+        runSize(tickerId, field, size, -1);
     }
 
-    private void runSize(long tickerId, int field, int size) {
+    @Override
+    public void tickByTickAllLast(int reqId, int tickType, long time, double price, int size, TickAttribLast tickAttribLast, String exchange, String specialConditions) {
+        // System.out.println(reqId + " " + tickType + " " + time + " " + price + " " + size + " " + exchange + " " + specialConditions);
+        price = Utils.round(price, contract.getRounding());
+        synchronized (this) {
+            if (time != counter_time || timeSales.isNewTrade()) {
+                try {
+                    if (Math.abs(tradeCount.get(timeSales.getId()).getSize()) > 2) {
+                        timeSales.setNewTrade(false);
+                        //Date dateLong = new Date(tradeCount.get(counter_time).time);
+                        //System.out.println(dateLong + " " + tradeCount.get(counter_time).time);
+                        System.out.println("        " + tradeCount.get(timeSales.getId()).toString());
+                        timeSalesRepo.save(tradeCount.get(timeSales.getId()));
+                    }else{
+                        //System.out.println("DISCARD <<<< " + tradeCount.get(timeSales.id).toString());
+                    }
+                } catch (NullPointerException e) {
+                   // counter_time = time;
+                   // e.printStackTrace();
+                }
+                    timeSales.incrementId();
+                timeSales.setPrice(price);
+                timeSales.setWay(timeSales.getBid(), timeSales.getAsk());
+                    if (timeSales.getWay().equals("SELL")) {
+                        timeSales.setSize(- size);
+                    } else if(timeSales.getWay().equals("BUY")) {
+                        timeSales.setSize(size);
+                    }else{
+                        timeSales.setSize(0);
+                    }
+                    timeSales.setTime(time);
+                    counter_time = time;
+                    try {
+                        tradeCount.put(timeSales.getId(), (TimeSales) timeSales.clone());
+                        timeSales.setStart(false);
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+                //    System.out.println("New >> " + timeSales.toString());
+
+
+
+
+
+            } else {
+                try {
+                    if (timeSales.getWay().equals("SELL")) {
+                        tradeCount.get(timeSales.getId()).setSize(tradeCount.get(timeSales.getId()).getSize() - size);
+                    } else {
+                        tradeCount.get(timeSales.getId()).setSize(tradeCount.get(timeSales.getId()).getSize() + size);
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+
+            //    System.out.println("Update >> " + tradeCount.get(timeSales.id).toString());
+
+            }
+        }
+    }
+
+    @Override
+    public void tickByTickBidAsk(int reqId, long time, double bidPrice, double askPrice, int bidSize, int askSize, TickAttribBidAsk tickAttribBidAsk) {
+        if(bidPrice == timeSales.getBid() && askPrice == timeSales.getAsk()){
+        }else{
+            //synchronized(this) {
+               // timeSales.previousBid = timeSales.bid;
+                timeSales.setBid(Utils.round(bidPrice,contract.getRounding()));
+               // timeSales.previousAsk = timeSales.ask;
+                timeSales.setAsk(Utils.round(askPrice,contract.getRounding()));
+                timeSales.setNewTrade(true);
+             //   System.out.println(bidPrice + " -- " + askPrice);
+            //}
+        }
+    }
+
+    private void runSize(long tickerId, int field, int size, double price) {
 
         if (field == 0 || field == 69) {
             generatorState.setBidQuantity(size);
@@ -191,6 +294,7 @@ public class Generator implements IbClient, ProcessorListener {
 
         if (field == 5 || field == 71) {
             generatorState.setTickQuantity(size);
+            //tickByTickAllLast(1, 0, Instant.now().getEpochSecond(), price, size, null, "", "");
         }
 
         if (field == 8 || field == 74) {
@@ -267,6 +371,9 @@ public class Generator implements IbClient, ProcessorListener {
                 case 2:
                     generatorState.setAsk(price);
                     break;
+            }
+            if (generatorState.isLiveQuote() && Global.hasCompletedLoading && generatorState.getSpeedMultiplier() <= 10) {
+                wsController.sendLiveGeneratorState(generatorState);
             }
         }
     }
@@ -354,18 +461,24 @@ public class Generator implements IbClient, ProcessorListener {
     }
 
     public void disconnectMarketData(boolean save) {
+        LOGGER.info("Disconnect data for contract " + contract.getIdcontract());
         if (this.generatorState.getMarketDataStatus() > 0) {
             this.generatorState.setMarketDataStatus(0);
             if (Global.RANDOM)
                 generatorState.setRandomGenerator(false);
-            if (save) {
-                database.getSaverController().saveBatchTicks(true);
-            }
             if (contract.getIdcontract() > 1) {
                 try {
                     this.dataService.cancelMktData(contract, true);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (save) {
+                    database.getSaverController().saveBatchTicks(true);
                 }
             } else {
                 this.dataService.connectPortfolioUpdate(false);
@@ -424,5 +537,7 @@ public class Generator implements IbClient, ProcessorListener {
         }
     }
 }
+
+
 
 

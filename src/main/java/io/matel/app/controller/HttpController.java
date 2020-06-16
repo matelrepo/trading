@@ -10,11 +10,14 @@ import io.matel.app.config.connection.user.UserRepository;
 import io.matel.app.config.tools.MailService;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
+import io.matel.app.domain.GlobalSettings;
 import io.matel.app.domain.HistoricalDataType;
+import io.matel.app.repo.GlobalSettingsRepo;
 import io.matel.app.state.GeneratorState;
 import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jboss.logging.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +49,9 @@ public class HttpController {
 
     @Autowired
     DailyCompute dailyCompute;
+
+    @Autowired
+    GlobalSettingsRepo globalSettingsRepo;
 
 
 
@@ -100,6 +106,7 @@ public class HttpController {
     @GetMapping("/quote-histo/{id}")
     public GeneratorState getGeneratorState(@PathVariable String id){
         long idcontract = Long.valueOf(id);
+        System.out.println(appController.getGenerators().get(idcontract).getGeneratorState().getLastPrice());
         return appController.getGenerators().get(idcontract).getGeneratorState();
     }
 
@@ -116,15 +123,11 @@ public class HttpController {
         appController.disconnectAllMarketData(save);
     }
 
-    @PostMapping("/send-email")
-    public void sendEmail(){
-        mailService.sendMessage(null, null);
-    }
-
-    @PostMapping("/contracts/clone/{id}")
-    public void cloneContract(@PathVariable String id){
+    @PostMapping("/contracts/clone/{id}/{_idTick}")
+    public void cloneContract(@PathVariable String id, @PathVariable String _idTick){
         int idcontract = Integer.valueOf(id);
-        contractController.cloneContract(idcontract);
+        Long idTick = Long.valueOf(_idTick);
+        contractController.cloneContract(idcontract, idTick);
     }
 
     @PostMapping("/contracts/remove/{id}")
@@ -141,12 +144,11 @@ public class HttpController {
     @PostMapping("/connect/{id}")
     public Map<Long, GeneratorState> connectMarketData(@PathVariable String id, @RequestBody String connect) throws ExecutionException, InterruptedException {
         long idcontract = Long.valueOf(id);
-        appController.getDatabase().getSaverController().saveBatchTicks(true);
+       // appController.getDatabase().getSaverController().saveBatchTicks(true);
         if(Boolean.valueOf(connect)) {
             LOGGER.info("Connect data for contract " + idcontract);
             appController.getGenerators().get(idcontract).connectMarketData();
         }else{
-            LOGGER.info("Disconnect data for contract " + idcontract);
             appController.getGenerators().get(idcontract).disconnectMarketData(true);
         }
         return appController.getGeneratorsState();
@@ -166,11 +168,38 @@ public class HttpController {
         appController.getGenerators().get(idcontract).getGeneratorState().setSpeedMultiplier(speed);
     }
 
+    @PostMapping("/update-global-settings")
+    public void updateGlobalSettings(@RequestBody GlobalSettings settings){
+        System.out.println("Updating global settings for contract " + settings.getIdcontract());
+        GlobalSettings sett = appController.getGlobalSettings().get(settings.getIdcontract()).get(settings.getFreq());
+//        appController.getGlobalSettings().get(settings.getIdcontract()).put(settings.getFreq(), settings);
+        sett.setEmail(settings.isEmail());
+        sett.setVoice(settings.isVoice());
+        sett.setTrade(settings.isTrade());
+        globalSettingsRepo.save(sett);
+    }
+
+    @GetMapping("/global-settings/{idc}")
+    public Map<Integer, GlobalSettings> getGlobalSettings(@PathVariable String idc){
+        System.out.println(idc);
+        Long idcontract = Long.valueOf(idc);
+        return appController.getGlobalSettings().get(idcontract);
+    }
+
+
     @PostMapping("/activate-email")
     public void setupGlobalAlert(@RequestBody String _email){
         boolean email = Boolean.valueOf(_email);
         Global.send_email = email;
+        System.out.println(Global.send_email);
     }
+
+    @PostMapping("/send-email")
+    public void sendEmail(){
+//        System.out.println("send email");
+        mailService.sendMessage(null, null);
+    }
+
 
     @PostMapping("/update-eod-batch")
     public void updateEOD(@RequestBody String _date){
@@ -183,15 +212,29 @@ public class HttpController {
     @PostMapping("/save-contract/{adj}")
     public void saveContract(@RequestBody ContractBasic _contract, @PathVariable String adj){
         double adjustment = Double.valueOf(adj);
+        appController.getGenerators().get(_contract.getIdcontract()).disconnectMarketData(true);
         contractController.saveContract(_contract);
         appController.getGenerators().get(_contract.getIdcontract()).setContract(_contract);
         contractController.initContracts(false);
         if(adjustment !=0){
             appController.saveNow();
-            int result = appController.getDatabase().updateCandles(_contract.getIdcontract(), adjustment);
+            int resultTicks = appController.getDatabase().adjustTicks(_contract.getIdcontract(), adjustment);
+            int resultCandles = appController.getDatabase().adjustCandles(_contract.getIdcontract(), adjustment);
+            int resultProcessorState = appController.getDatabase().adjustProcessorState(_contract.getIdcontract(), adjustment);
+            appController.createGenerator(appController.getGenerators().get(_contract.getIdcontract()).getContract(),true);
+            appController.getGenerators().get(_contract.getIdcontract()).getProcessors().forEach((freq, proc)->{
+                proc.getFlow().forEach(candle ->{
+                    candle.setOpen(candle.getOpen()+adjustment);
+                    candle.setHigh(candle.getHigh()+adjustment);
+                    candle.setLow(candle.getLow()+adjustment);
+                    candle.setClose(candle.getClose()+adjustment);
+                    candle.setCloseAverage(candle.getCloseAverage()+adjustment);
+                });
+            });
+
             mailService.sendMessage("(" +_contract.getIdcontract() +") " + _contract.getSymbol() + " adjustment",
-                    "UPDATE trading.data20 set close = close + " + adjustment +";", true);
-            LOGGER.info("Maintenance update database for contract " + _contract.getIdcontract() +" >>> " + result + " entries");
+                    "UPDATE trading.data20 set close = close + " + adjustment +" where contract =" + _contract.getIdcontract() +";", true);
+            LOGGER.info("Maintenance update database for contract " + _contract.getIdcontract() +" >>> " + resultTicks + " ticks " + resultCandles + " candles " + resultProcessorState + " states");
         }
     }
 //

@@ -1,6 +1,8 @@
 package io.matel.app.config.Ibconfig;
 
 
+import com.ib.client.Contract;
+import com.ib.client.TickAttribBidAsk;
 import io.matel.app.AppController;
 import io.matel.app.config.Global;
 import io.matel.app.controller.ContractController;
@@ -74,9 +76,11 @@ public class DataService {
 //
 //    }
 
+
     public void reqHistoricalData(ContractBasic contract){
         eWrapper.getClient().reqHistoricalData((int) contract.getIdcontract(), contractController.contractBasic2ContractIB(contract),
                 "","20 D", "5 mins", "TRADES",0,1,false,null );
+
     }
 
 //    public void reqContractDetails(ContractBasic contract){
@@ -105,6 +109,17 @@ public class DataService {
             liveMarketDataHandler.put(contract.getIdcontract(), handler);
             eWrapper.getClient().reqMktData((int) contract.getIdcontract(), contractController.contractBasic2ContractIB(contract), "", false, false, null);
             numMktDataLines++;
+        }
+    }
+
+
+    public void reqTickByTickData(ContractBasic contract , IbClient handler) {
+        if (Global.ONLINE) {
+            liveMarketDataHandler.put(100000L, handler);
+            liveMarketDataHandler.put(100001L, handler);
+            eWrapper.getClient().reqTickByTickData(100000, contractController.contractBasic2ContractIB(contract), "Last", 0, false);
+            eWrapper.getClient().reqTickByTickData(100001, contractController.contractBasic2ContractIB(contract), "BidAsk", 0, false);
+
         }
     }
 

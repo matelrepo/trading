@@ -7,7 +7,9 @@ import io.matel.app.controller.ContractController;
 import io.matel.app.controller.HistoricalDataController;
 import io.matel.app.controller.WsController;
 import io.matel.app.database.Database;
+import io.matel.app.domain.GlobalSettings;
 import io.matel.app.domain.HistoricalDataType;
+import io.matel.app.repo.GlobalSettingsRepo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -26,7 +27,6 @@ import java.util.concurrent.*;
 public class AppLauncher implements CommandLineRunner {
 
     private static final Logger LOGGER = LogManager.getLogger(AppLauncher.class);
-   // private ExecutorService executor = Executors.newFixedThreadPool(100);
     private AppController appController;
     private WsController wsController;
     private ConcurrentHashMap<Long, LoadingErrorHandler> errors = new ConcurrentHashMap();
@@ -49,6 +49,9 @@ public class AppLauncher implements CommandLineRunner {
 
     @Autowired
     HistoricalDataController historicalDataController;
+
+    @Autowired
+    GlobalSettingsRepo globalSettingsRepo;
 
     DataService dataService;
 
@@ -114,9 +117,25 @@ public class AppLauncher implements CommandLineRunner {
 //                    }
 //                });
 //                }).start();
+//            appController.getGenerators().forEach((id, generator) -> {
+//                    generator.getProcessors().forEach((freq, proc)->{
+//                        if(freq>=240) {
+//                            globalSettingsRepo.save(new GlobalSettings(global.getIdTick(true), 1, generator.getContract().getIdcontract(),
+//                                    freq, true, true, false));
+//                            globalSettingsRepo.save(new GlobalSettings(global.getIdTick(true), 2, generator.getContract().getIdcontract(),
+//                                    freq, true, true, false));
+//                        }else{
+//                            globalSettingsRepo.save(new GlobalSettings(global.getIdTick(true), 1, generator.getContract().getIdcontract(),
+//                                    freq, false, false, false));
+//                            globalSettingsRepo.save(new GlobalSettings(global.getIdTick(true), 2, generator.getContract().getIdcontract(),
+//                                    freq, false, false, false));
+//                        }
+//                });
+//            });
+//
+//            System.out.println("done");
 
-
-            int tmp = 1;
+                int tmp = 1;
             if (tmp > 0) {
                 if (Global.READ_ONLY_TICKS) {
                     LOGGER.warn(">>> Read only lock! <<<");

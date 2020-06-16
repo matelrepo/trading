@@ -1,121 +1,65 @@
-2020-06-09 10:02:43,070 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Lenovo-PC with PID 1788 (C:\Users\user\IdeaProjects\trading\target\classes started by Matel in C:\Users\user\IdeaProjects\trading)
-2020-06-09 10:02:43,087 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
-2020-06-09 10:02:44,252 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
-2020-06-09 10:02:44,379 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 118ms. Found 6 repository interfaces.
-2020-06-09 10:02:44,820 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$8f4dc304] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-06-09 10:02:45,423 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
-2020-06-09 10:02:45,440 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
-2020-06-09 10:02:45,451 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
-2020-06-09 10:02:45,452 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
-2020-06-09 10:02:45,618 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
-2020-06-09 10:02:45,618 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 2432 ms
-2020-06-09 10:02:45,820 WARN c.z.h.HikariConfig [main] HikariPool-1 - maxLifetime is less than 30000ms, setting to default 1800000ms.
-2020-06-09 10:02:45,820 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
-2020-06-09 10:02:45,931 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
-2020-06-09 10:02:45,994 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
+2020-06-16 17:53:57,488 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Lenovo-PC with PID 13660 (C:\Users\user\IdeaProjects\trading\target\classes started by Matel in C:\Users\user\IdeaProjects\trading)
+2020-06-16 17:53:57,497 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
+2020-06-16 17:53:58,408 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-06-16 17:53:58,519 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 104ms. Found 8 repository interfaces.
+2020-06-16 17:53:58,893 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$218a3006] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-06-16 17:53:59,126 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
+2020-06-16 17:53:59,141 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2020-06-16 17:53:59,151 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2020-06-16 17:53:59,152 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
+2020-06-16 17:53:59,299 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2020-06-16 17:53:59,300 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1739 ms
+2020-06-16 17:53:59,456 WARN c.z.h.HikariConfig [main] HikariPool-1 - maxLifetime is less than 30000ms, setting to default 1800000ms.
+2020-06-16 17:53:59,457 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2020-06-16 17:53:59,544 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2020-06-16 17:53:59,598 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
 	name: default
 	...]
-2020-06-09 10:02:46,083 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
-2020-06-09 10:02:46,087 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
-2020-06-09 10:02:46,243 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
-2020-06-09 10:02:46,381 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2020-06-09 10:02:46,511 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
-2020-06-09 10:02:46,518 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@6e46891d
-2020-06-09 10:02:46,858 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
-2020-06-09 10:02:47,232 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.config.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
-2020-06-09 10:02:47,479 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2020-06-09 10:02:48,179 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
-2020-06-09 10:02:48,184 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
-2020-06-09 10:02:48,455 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5248c05a, org.springframework.security.web.context.SecurityContextPersistenceFilter@46df794e, org.springframework.security.web.header.HeaderWriterFilter@1735e1c4, org.springframework.web.filter.CorsFilter@151f1734, org.springframework.security.web.authentication.logout.LogoutFilter@49faf815, io.matel.app.config.connection.security.JwtAuthenticationFilter@601e7c97, io.matel.app.config.connection.security.JwtAuthorizationFilter@c8ed958, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6cd65042, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@733e3c19, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@18d09283, org.springframework.security.web.session.SessionManagementFilter@7da9b32c, org.springframework.security.web.access.ExceptionTranslationFilter@1d0fc0bc, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@1e37cb10]
-2020-06-09 10:02:48,469 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
-2020-06-09 10:02:48,492 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
-2020-06-09 10:02:48,723 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2020-06-09 10:02:48,928 INFO o.s.c.l.CompositeLog [main] Starting...
-2020-06-09 10:02:48,929 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2020-06-09 10:02:48,931 INFO o.s.c.l.CompositeLog [main] Started.
-2020-06-09 10:02:48,944 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
-2020-06-09 10:02:48,958 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
-2020-06-09 10:02:48,960 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplication in 6.669 seconds (JVM running for 7.95)
-2020-06-09 10:02:48,964 INFO i.m.a.AppLauncher [main] Starting with 8 cores
-2020-06-09 10:02:49,032 INFO i.m.a.c.I.EWrapperImpl [main] >>> IB CONNECTED
-2020-06-09 10:02:49,116 INFO o.h.h.i.QueryTranslatorFactoryInitiator [Thread-6] HHH000397: Using ASTQueryTranslatorFactory
-2020-06-09 10:02:49,777 INFO i.m.a.AppLauncher [Thread-6] 100 contracts live found
-2020-06-09 10:02:49,777 INFO i.m.a.AppLauncher [Thread-6] 8385 contracts daily found
-2020-06-09 10:02:49,802 INFO i.m.a.AppLauncher [Thread-6] Setting up last id tick: 187159442
-2020-06-09 10:02:49,803 INFO i.m.a.AppLauncher [Thread-6] Setting up last id candle: 113364570
-2020-06-09 10:02:49,803 INFO i.m.a.AppLauncher [Thread-6] Loading historical candles...
-2020-06-09 10:02:54,158 WARN i.m.a.AppLauncher [Thread-7] Error: LoadingErrorHandler{idcontract=2, lastTickByContract=null, numTicksBreaking=4, lastCandleId=186932444, minTickIdBreaking=186932444, errorDetected=true}
-2020-06-09 10:02:54,165 INFO i.m.a.AppLauncher [Thread-7] Loading completed for contract 2
-2020-06-09 10:02:54,168 INFO i.m.a.AppLauncher [Thread-7] Remaining contracts 99/100
-2020-06-09 10:02:54,223 INFO i.m.a.c.I.DataService [SX7E.EUR.2] Requesting market data for contract 2
-2020-06-09 10:02:54,463 WARN i.m.a.AppLauncher [Thread-9] Error: LoadingErrorHandler{idcontract=4, lastTickByContract=null, numTicksBreaking=5, lastCandleId=186946203, minTickIdBreaking=186946203, errorDetected=true}
-2020-06-09 10:02:54,464 INFO i.m.a.AppLauncher [Thread-9] Loading completed for contract 4
-2020-06-09 10:02:54,465 INFO i.m.a.AppLauncher [Thread-9] Remaining contracts 98/100
-2020-06-09 10:02:54,478 WARN i.m.a.AppLauncher [Thread-8] Error: LoadingErrorHandler{idcontract=3, lastTickByContract=null, numTicksBreaking=4, lastCandleId=186932386, minTickIdBreaking=186932386, errorDetected=true}
-2020-06-09 10:02:54,479 INFO i.m.a.AppLauncher [Thread-8] Loading completed for contract 3
-2020-06-09 10:02:54,479 INFO i.m.a.AppLauncher [Thread-8] Remaining contracts 97/100
-2020-06-09 10:02:54,516 INFO i.m.a.c.I.DataService [VIX.USD.4] Requesting market data for contract 4
-2020-06-09 10:02:54,530 INFO i.m.a.c.I.DataService [GBL.EUR.3] Requesting market data for contract 3
-2020-06-09 10:02:54,587 WARN i.m.a.AppLauncher [Thread-13] Error: LoadingErrorHandler{idcontract=7, lastTickByContract=null, numTicksBreaking=3, lastCandleId=186946108, minTickIdBreaking=186946108, errorDetected=true}
-2020-06-09 10:02:54,588 INFO i.m.a.AppLauncher [Thread-13] Loading completed for contract 7
-2020-06-09 10:02:54,589 INFO i.m.a.AppLauncher [Thread-13] Remaining contracts 96/100
-2020-06-09 10:02:54,639 INFO i.m.a.c.I.DataService [ZN.USD.7] Requesting market data for contract 7
-2020-06-09 10:02:54,685 WARN i.m.a.AppLauncher [Thread-20] Error: LoadingErrorHandler{idcontract=12, lastTickByContract=null, numTicksBreaking=5, lastCandleId=186302984, minTickIdBreaking=186302984, errorDetected=true}
-2020-06-09 10:02:54,686 INFO i.m.a.AppLauncher [Thread-20] Loading completed for contract 12
-2020-06-09 10:02:54,687 INFO i.m.a.AppLauncher [Thread-20] Remaining contracts 95/100
-2020-06-09 10:02:54,739 INFO i.m.a.c.I.DataService [3188.HKD.12] Requesting market data for contract 12
-2020-06-09 10:02:54,963 WARN i.m.a.AppLauncher [Thread-22] Error: LoadingErrorHandler{idcontract=13, lastTickByContract=null, numTicksBreaking=2, lastCandleId=186809870, minTickIdBreaking=186809870, errorDetected=true}
-2020-06-09 10:02:54,963 INFO i.m.a.AppLauncher [Thread-22] Loading completed for contract 13
-2020-06-09 10:02:54,964 INFO i.m.a.AppLauncher [Thread-22] Remaining contracts 94/100
-2020-06-09 10:02:55,014 INFO i.m.a.c.I.DataService [CC.USD.13] Requesting market data for contract 13
-2020-06-09 10:02:55,268 WARN i.m.a.AppLauncher [Thread-16] Error: LoadingErrorHandler{idcontract=10, lastTickByContract=null, numTicksBreaking=5, lastCandleId=186946001, minTickIdBreaking=186946001, errorDetected=true}
-2020-06-09 10:02:55,268 INFO i.m.a.AppLauncher [Thread-16] Loading completed for contract 10
-2020-06-09 10:02:55,269 INFO i.m.a.AppLauncher [Thread-16] Remaining contracts 93/100
-2020-06-09 10:02:55,328 INFO i.m.a.c.I.DataService [NG.USD.10] Requesting market data for contract 10
-2020-06-09 10:02:55,476 INFO i.m.a.c.HistoricalDataController [Thread-30] Historical data from database for contract 16 - freq 480
-2020-06-09 10:02:55,666 WARN i.m.a.AppLauncher [Thread-24] Error: LoadingErrorHandler{idcontract=14, lastTickByContract=null, numTicksBreaking=5, lastCandleId=186845394, minTickIdBreaking=186845394, errorDetected=true}
-2020-06-09 10:02:55,666 INFO i.m.a.AppLauncher [Thread-24] Loading completed for contract 14
-2020-06-09 10:02:55,667 INFO i.m.a.AppLauncher [Thread-24] Remaining contracts 92/100
-2020-06-09 10:02:55,719 INFO i.m.a.c.I.DataService [CT.USD.14] Requesting market data for contract 14
-2020-06-09 10:02:55,796 WARN i.m.a.AppLauncher [Thread-11] Error: LoadingErrorHandler{idcontract=5, lastTickByContract=null, numTicksBreaking=5, lastCandleId=186946131, minTickIdBreaking=186946131, errorDetected=true}
-2020-06-09 10:02:55,796 INFO i.m.a.AppLauncher [Thread-11] Loading completed for contract 5
-2020-06-09 10:02:55,797 INFO i.m.a.AppLauncher [Thread-11] Remaining contracts 91/100
-2020-06-09 10:02:55,804 WARN i.m.a.AppLauncher [Thread-12] Error: LoadingErrorHandler{idcontract=6, lastTickByContract=null, numTicksBreaking=4, lastCandleId=186946125, minTickIdBreaking=186946125, errorDetected=true}
-2020-06-09 10:02:55,805 INFO i.m.a.AppLauncher [Thread-12] Loading completed for contract 6
-2020-06-09 10:02:55,806 INFO i.m.a.AppLauncher [Thread-12] Remaining contracts 90/100
-2020-06-09 10:02:55,847 INFO i.m.a.c.I.DataService [ES.USD.5] Requesting market data for contract 5
-2020-06-09 10:02:55,856 INFO i.m.a.c.I.DataService [NQ.USD.6] Requesting market data for contract 6
-2020-06-09 10:02:55,864 WARN i.m.a.AppLauncher [Thread-14] Error: LoadingErrorHandler{idcontract=8, lastTickByContract=null, numTicksBreaking=6, lastCandleId=186946117, minTickIdBreaking=186946117, errorDetected=true}
-2020-06-09 10:02:55,865 INFO i.m.a.AppLauncher [Thread-14] Loading completed for contract 8
-2020-06-09 10:02:55,865 INFO i.m.a.AppLauncher [Thread-14] Remaining contracts 89/100
-2020-06-09 10:02:55,881 WARN i.m.a.AppLauncher [Thread-42] Error: LoadingErrorHandler{idcontract=17, lastTickByContract=null, numTicksBreaking=2, lastCandleId=186770305, minTickIdBreaking=186770305, errorDetected=true}
-2020-06-09 10:02:55,882 INFO i.m.a.AppLauncher [Thread-42] Loading completed for contract 17
-2020-06-09 10:02:55,882 INFO i.m.a.AppLauncher [Thread-42] Remaining contracts 88/100
-2020-06-09 10:02:55,900 WARN i.m.a.AppLauncher [Thread-19] Error: LoadingErrorHandler{idcontract=11, lastTickByContract=null, numTicksBreaking=4, lastCandleId=186934849, minTickIdBreaking=186934849, errorDetected=true}
-2020-06-09 10:02:55,901 INFO i.m.a.AppLauncher [Thread-19] Loading completed for contract 11
-2020-06-09 10:02:55,901 INFO i.m.a.AppLauncher [Thread-19] Remaining contracts 87/100
-2020-06-09 10:02:55,907 WARN i.m.a.AppLauncher [Thread-15] Error: LoadingErrorHandler{idcontract=9, lastTickByContract=null, numTicksBreaking=5, lastCandleId=186946118, minTickIdBreaking=186946118, errorDetected=true}
-2020-06-09 10:02:55,907 INFO i.m.a.AppLauncher [Thread-15] Loading completed for contract 9
-2020-06-09 10:02:55,908 INFO i.m.a.AppLauncher [Thread-15] Remaining contracts 86/100
-2020-06-09 10:02:55,916 INFO i.m.a.c.I.DataService [CL.USD.8] Requesting market data for contract 8
-2020-06-09 10:02:55,923 WARN i.m.a.AppLauncher [Thread-26] Error: LoadingErrorHandler{idcontract=15, lastTickByContract=null, numTicksBreaking=4, lastCandleId=186946233, minTickIdBreaking=186946233, errorDetected=true}
-2020-06-09 10:02:55,923 INFO i.m.a.AppLauncher [Thread-26] Loading completed for contract 15
-2020-06-09 10:02:55,924 INFO i.m.a.AppLauncher [Thread-26] Remaining contracts 85/100
-2020-06-09 10:02:55,933 INFO i.m.a.c.I.DataService [ECO.EUR.17] Requesting market data for contract 17
-2020-06-09 10:02:55,953 INFO i.m.a.c.I.DataService [DAX.EUR.11] Requesting market data for contract 11
-2020-06-09 10:02:55,959 INFO i.m.a.c.I.DataService [GC.USD.9] Requesting market data for contract 9
-2020-06-09 10:02:55,975 INFO i.m.a.c.I.DataService [DX.USD.15] Requesting market data for contract 15
-2020-06-09 10:02:56,279 WARN i.m.a.AppLauncher [Thread-55] Error: LoadingErrorHandler{idcontract=23, lastTickByContract=null, numTicksBreaking=2, lastCandleId=186831390, minTickIdBreaking=186831390, errorDetected=true}
-2020-06-09 10:02:56,280 INFO i.m.a.AppLauncher [Thread-55] Loading completed for contract 23
-2020-06-09 10:02:56,280 INFO i.m.a.AppLauncher [Thread-55] Remaining contracts 84/100
-2020-06-09 10:02:56,315 WARN i.m.a.AppLauncher [Thread-53] Error: LoadingErrorHandler{idcontract=21, lastTickByContract=null, numTicksBreaking=4, lastCandleId=186809927, minTickIdBreaking=186809927, errorDetected=true}
-2020-06-09 10:02:56,317 INFO i.m.a.AppLauncher [Thread-53] Loading completed for contract 21
-2020-06-09 10:02:56,317 INFO i.m.a.AppLauncher [Thread-53] Remaining contracts 83/100
-2020-06-09 10:02:56,331 INFO i.m.a.c.I.DataService [OJ.USD.23] Requesting market data for contract 23
-2020-06-09 10:02:56,368 INFO i.m.a.c.I.DataService [KC.USD.21] Requesting market data for contract 21
-2020-06-09 10:02:56,545 WARN i.m.a.AppLauncher [Thread-84] Error: LoadingErrorHandler{idcontract=26, lastTickByContract=null, numTicksBreaking=6, lastCandleId=186694783, minTickIdBreaking=186694783, errorDetected=true}
-2020-06-09 10:02:56,545 WARN i.m.a.AppLauncher [Thread-83] Error: LoadingErrorHandler{idcontract=25, lastTickByContract=null, numTicksBreaking=4, lastCandleId=186790810, minTickIdBreaking=186790810, errorDetected=true}
-2020-06-09 10:02:56,546 INFO i.m.a.AppLauncher [Thread-84] Loading completed for contract 26
-2020-06-09 10:02:56,546 INFO i.m.a.AppLauncher [Thread-84] Remaining contracts 82/100
-2020-06-09 10:02:56,547 INFO i.m.a.AppLauncher [Thread-83] Loading completed for contract 25
-2020-06-09 10:02:56,547 INFO i.m.a.AppLauncher [Thread-83] Remaining contracts 81/100
+2020-06-16 17:53:59,665 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
+2020-06-16 17:53:59,667 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
+2020-06-16 17:53:59,795 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2020-06-16 17:54:00,063 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2020-06-16 17:54:00,156 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
+2020-06-16 17:54:00,162 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@134d7ffa
+2020-06-16 17:54:00,445 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
+2020-06-16 17:54:00,778 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.config.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
+2020-06-16 17:54:00,974 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2020-06-16 17:54:01,614 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
+2020-06-16 17:54:01,618 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
+2020-06-16 17:54:01,852 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@29a5f924, org.springframework.security.web.context.SecurityContextPersistenceFilter@2e60d4f4, org.springframework.security.web.header.HeaderWriterFilter@233d2b76, org.springframework.web.filter.CorsFilter@5f6ba085, org.springframework.security.web.authentication.logout.LogoutFilter@6bf70600, io.matel.app.config.connection.security.JwtAuthenticationFilter@7e1ce99c, io.matel.app.config.connection.security.JwtAuthorizationFilter@26f7b114, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@45ecdd32, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@38326fd5, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@209d0037, org.springframework.security.web.session.SessionManagementFilter@2a9f7572, org.springframework.security.web.access.ExceptionTranslationFilter@580e01cd, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@4411a0fe]
+2020-06-16 17:54:01,867 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
+2020-06-16 17:54:01,886 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
+2020-06-16 17:54:02,081 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2020-06-16 17:54:02,239 INFO o.s.c.l.CompositeLog [main] Starting...
+2020-06-16 17:54:02,239 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+2020-06-16 17:54:02,240 INFO o.s.c.l.CompositeLog [main] Started.
+2020-06-16 17:54:02,251 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2020-06-16 17:54:02,263 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
+2020-06-16 17:54:02,266 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplication in 5.39 seconds (JVM running for 6.634)
+2020-06-16 17:54:02,268 INFO i.m.a.AppLauncher [main] Starting with 8 cores
+2020-06-16 17:54:02,295 INFO i.m.a.c.I.EWrapperImpl [main] >>> IB CONNECTED
+2020-06-16 17:54:02,363 INFO o.h.h.i.QueryTranslatorFactoryInitiator [Thread-6] HHH000397: Using ASTQueryTranslatorFactory
+2020-06-16 17:54:02,705 INFO i.m.a.AppLauncher [Thread-6] 1 contracts live found
+2020-06-16 17:54:02,705 INFO i.m.a.AppLauncher [Thread-6] 8385 contracts daily found
+2020-06-16 17:54:02,712 INFO i.m.a.AppLauncher [Thread-6] Setting up last id tick: 191819532
+2020-06-16 17:54:02,712 INFO i.m.a.AppLauncher [Thread-6] Setting up last id candle: 115150036
+2020-06-16 17:54:02,712 WARN i.m.a.AppLauncher [Thread-6] >>> Read only lock! <<<
+2020-06-16 17:54:03,603 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-06-16 17:54:03,604 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2020-06-16 17:54:03,611 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 7 ms
+2020-06-16 17:54:03,766 INFO i.m.a.c.c.a.ActiveUserEvent [http-nio-8080-exec-1] UserActivityEvent{type='login', username='matel', eventSessionId='2b0123a2-f7cf-514e-1122-568c7e918b6a', timestamp=2020-06-16T17:54:03.758817600+02:00[Europe/Paris]}
+2020-06-16 17:54:06,901 INFO i.m.a.AppLauncher [Thread-6] Loading historical candles...
+2020-06-16 17:54:09,476 WARN i.m.a.c.I.EWrapperImpl [Thread-6] >>> ERROR >>> -1 2158 Sec-def data farm connection is OK:secdefhk
+2020-06-16 17:54:09,480 INFO i.m.a.c.I.EWrapperImpl [Thread-6] End Download: U2629343
+2020-06-16 17:54:09,481 WARN i.m.a.c.I.EWrapperImpl [Thread-6] >>> ERROR >>> 17001 321 Error validating request:-'cq' : cause - Invalid account code
+2020-06-16 17:54:13,562 INFO i.m.a.d.SaverController [Thread-8] Saving now 0 ticks for contract 5
+2020-06-16 17:54:13,567 INFO i.m.a.AppLauncher [Thread-8] Loading completed for contract 5
+2020-06-16 17:54:13,570 INFO i.m.a.AppLauncher [Thread-8] Remaining contracts 0/1
+2020-06-16 17:54:13,570 INFO i.m.a.AppLauncher [Thread-8] All completed
+2020-06-16 17:54:13,618 INFO i.m.a.c.I.DataService [ES.USD.5] Requesting market data for contract 5
+2020-06-16 17:54:19,907 INFO i.m.a.c.c.a.ActiveUserEvent [http-nio-8080-exec-2] UserActivityEvent{type='logout', username='matel', eventSessionId='2b0123a2-f7cf-514e-1122-568c7e918b6a', timestamp=2020-06-16T17:54:19.907032700+02:00[Europe/Paris]}
+2020-06-16 17:54:21,281 INFO i.m.a.c.HttpController [http-nio-8080-exec-6] Sending (1) contracts live
+2020-06-16 17:54:21,597 INFO i.m.a.c.c.a.ActiveUserEvent [http-nio-8080-exec-7] UserActivityEvent{type='login', username='matel', eventSessionId='5ad0d6b1-3153-4c36-2772-5423fd9bf6dd', timestamp=2020-06-16T17:54:21.597363400+02:00[Europe/Paris]}
+2020-06-16 17:55:23,763 INFO i.m.a.c.c.a.ActiveUserEvent [http-nio-8080-exec-10] UserActivityEvent{type='logout', username='matel', eventSessionId='5ad0d6b1-3153-4c36-2772-5423fd9bf6dd', timestamp=2020-06-16T17:55:23.763471300+02:00[Europe/Paris]}
+2020-06-16 17:55:25,122 INFO i.m.a.c.HttpController [http-nio-8080-exec-7] Sending (1) contracts live
+2020-06-16 17:55:25,422 INFO i.m.a.c.c.a.ActiveUserEvent [http-nio-8080-exec-9] UserActivityEvent{type='login', username='matel', eventSessionId='b1723590-c98c-8596-1fac-d791a184fc04', timestamp=2020-06-16T17:55:25.422518600+02:00[Europe/Paris]}
