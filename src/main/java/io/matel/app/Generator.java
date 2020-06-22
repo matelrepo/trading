@@ -10,6 +10,7 @@ import io.matel.app.config.Global;
 import io.matel.app.controller.ContractController;
 import io.matel.app.controller.WsController;
 import io.matel.app.database.Database;
+import io.matel.app.database.SaverController;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.Tick;
 import io.matel.app.domain.TimeSales;
@@ -23,12 +24,9 @@ import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.text.DateFormat;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -71,9 +69,37 @@ public class Generator implements IbClient, ProcessorListener {
     @Autowired
     TimeSalesRepo timeSalesRepo;
 
+    @Autowired
+    SaverController saverController;
+
+    public Map<Integer, ProcessorState> getStates() {
+        return states;
+    }
+
+    private Map<Integer, ProcessorState> states = new HashMap<>();
+
     private boolean checkpoint = false;
     private OffsetDateTime checkpoint_stamp = null;
 
+    public boolean isHedgeLongEvent() {
+        return hedgeLongEvent;
+    }
+
+    public void setHedgeLongEvent(boolean hedgeLongEvent) {
+        this.hedgeLongEvent = hedgeLongEvent;
+    }
+
+    private boolean hedgeLongEvent = false;
+
+    public boolean isHedgeShortEvent() {
+        return hedgeShortEvent;
+    }
+
+    public void setHedgeShortEvent(boolean hedgeShortEvent) {
+        this.hedgeShortEvent = hedgeShortEvent;
+    }
+
+    private boolean hedgeShortEvent = false;
 
     private ContractBasic contract;
     private List<Tick> flowLive = new ArrayList<>();
@@ -81,7 +107,7 @@ public class Generator implements IbClient, ProcessorListener {
     private Map<Integer, Processor> processors = new ConcurrentHashMap<>();
     private GeneratorState generatorState;
     private Database database;
-    private ZonedDateTime dateNow = ZonedDateTime.now();
+    private OffsetDateTime dateNow = OffsetDateTime.now();
     private final int[] frequencies;
 
     Map<Long, TimeSales> tradeCount = new ConcurrentHashMap<>();
@@ -92,7 +118,7 @@ public class Generator implements IbClient, ProcessorListener {
 
     public Database getDatabase() {
         if (database == null)
-            database = appController.createDatabase("matel", Global.PORT, "matel");
+            database = appController.getDatabase();
         return database;
     }
 
@@ -111,7 +137,7 @@ public class Generator implements IbClient, ProcessorListener {
     }
 
     public void initDatabase() {
-        database = appController.createDatabase("matel", Global.PORT, "matel");
+        database = appController.getDatabase();
     }
 
     public void connectMarketData() throws ExecutionException, InterruptedException {
@@ -354,7 +380,7 @@ public class Generator implements IbClient, ProcessorListener {
                             if (flowDelayed.size() > Global.MAX_LENGTH_TICKS) {
                                 flowDelayed.remove(Global.MAX_LENGTH_TICKS);
                             }
-                            int count = getDatabase().getSaverController().saveBatchTicks(flowDelayed.get(0), false);
+                            int count = saverController.saveBatchTicks(flowDelayed.get(0), false);
                             if (count > 0)
                                 appController.getGeneratorsState().forEach((id, state) -> {
                                     generatorStateRepo.save(state);
@@ -397,6 +423,7 @@ public class Generator implements IbClient, ProcessorListener {
 //        });
         updateGeneratorState(tick);
         if (checkpoint && (Global.COMPUTE_DEEP_HISTORICAL || Global.hasCompletedLoading)) {
+//            System.out.println("coucou");
             synchronized (this) {
                 processors.forEach((freq, proc) -> {
                     if (freq > 0) {
@@ -404,11 +431,18 @@ public class Generator implements IbClient, ProcessorListener {
                             proc.getFlow().get(0).setCheckpoint(true);
                         try {
                             ProcessorState state = (ProcessorState) proc.getProcessorState().clone();
-                            if(state.getTimestampTick()==null)
+//                            Event event = (Event) proc.getProcessorState().getEvent().clone();
+//                            state.setEvent(event);
+//                            ProcessorState state = proc.getProcessorState();
+
+                            if(state.getTimestampTick()==null) {
                                 state.setTimestampTick(checkpoint_stamp);
+                                state.setTimestampTick(checkpoint_stamp);
+                            }
                             if(state.getTimestampCandle()==null)
                                 state.setTimestampCandle(checkpoint_stamp);
-                            database.getSaverController().saveBatchProcessorState(state, false);
+                            processorStateRepo.save(state);
+//                            database.getSaverController().saveBatchProcessorState(state, false);
                         } catch (CloneNotSupportedException e) {
                             e.printStackTrace();
                         }
@@ -478,7 +512,7 @@ public class Generator implements IbClient, ProcessorListener {
                     e.printStackTrace();
                 }
                 if (save) {
-                    database.getSaverController().saveBatchTicks(true);
+                   saverController.saveBatchTicks(true);
                 }
             } else {
                 this.dataService.connectPortfolioUpdate(false);
@@ -530,10 +564,12 @@ public class Generator implements IbClient, ProcessorListener {
 
     @Override
     public void notifyEvent(ProcessorState state) {
-        if (Global.COMPUTE_DEEP_HISTORICAL && state.getTimestampTick().until(dateNow, ChronoUnit.DAYS) > 80) {
+        if (Global.COMPUTE_DEEP_HISTORICAL && (state.getTimestampTick().until(dateNow, ChronoUnit.DAYS) > 80)) {
         } else {
-            checkpoint = true;
-            checkpoint_stamp = state.getTimestampTick();
+            if(state.getFreq()>15) {
+                checkpoint = true;
+                checkpoint_stamp = state.getTimestampTick();
+            }
         }
     }
 }

@@ -6,13 +6,13 @@ import java.time.ZoneId;
 
 @Configuration
 public class Global {
-    public static final boolean ONLINE = true;
+    public static final boolean ONLINE = false;
     public static final boolean RANDOM = false;
     public static final boolean HISTO = false;
     public static final boolean READ_ONLY_TICKS = true;
-    public static final boolean READ_ONLY_CANDLES = true;
-    public static final boolean READ_ONLY_PROCESSOR_STATE = true;
-    public static final boolean COMPUTE_DEEP_HISTORICAL = false;
+    public static final boolean READ_ONLY_CANDLES = false;
+    public static final boolean READ_ONLY_PROCESSOR_STATE = false;
+    public static final boolean COMPUTE_DEEP_HISTORICAL = true;
 
     public static final String PORT = "5432";
     //public static final String ACCOUNT_NUMBER ="U2629343";

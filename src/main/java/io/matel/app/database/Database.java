@@ -3,16 +3,17 @@ package io.matel.app.database;
 import io.matel.app.AppController;
 import io.matel.app.config.Global;
 import io.matel.app.domain.Candle;
+import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.EventType;
 import io.matel.app.domain.Tick;
 import io.matel.app.state.ProcessorState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.assertj.core.data.Offset;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.*;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,12 +36,17 @@ public class Database {
     public Database(String databaseName, String port, String username) {
         this.databaseName = databaseName;
         connect(databaseName, port, username);
-        saverController = new SaverController(this);
+//        saverController = new SaverController(this);
     }
 
-    public SaverController getSaverController() {
-        return saverController;
+    public void setSaverController(SaverController saverController){
+        this.saverController= saverController;
+
     }
+
+//    public SaverController getSaverController() {
+//        return saverController;
+//    }
 
 
     public void close() {
@@ -177,6 +183,26 @@ public class Database {
         return idTick;
     }
 
+    public List<ContractBasic> getExpirationReport() {
+        List<ContractBasic> contracts = new ArrayList<>();
+        try {
+            String sql = "SELECT idcontract, symbol, title, expiration, first_notice, sec_type, exchange FROM public.contracts WHERE active order by first_notice limit 2;";
+            System.out.println(sql);
+            ResultSet rs = connection.createStatement().executeQuery(sql);
+            while (rs.next()) {
+                contracts.add(new ContractBasic(rs.getLong(1), rs.getString(2), rs.getString(3) ,
+                        rs.getObject(4, LocalDate.class), rs.getObject(5, LocalDate.class),
+                        rs.getString(6), rs.getString(7)));
+            }
+        } catch (SQLException e) {
+        }
+
+        for (ContractBasic contract : contracts) {
+            System.out.println(contract.toString());
+        }
+        return contracts;
+    }
+
 
 //    public Map<Integer, Long > getIdCandlesTable(Long idTick, long idContract) {
 //            Map<Integer, Long> idCandlesByFreq = new ConcurrentHashMap<>();
@@ -224,60 +250,60 @@ public class Database {
         return idCandlesByFreq;
     }
 
-    public Map<Integer, ProcessorState > getProcessorStateTable(Long idTick, long idContract) {
-        Map<Integer, ProcessorState> processorStates = new ConcurrentHashMap<>();
-        if(idTick==null)
-            idTick=Long.MAX_VALUE;
-        try {
-            String sql = "select * from public.processor_state WHERE id_tick IN (select id_tick from public.processor_state where id_tick IN " +
-                    "(select max(id_tick) from public.processor_state where id_tick <=" + idTick + " and idcontract =" + idContract+ ") limit 1 ) order by freq";
-            ResultSet rs = connection.createStatement().executeQuery(sql);
-         //   System.out.println(sql);
-            while (rs.next()) {
-            //    ZonedDateTime time = rs.getTimestamp(25) ==null ? null : rs.getTimestamp(25).toLocalDateTime().atZone(Global.ZONE_ID);
-            //    ZonedDateTime time_candle = rs.getTimestamp(26) ==null ? null : rs.getTimestamp(26).toLocalDateTime().atZone(Global.ZONE_ID);
-                OffsetDateTime time = rs.getObject(25, OffsetDateTime.class) ==null ? null : rs.getObject(25, OffsetDateTime.class);
-                OffsetDateTime time_candle = rs.getObject(26,  OffsetDateTime.class) ==null ? null : rs.getObject(26,OffsetDateTime.class);
-                ProcessorState state = new ProcessorState(rs.getLong(10), rs.getInt(7));
-                state.setId(rs.getLong(1));
-                state.setCheckpoint(rs.getBoolean(2));
-                state.setClose(rs.getDouble(3));
-                state.setColor(rs.getInt(4));
-                state.setEvent(EventType.valueOf(rs.getString(5)));
-                state.setActiveEvents(rs.getString(6));
-                state.setHigh(rs.getDouble(8));
-                state.setIdCandle(rs.getLong(9));
-                state.setIdTick(rs.getLong(10));
-                state.setTradable(rs.getBoolean(12));
-                if(rs.getObject(13)==null){
-                    state.setLastDayOfQuarter(null);
-                }else{
-                    state.setLastDayOfQuarter( rs.getDate(13).toLocalDate());
-                }
-                state.setLow(rs.getDouble(14));
-                state.setMax(rs.getDouble(15));
-                state.setMaxTrend(rs.getBoolean(16));
-                state.setMaxValid(rs.getDouble(17));
-                state.setMaxValue(rs.getDouble(18));
-                state.setMin(rs.getDouble(19));
-                state.setMinTrend(rs.getBoolean(20));
-                state.setMinValid(rs.getDouble(21));
-                state.setMinValue(rs.getDouble(22));
-                state.setOpen(rs.getDouble(23));
-                state.setTarget(rs.getDouble(24));
-                state.setTimestampTick(time);
-                state.setValue(rs.getDouble(27));
-                state.setTimestampCandle(time_candle);
-                state.setAverageClose(rs.getDouble(28));
-                state.setAbnormalHeight(rs.getDouble(29));
-
-                processorStates.put(rs.getInt(7),state);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return processorStates;
-    }
+//    public Map<Integer, ProcessorState > getProcessorStateTable(Long idTick, long idContract) {
+//        Map<Integer, ProcessorState> processorStates = new ConcurrentHashMap<>();
+//        if(idTick==null)
+//            idTick=Long.MAX_VALUE;
+//        try {
+//            String sql = "select * from public.processor_state WHERE id_tick IN (select id_tick from public.processor_state where id_tick IN " +
+//                    "(select max(id_tick) from public.processor_state where id_tick <=" + idTick + " and idcontract =" + idContract+ ") limit 1 ) order by freq";
+//            ResultSet rs = connection.createStatement().executeQuery(sql);
+//         //   System.out.println(sql);
+//            while (rs.next()) {
+//            //    ZonedDateTime time = rs.getTimestamp(25) ==null ? null : rs.getTimestamp(25).toLocalDateTime().atZone(Global.ZONE_ID);
+//            //    ZonedDateTime time_candle = rs.getTimestamp(26) ==null ? null : rs.getTimestamp(26).toLocalDateTime().atZone(Global.ZONE_ID);
+//                OffsetDateTime time = rs.getObject(25, OffsetDateTime.class) ==null ? null : rs.getObject(25, OffsetDateTime.class);
+//                OffsetDateTime time_candle = rs.getObject(26,  OffsetDateTime.class) ==null ? null : rs.getObject(26,OffsetDateTime.class);
+//                ProcessorState state = new ProcessorState(rs.getLong(10), rs.getInt(7));
+//                state.setId(rs.getLong(1));
+//                state.setCheckpoint(rs.getBoolean(2));
+//                state.setClose(rs.getDouble(3));
+//                state.setColor(rs.getInt(4));
+//                state.setEventType(EventType.valueOf(rs.getString(5)));
+//                state.setActiveEvents(rs.getString(6));
+//                state.setHigh(rs.getDouble(8));
+//                state.setIdCandle(rs.getLong(9));
+//                state.setIdTick(rs.getLong(10));
+//                state.setTradable(rs.getBoolean(12));
+//                if(rs.getObject(13)==null){
+//                    state.setLastDayOfQuarter(null);
+//                }else{
+//                    state.setLastDayOfQuarter( rs.getDate(13).toLocalDate());
+//                }
+//                state.setLow(rs.getDouble(14));
+//                state.setMax(rs.getDouble(15));
+//                state.setMaxTrend(rs.getBoolean(16));
+//                state.setMaxValid(rs.getDouble(17));
+//                state.setMaxValue(rs.getDouble(18));
+//                state.setMin(rs.getDouble(19));
+//                state.setMinTrend(rs.getBoolean(20));
+//                state.setMinValid(rs.getDouble(21));
+//                state.setMinValue(rs.getDouble(22));
+//                state.setOpen(rs.getDouble(23));
+//                state.setTarget(rs.getDouble(24));
+//                state.setTimestampTick(time);
+//                state.setValue(rs.getDouble(27));
+//                state.setTimestampCandle(time_candle);
+//                state.setAverageClose(rs.getDouble(28));
+//                state.setAbnormalHeight(rs.getDouble(29));
+//
+//                processorStates.put(rs.getInt(7),state);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return processorStates;
+//    }
 
     public List<Candle> getHistoricalCandles(Long idcontract, int freq, Long maxIdCandle, boolean clone, int numCandles) {
         List<Candle> candles = new ArrayList<>();
@@ -361,6 +387,7 @@ public class Database {
                     }
                     count++;
                 } catch (NullPointerException e) {
+                    e.printStackTrace();
                     LOGGER.warn("Error null pointer in database");
 
                 }
@@ -383,24 +410,25 @@ public class Database {
         }
     }
 
-    public synchronized int saveProcessorStates(List<ProcessorState> states) {
+    public synchronized int saveEvents(List<ProcessorState> states) {
         int count = 0;
         try (Statement statement = this.connection.createStatement()) {
-            String sql = "INSERT INTO public.processor_state " +
-                    "(close, color, event, events, freq, high, id_candle, id_tick, idcontract,is_tradable,last_day_of_quarter, low, max, max_trend, max_valid," +
-                    "max_value, min, min_trend, min_valid, min_value, open, target, timestamp_tick,value, checkpoint, timestamp_candle, average_close, abnormal_height)" +
-                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO public.events " +
+                    "(close, color, event_type, events_list, freq, high, id_candle, id_tick, idcontract,is_tradable,last_day_of_quarter, low, max, max_trend, max_valid," +
+                    "max_value, min, min_trend, min_valid, min_value, open, target, timestamp_tick,value, checkpoint, timestamp_candle, average_close, abnormal_height, " +
+                    "events_tradable_list, evtype)" +
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             for (ProcessorState state : states) {
                 preparedStatement.setDouble(1, state.getClose());
                 preparedStatement.setInt(2, state.getColor());
                // System.out.println(state.getEvent());
-                if(state.getEvent()==null){
+                if(state.getEventType()==null){
                     preparedStatement.setString(3,null);
                 }else{
-                    preparedStatement.setString(3,state.getEvent().toString());
+                    preparedStatement.setString(3,state.getEventType().toString());
                 }
-                preparedStatement.setString(4,state.getEvents());
+                preparedStatement.setString(4,state.getEventsList());
                 preparedStatement.setInt(5, state.getFreq());
                 preparedStatement.setDouble(6, state.getHigh());
                 preparedStatement.setLong(7, state.getIdCandle());
@@ -433,9 +461,14 @@ public class Database {
                 }
                 preparedStatement.setDouble(27, state.getAverageClose());
                 preparedStatement.setDouble(28, state.getAbnormalHeight());
+                preparedStatement.setString(29,state.getEventsTradableList());
+            preparedStatement.setString(30,state.getEvtype());
 
 
-                preparedStatement.addBatch();
+
+
+
+            preparedStatement.addBatch();
                 count++;
             }
             preparedStatement.executeBatch();

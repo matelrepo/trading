@@ -27,7 +27,11 @@ public class MailService {
             SimpleMailMessage mail = new SimpleMailMessage();
             mail.setTo("mcolsenet@gmail.com");
             if(processorState != null && contract != null) {
-                mail.setSubject("(" + processorState.getIdcontract() + ") " + contract.getSymbol() + " >> (" + processorState.getFreq() + ") " + processorState.getEvent());
+                if(processorState.getEvtype().equals("NONE")){
+                    mail.setSubject("(" + processorState.getIdcontract() + ") " + contract.getSymbol() + " >> (" + processorState.getFreq() + ") " + processorState.getEventType());
+                }else{
+                    mail.setSubject(processorState.getEvtype() + " - (" + processorState.getIdcontract() + ") " + contract.getSymbol() + " >> (" + processorState.getFreq() + ") " + processorState.getEventType());
+                }
                 mail.setText((new StringBuilder("Value=")).append(processorState.getValue()).append(" Target=").append(processorState.getTarget()).toString());
             }else{
                 mail.setSubject("");

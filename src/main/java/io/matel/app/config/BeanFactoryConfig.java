@@ -4,6 +4,7 @@ import io.matel.app.DailyCompute;
 import io.matel.app.database.Database;
 import io.matel.app.Generator;
 import io.matel.app.Processor;
+import io.matel.app.database.SaverController;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.state.ProcessorState;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -28,6 +29,18 @@ public class BeanFactoryConfig {
         return new Processor(contract, freq);
     }
 
+    @Bean(name = "ProcessorState")
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    public ProcessorState createProcessorState(ContractBasic contract, int freq) {
+        return new ProcessorState(contract, freq);
+    }
+
+//    @Bean(name = "Event")
+//    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+//    public Event createEvent(long idcontract, int freq) {
+//        return new Event(idcontract, freq);
+//    }
+
 //    @Bean(name = "DailyCompute")
 //    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 //    public DailyCompute createDailyCompute() {
@@ -39,4 +52,10 @@ public class BeanFactoryConfig {
     public Database createDatabaseJdbc(String databaseName, String port, String username) {
         return new Database(databaseName, port, username);
     }
+
+//    @Bean(name = "SaverController")
+//    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+//    public SaverController createSaverController(Database database) {
+//        return new SaverController(database);
+//    }
 }

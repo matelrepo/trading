@@ -7,12 +7,15 @@ import io.matel.app.config.connection.activeuser.ActiveUserEvent;
 import io.matel.app.controller.ContractController;
 import io.matel.app.controller.HistoricalDataController;
 import io.matel.app.database.Database;
+import io.matel.app.database.SaverController;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.GlobalSettings;
 import io.matel.app.domain.HistoricalDataType;
 import io.matel.app.repo.*;
 import io.matel.app.state.GeneratorState;
+import io.matel.app.state.ProcessorState;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PreDestroy;
@@ -46,6 +49,11 @@ public class AppController {
     @Autowired
     HistoricalDataController historicalDataController;
 
+    @Autowired
+    DailyCompute dailyCompute;
+
+    @Autowired
+    SaverController saverController;
 
 
 @Autowired
@@ -81,9 +89,12 @@ Map<Long, Map<Integer, GlobalSettings>> globalSettings = new ConcurrentHashMap<>
     }
 
     public Database createDatabase(String databaseName, String port, String username) {
-       // database = beanFactory.createDatabaseJdbc(databaseName, port, username);
         return beanFactory.createDatabaseJdbc(databaseName, port, username);
     }
+
+//    public ProcessorState createProcessorState(ContractBasic contract, int freq) {
+//        return beanFactory.createBeanProcessorState(contract, freq);
+//    }
 
     public synchronized Generator createGenerator(ContractBasic contract, boolean keep) {
         Generator generator = beanFactory.createBeanGenerator(contract, Global.RANDOM);
@@ -99,6 +110,11 @@ Map<Long, Map<Integer, GlobalSettings>> globalSettings = new ConcurrentHashMap<>
             for (int frequency : generator.getFrequencies()) {
                 if (frequency >= 0) {
                     Processor processor = beanFactory.createBeanProcessor(contract, frequency);
+                    ProcessorState state = beanFactory.createBeanProcessorState(contract, frequency);
+                    generator.getStates().put(frequency, state);
+                    processor.setProcessorState(state);
+//                    processor.getProcessorState().setEvent(beanFactory.createBeanEvent(contract.getIdcontract(), frequency));
+//                    processor.setEvent(beanFactory.createBeanEvent(contract.getIdcontract(),frequency));
                     processor.addListener(generators.get(contract.getIdcontract()));
                     generator.getProcessors().put(frequency, processor);
                    // if(type!=HistoricalDataType.NONE)
@@ -113,8 +129,14 @@ Map<Long, Map<Integer, GlobalSettings>> globalSettings = new ConcurrentHashMap<>
     }
 
 
-    public void connectMarketData(ContractBasic contract) throws ExecutionException, InterruptedException {
-        generators.get(contract.getIdcontract()).connectMarketData();
+    public void connectMarketData(ContractBasic contract) {
+        try {
+            generators.get(contract.getIdcontract()).connectMarketData();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -154,8 +176,22 @@ Map<Long, Map<Integer, GlobalSettings>> globalSettings = new ConcurrentHashMap<>
         return activeUsers;
     }
 
+    public void EODByExchange(String _date){ //_date -> 2020-06-11
+        new Thread(()->{
+            dailyCompute.EODByExchange(_date);
+        }).start();
+    }
+
+    @Scheduled(cron = "0 0 2 * * TUE-SAT", zone="Europe/Istanbul")
+    public void EODByExchange(){
+        System.out.println("Exchange update");
+        new Thread(()->{
+            dailyCompute.EODByExchange();
+        }).start();
+    }
+
     @PreDestroy
     public void saveNow(){
-      database.getSaverController().saveBatchTicks(true);
+     saverController.saveNow(null, true);
     }
 }

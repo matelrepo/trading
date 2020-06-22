@@ -14,7 +14,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.io.FileInputStream;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -57,6 +59,12 @@ public class WsController {
         }
     }
 
+    public void sendContractDetails(List<ContractBasic> contracts){
+        String path = "/get/contract-details";
+        System.out.println("Sending " + contracts.stream().limit(4).collect(Collectors.toList()).size());
+        template.convertAndSend(path, contracts.stream().limit(4).collect(Collectors.toList()));
+    }
+
     public void sendEvent(ProcessorState processorState, ContractBasic contract) {
         if (Global.hasCompletedLoading && contract.getIdcontract()<10000) { //10000 EOD reader from website search box
             String path = "/get/events";
@@ -66,8 +74,8 @@ public class WsController {
                 mailService.sendMessage(processorState, contract);
                 }
                 if(appController.getGlobalSettings().get(contract.getIdcontract()).get(processorState.getFreq()).isVoice()){
-                    System.out.println("New event -> " + processorState.getEvent() + " " + processorState.toString());
-                String test = "src/main/resources/audio/" + processorState.getFreq() + processorState.getEvent() + ".mp3";
+                    System.out.println("New event -> " + processorState.getEventType() + " " + processorState.toString());
+                String test = "src/main/resources/audio/" + processorState.getFreq() + processorState.getEventType() + ".mp3";
                 String test2 = "src/main/resources/audio/c" + contract.getIdcontract() + ".mp3";
 
                 try {
@@ -79,7 +87,7 @@ public class WsController {
                 }
                 try {
                     FileInputStream fileInputStream2 = new FileInputStream("src/main/resources/audio/" + processorState.getFreq() +
-                            processorState.getEvent() + ".mp3");
+                            processorState.getEventType() + ".mp3");
                     Player player2 = new Player((fileInputStream2));
                     player2.play();
 

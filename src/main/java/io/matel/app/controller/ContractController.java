@@ -1,6 +1,7 @@
 package io.matel.app.controller;
 
 import com.ib.client.Contract;
+import com.ib.client.ContractDetails;
 import io.matel.app.AppController;
 import io.matel.app.Generator;
 import io.matel.app.config.Global;
@@ -11,6 +12,7 @@ import io.matel.app.repo.ProcessorStateRepo;
 import io.matel.app.state.ProcessorState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -18,11 +20,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
 
 
-@Component
+@Controller
 public class ContractController {
 
 
@@ -33,6 +36,12 @@ public class ContractController {
     @Autowired
     AppController appController;
     private List<ContractBasic> contracts = new ArrayList<>();
+
+    public Map<Long,List<ContractBasic>> getContractsDetails() {
+        return contractsDetails;
+    }
+
+    private Map<Long,List<ContractBasic>> contractsDetails = new ConcurrentHashMap<>();
 
     @Autowired
     HistoricalDataController historicalDataController;
@@ -56,18 +65,20 @@ public class ContractController {
 
     public List<ContractBasic> initContracts(boolean createGenerator) throws NullPointerException {
         List<ContractBasic> list = new ArrayList<>();
-       //   list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
+          list = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "LIVE");
           dailyContracts = contractRepository.findByActiveAndTypeOrderByIdcontract(true, "DAILY");
         for (ContractBasic dailyContract : dailyContracts) {
             dailyContractsBySymbol.put(dailyContract.getSymbol(), dailyContract);
         }
-        list.add(contractRepository.findByIdcontract(5));
+        //list.add(contractRepository.findByIdcontract(33));
+//        list.add(contractRepository.findByIdcontract(23));
 
 
         contracts= list;
         if(createGenerator) {
             list.forEach(contract -> {
                 appController.createGenerator(contract, true);
+                contractsDetails.put(contract.getIdcontract(),new ArrayList<>());
             });
         }
         return list;
@@ -91,11 +102,11 @@ public class ContractController {
             contracts.add(con);
            // appController.loadHistoricalData(generator);
             Map<Integer, Candle> idCandles = generator.getDatabase().getIdCandlesTable(tickThreshold.get(), generator.getContract().getIdcontract()-1000);
-            Map<Integer, ProcessorState> idStates = generator.getDatabase().getProcessorStateTable(tickThreshold.get(), generator.getContract().getIdcontract()-1000);
-            if(idStates.size()>0)
-                idStates.forEach((freq, state)->{
-                    tickThreshold.set(state.getIdTick());
-                });
+//            Map<Integer, ProcessorState> idStates = generator.getDatabase().getProcessorStateTable(tickThreshold.get(), generator.getContract().getIdcontract()-1000);
+//            if(idStates.size()>0)
+//                idStates.forEach((freq, state)->{
+//                    tickThreshold.set(state.getEvent().getIdTick());
+//                });
             generator.getProcessors().forEach((freq, processor) -> {
                 processor.resetFlow();
                 if (freq > 0) {
@@ -103,20 +114,14 @@ public class ContractController {
                     idCandles.get(freq).setIdcontract(generator.getContract().getIdcontract());
                     processor.getFlow().add(0,idCandles.get(freq));
 //                    System.out.println(idCandles.get(freq).toString());
-                    processor.setProcessorState(idStates.get(freq));
+//                    processor.setProcessorState(idStates.get(freq));
                     processor.setFlow(null);
                 }
             });
             generator.getGeneratorState().setLastPrice(idCandles.get(generator.getFrequencies()[generator.getFrequencies().length-1]).getClose());
             Global.hasCompletedLoading = true;
             if(Global.ONLINE || Global.RANDOM) {
-                try {
                     appController.connectMarketData(generator.getContract());
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }else if(Global.HISTO){
                 historicalDataController.computingDeepHistorical(generator.getContract().getIdcontract()-1000, tickThreshold.get(), true);
             }

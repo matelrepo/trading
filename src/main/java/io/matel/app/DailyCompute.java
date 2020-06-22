@@ -6,9 +6,11 @@ import io.matel.app.config.Global;
 import io.matel.app.config.tools.Utils;
 import io.matel.app.controller.ContractController;
 import io.matel.app.controller.HistoricalDataController;
+import io.matel.app.database.SaverController;
 import io.matel.app.domain.ContractBasic;
 import io.matel.app.domain.Tick;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -37,6 +39,9 @@ public class DailyCompute {
 
     @Autowired
     AppLauncher appLauncher;
+
+    @Autowired
+    SaverController saverController;
 
     @Autowired
     HistoricalDataController historicalDataController;
@@ -90,7 +95,7 @@ public class DailyCompute {
                                 Tick tick4 = new Tick(global.getIdTick(true), contract.getIdcontract(),LocalDate.parse(node.get("date").asText()).atStartOfDay(Global.ZONE_ID).plusSeconds(3).toOffsetDateTime(), Utils.round(node.get("close").asDouble()*multiplier,contract.getRounding()));
                                 generator.processPrice(tick4,false, true,true,false, frequencies);
                         }
-                        generator.getDatabase().getSaverController().saveNow(generator, true);
+                        saverController.saveNow(generator, true);
                         generator.getDatabase().close();
                         appController.getGenerators().remove(generator);
                     } catch (IOException  | NullPointerException e) {
@@ -106,6 +111,14 @@ public class DailyCompute {
 
     }
 
+    public void EODByExchange(){
+        if(LocalDate.now().getDayOfWeek().getValue() == 7) {
+        }else if(LocalDate.now().getDayOfWeek().getValue()==8){
+            EODByExchange(LocalDate.now().minusDays(3).toString());
+        }else{
+            EODByExchange(LocalDate.now().minusDays(1).toString());
+        }
+    }
 
     public void EODByExchange(String date) {
         List<Daily> dailyList = new ArrayList<>();
@@ -162,7 +175,7 @@ public class DailyCompute {
                                         Tick tick4 = new Tick(global.getIdTick(true), contract.getIdcontract(), LocalDate.parse(node.get("date").asText()).atStartOfDay(Global.ZONE_ID).plusSeconds(3).toOffsetDateTime(), node.get("close").asDouble() * multiplier);
                                         tick4.setVolume((int) node.get("volume").asInt()/4);
                                         generator.processPrice(tick4, false, true,true,false, frequencies);
-                                        generator.getDatabase().getSaverController().saveNow(generator, true);
+                                        saverController.saveNow(generator, true);
                                         semaphore.release();
                                  //   }).start();
                                     });

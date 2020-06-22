@@ -2,9 +2,9 @@ package io.matel.app;
 
 import io.matel.app.config.Global;
 import io.matel.app.controller.WsController;
+import io.matel.app.database.SaverController;
 import io.matel.app.domain.Candle;
 import io.matel.app.domain.ContractBasic;
-import io.matel.app.domain.Tick;
 import io.matel.app.state.ProcessorState;
 import io.matel.app.config.tools.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,11 @@ public class FlowMerger {
     @Autowired
     private Global global;
 
+    @Autowired
+    SaverController saverController;
+
     protected ProcessorState processorState;
+//    protected Event event;
 
 
     protected List<Candle> flow = new ArrayList<>();
@@ -49,6 +53,10 @@ public class FlowMerger {
         base = 60000L * freq <= 0 ? 60000L : 60000L * freq; // Special freq = 1380, 6900,35000
     }
 
+//    public void setEvent(Event event){
+//        this.event=event;
+//    }
+
     public synchronized void newCandle(OffsetDateTime timestampCandle, OffsetDateTime timestampTick, long idTick, Double open, Double high, Double low, double close, int volume) {
         if (flow.size() > 1) {
             smallCandleNoiseRemoval = flow.get(0).getLow() >= flow.get(1).getLow() && flow.get(0).getHigh() <= flow.get(1).getHigh() && freq > 0;
@@ -69,8 +77,7 @@ public class FlowMerger {
 
             if (flow.size() > 0) {
                 candle.setColor(flow.get(0).getColor());
-                appController.getGenerators().get(contract.getIdcontract())
-                        .getDatabase().getSaverController().saveBatchCandles(flow.get(0), false);
+                saverController.saveBatchCandles(flow.get(0), false);
             }
 
 

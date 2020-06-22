@@ -76,12 +76,11 @@ public class HistoricalDataController {
 
     public void findProcessorStateByContract() {
         processorStatesIdTickByIdContract= appController.getDatabase().findTopIdTickFromProcessorState();
-       // System.out.println(processorStatesIdTickByIdContract.size());
     }
 
-    public Map<Long, Long> getProcessorStatesIdTickByIdContract() {
-        return processorStatesIdTickByIdContract;
-    }
+//    public Map<Long, Long> getProcessorStatesIdTickByIdContract() {
+//        return processorStatesIdTickByIdContract;
+//    }
 
     private List<Candle> loadHistoricalFromDBB(long idcontract, int numCandles, int freq, long maxIdCandle, boolean setCandles) {
         List<Candle> candles = null;
@@ -105,8 +104,9 @@ public class HistoricalDataController {
         long id = contract.getCloneid() < 0 ? contract.getIdcontract() : contract.getCloneid();
         List<ProcessorState> states;
         try {
-            states = processorStateRepo.findByIdTick(getProcessorStatesIdTickByIdContract().get(id));
+            states = processorStateRepo.findByIdTick(processorStatesIdTickByIdContract.get(id));
             states.forEach(state -> {
+                state.setContract(contract);
                 appController.getGenerators().get(id).getProcessors().get(state.getFreq()).setProcessorState(state);
             });
         }catch(NullPointerException e){

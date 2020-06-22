@@ -4,6 +4,7 @@ import com.ib.client.*;
 import io.matel.app.AppController;
 import io.matel.app.AppLauncher;
 import io.matel.app.config.Global;
+import io.matel.app.controller.ContractController;
 import io.matel.app.controller.HistoricalDataController;
 import io.matel.app.controller.WsController;
 import io.matel.app.domain.ContractBasic;
@@ -14,10 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import javax.validation.constraints.Null;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Configuration
 public class EWrapperImpl implements EWrapper {
@@ -44,6 +48,9 @@ public class EWrapperImpl implements EWrapper {
     @Autowired
     HistoricalDataController historicalDataController;
 
+    @Autowired
+    ContractController contractController;
+
 
     private boolean hasConnectedAlready = false;
 
@@ -51,7 +58,7 @@ public class EWrapperImpl implements EWrapper {
         init();
     }
 
-    public void init(){
+    public void init() {
         this.signal = new EJavaSignal();
         this.client = new EClientSocket(this, this.signal);
     }
@@ -61,9 +68,9 @@ public class EWrapperImpl implements EWrapper {
         connectionClosed();
     }
 
-	public EClientSocket getClient() {
-		return client;
-	}
+    public EClientSocket getClient() {
+        return client;
+    }
 
 
     @Override
@@ -81,11 +88,11 @@ public class EWrapperImpl implements EWrapper {
         if (errorCode == 2104 || errorCode == 2103 || errorCode == 2106 || errorCode == 10167 || errorCode == 300) {
         } else {
             LOGGER.warn(">>> ERROR >>> " + id + " " + errorCode + " " + errorMsg);
-            if(errorCode ==200){
+            if (errorCode == 200) {
                 try {
                     System.out.println(appController.getGenerators().get(Long.valueOf(id)));
                     appController.getGenerators().get(Long.valueOf(id)).getGeneratorState().setMarketDataStatus(0);
-                }catch(NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }
@@ -108,7 +115,7 @@ public class EWrapperImpl implements EWrapper {
             appLauncher.startLive();
 
         } else {
-            while(!client.isConnected()){
+            while (!client.isConnected()) {
                 LOGGER.warn("Trying to reconnect market data but client is not connected");
             }
             LOGGER.info("Reconnecting market data");
@@ -153,7 +160,7 @@ public class EWrapperImpl implements EWrapper {
 
     @Override
     public void historicalDataEnd(int reqId, String startDateStr, String endDateStr) {
-historicalDataController.receiveHistoricalDataFromIBEnd();
+        historicalDataController.receiveHistoricalDataFromIBEnd();
     }
 
     @Override
@@ -163,19 +170,19 @@ historicalDataController.receiveHistoricalDataFromIBEnd();
 
     @Override
     public void tickSize(int tickerId, int field, int size) {
-        dataService.getLiveMarketDataHandler().get(Long.valueOf(tickerId)).tickSize(tickerId, field,size);
+        dataService.getLiveMarketDataHandler().get(Long.valueOf(tickerId)).tickSize(tickerId, field, size);
     }
 
 
     @Override
     public void tickByTickAllLast(int reqId, int tickType, long time, double price, int size, TickAttribLast tickAttribLast, String exchange, String specialConditions) {
-    //    System.out.println(reqId + " " + tickType + " " + time + " " + price + " " + size + " " + exchange + " " + specialConditions);
+        //    System.out.println(reqId + " " + tickType + " " + time + " " + price + " " + size + " " + exchange + " " + specialConditions);
         dataService.getLiveMarketDataHandler().get(Long.valueOf(reqId)).tickByTickAllLast(reqId, tickType, time, price, size, tickAttribLast, exchange, specialConditions);
     }
 
     @Override
     public void tickByTickBidAsk(int reqId, long time, double bidPrice, double askPrice, int bidSize, int askSize, TickAttribBidAsk tickAttribBidAsk) {
-     //   System.out.println(reqId + " " + time + " " + bidPrice + " " + askPrice + " " + bidSize + " " + askSize + tickAttribBidAsk.toString());
+        //   System.out.println(reqId + " " + time + " " + bidPrice + " " + askPrice + " " + bidSize + " " + askSize + tickAttribBidAsk.toString());
         dataService.getLiveMarketDataHandler().get(Long.valueOf(reqId)).tickByTickBidAsk(reqId, time, bidPrice, askPrice, bidSize, askSize, tickAttribBidAsk);
     }
 
@@ -278,12 +285,27 @@ historicalDataController.receiveHistoricalDataFromIBEnd();
 
     @Override
     public void contractDetails(int reqId, ContractDetails contractDetails) {
-//    ContractBasic contract = appController.getGenerators().get(Long.valueOf(reqId)).getContract();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        try {
+           // if(contractController.getContractsDetails().get(Long.valueOf(reqId)).size()==0) {
+                ContractBasic contract = (ContractBasic) appController.getGenerators().get(Long.valueOf(reqId)).getContract().clone();
+                contract.setExpiration(LocalDate.parse(contractDetails.contract().lastTradeDateOrContractMonth(), formatter));
+                contract.setFirstNotice(LocalDate.parse(contractDetails.contract().lastTradeDateOrContractMonth(), formatter));
+                System.out.println(contractController.getContractsDetails().get(Long.valueOf(reqId)).size());
+                contractController.getContractsDetails().get(Long.valueOf(reqId)).add(contract);
+                System.out.println(contractController.getContractsDetails().get(Long.valueOf(reqId)).size());
+          //  }
+
+
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
 //        if(contract.getConid()==null) {
 //            contract.setConid(contractDetails.conid());
 //            contractRepository.save(contract);
 //        }
-//        System.out.println("contractDetails " + contract.toString());
+        //System.out.println("contractDetails " + contractDetails.toString());
     }
 
     @Override
@@ -294,7 +316,12 @@ historicalDataController.receiveHistoricalDataFromIBEnd();
 
     @Override
     public void contractDetailsEnd(int reqId) {
-//        System.out.println("Contract details");
+        System.out.println("Contract details end");
+        wsController.sendContractDetails(contractController.getContractsDetails().get(Long.valueOf(reqId)));
+//        List<ContractBasic> list = contractController.getContractsDetails().get(Long.valueOf(reqId)).stream().limit(3).collect(Collectors.toList());
+//        list.forEach(con -> {
+//            System.out.println(con.toString());
+//        });
     }
 
     @Override

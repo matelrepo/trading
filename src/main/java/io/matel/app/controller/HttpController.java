@@ -5,6 +5,7 @@ import io.matel.app.AppController;
 import io.matel.app.AppLauncher;
 import io.matel.app.DailyCompute;
 import io.matel.app.config.Global;
+import io.matel.app.config.Ibconfig.DataService;
 import io.matel.app.config.connection.activeuser.ActiveUserEvent;
 import io.matel.app.config.connection.user.UserRepository;
 import io.matel.app.config.tools.MailService;
@@ -19,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jboss.logging.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,10 +50,10 @@ public class HttpController {
     Global global;
 
     @Autowired
-    DailyCompute dailyCompute;
+    GlobalSettingsRepo globalSettingsRepo;
 
     @Autowired
-    GlobalSettingsRepo globalSettingsRepo;
+    DataService dataService;
 
 
 
@@ -110,12 +112,12 @@ public class HttpController {
         return appController.getGenerators().get(idcontract).getGeneratorState();
     }
 
-    @GetMapping("/processor-state/{id}")
-    public List<ProcessorState> getProcessorStates(@PathVariable String id){
-        long idcontract = Long.valueOf(id);
-        System.out.println(appController.getGenerators().get(idcontract).getDatabase().getSaverController().getProcessorStateBuffer().size());
-        return appController.getGenerators().get(idcontract).getDatabase().getSaverController().getProcessorStateBuffer();
-    }
+//    @GetMapping("/processor-state/{id}")
+//    public List<ProcessorState> getProcessorStates(@PathVariable String id){
+//        long idcontract = Long.valueOf(id);
+//        System.out.println(appController.getGenerators().get(idcontract).getDatabase().getSaverController().getProcessorStateBuffer().size());
+//        return appController.getGenerators().get(idcontract).getDatabase().getSaverController().getProcessorStateBuffer();
+//    }
 
     @PostMapping("/disconnect-all/{save_}")
     public void disconnectAll(@PathVariable String save_){
@@ -186,6 +188,22 @@ public class HttpController {
         return appController.getGlobalSettings().get(idcontract);
     }
 
+    @GetMapping("/expiration-report")
+    public List<ContractBasic> reqContractDetails(){
+      return appController.getDatabase().getExpirationReport();
+    }
+
+    @PostMapping("/contract-details")
+    public void reqContractDetails(@RequestBody ContractBasic _contract){
+//        System.out.println(_contract.toString());
+        _contract.setExpiration(null);
+        if(contractController.getContractsDetails().get(_contract.getIdcontract()).size()==0) {
+            dataService.reqContractDetails(_contract);
+        }else{
+            wsController.sendContractDetails(contractController.getContractsDetails().get(Long.valueOf(_contract.getIdcontract())));
+            }
+    }
+
 
     @PostMapping("/activate-email")
     public void setupGlobalAlert(@RequestBody String _email){
@@ -203,9 +221,7 @@ public class HttpController {
 
     @PostMapping("/update-eod-batch")
     public void updateEOD(@RequestBody String _date){
-                    new Thread(()->{
-                dailyCompute.EODByExchange(_date);
-            }).start();
+          appController.EODByExchange(_date);
     }
 
 

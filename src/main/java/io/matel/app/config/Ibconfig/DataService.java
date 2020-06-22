@@ -83,9 +83,10 @@ public class DataService {
 
     }
 
-//    public void reqContractDetails(ContractBasic contract){
-//        eWrapper.getClient().reqContractDetails((int) contract.getIdcontract(), contractController.contractBasic2ContractIB(contract));
-//    }
+    public void reqContractDetails(ContractBasic contract){
+        System.out.println(contractController.contractBasic2ContractIB(contract).toString());
+        eWrapper.getClient().reqContractDetails((int) contract.getIdcontract(), contractController.contractBasic2ContractIB(contract));
+    }
 
     public void cancelMktData(ContractBasic contract, boolean cancelRepo) throws InterruptedException{
         Thread.sleep(50);

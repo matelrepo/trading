@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name ="contracts")
@@ -75,6 +76,17 @@ public class ContractBasic implements Cloneable {
         this.fusion = fusion;
         this.category = category;
     }
+
+    public <T> ContractBasic(long idcontract, String symbol, String title, T expiration, T firstNotice, String secType, String exchange) {
+        this.idcontract = idcontract;
+        this.symbol = symbol;
+        this.title = title;
+        this.expiration = (LocalDate) expiration;
+        this.firstNotice = (LocalDate) firstNotice;
+        this.secType = secType;
+        this.exchange = exchange;
+    }
+
 
     public Object clone()throws CloneNotSupportedException{
         return (ContractBasic)super.clone();

@@ -1,65 +1,8 @@
-2020-06-16 17:53:57,488 INFO o.s.b.StartupInfoLogger [main] Starting SecurityApplication on Lenovo-PC with PID 13660 (C:\Users\user\IdeaProjects\trading\target\classes started by Matel in C:\Users\user\IdeaProjects\trading)
-2020-06-16 17:53:57,497 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
-2020-06-16 17:53:58,408 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data repositories in DEFAULT mode.
-2020-06-16 17:53:58,519 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 104ms. Found 8 repository interfaces.
-2020-06-16 17:53:58,893 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [main] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$218a3006] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2020-06-16 17:53:59,126 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
-2020-06-16 17:53:59,141 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
-2020-06-16 17:53:59,151 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
-2020-06-16 17:53:59,152 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.26]
-2020-06-16 17:53:59,299 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
-2020-06-16 17:53:59,300 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1739 ms
-2020-06-16 17:53:59,456 WARN c.z.h.HikariConfig [main] HikariPool-1 - maxLifetime is less than 30000ms, setting to default 1800000ms.
-2020-06-16 17:53:59,457 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
-2020-06-16 17:53:59,544 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
-2020-06-16 17:53:59,598 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [
-	name: default
-	...]
-2020-06-16 17:53:59,665 INFO o.h.Version [main] HHH000412: Hibernate Core {5.3.12.Final}
-2020-06-16 17:53:59,667 INFO o.h.c.Environment [main] HHH000206: hibernate.properties not found
-2020-06-16 17:53:59,795 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
-2020-06-16 17:54:00,063 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2020-06-16 17:54:00,156 INFO o.h.e.j.e.i.LobCreatorBuilderImpl [main] HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
-2020-06-16 17:54:00,162 INFO o.h.t.BasicTypeRegistry [main] HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@134d7ffa
-2020-06-16 17:54:00,445 INFO o.h.s.e.Version [main] HSEARCH000034: Hibernate Search 5.11.3.Final
-2020-06-16 17:54:00,778 INFO o.h.t.PojoInstantiator [main] HHH000182: No default (no-argument) constructor for class: io.matel.app.config.connection.activeuser.ActiveUserEvent (class must be instantiated by Interceptor)
-2020-06-16 17:54:00,974 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2020-06-16 17:54:01,614 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientInboundChannelExecutor'
-2020-06-16 17:54:01,618 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'clientOutboundChannelExecutor'
-2020-06-16 17:54:01,852 INFO o.s.s.w.DefaultSecurityFilterChain [main] Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@29a5f924, org.springframework.security.web.context.SecurityContextPersistenceFilter@2e60d4f4, org.springframework.security.web.header.HeaderWriterFilter@233d2b76, org.springframework.web.filter.CorsFilter@5f6ba085, org.springframework.security.web.authentication.logout.LogoutFilter@6bf70600, io.matel.app.config.connection.security.JwtAuthenticationFilter@7e1ce99c, io.matel.app.config.connection.security.JwtAuthorizationFilter@26f7b114, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@45ecdd32, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@38326fd5, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@209d0037, org.springframework.security.web.session.SessionManagementFilter@2a9f7572, org.springframework.security.web.access.ExceptionTranslationFilter@580e01cd, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@4411a0fe]
-2020-06-16 17:54:01,867 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'messageBrokerTaskScheduler'
-2020-06-16 17:54:01,886 INFO o.s.s.c.ExecutorConfigurationSupport [main] Initializing ExecutorService 'brokerChannelExecutor'
-2020-06-16 17:54:02,081 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2020-06-16 17:54:02,239 INFO o.s.c.l.CompositeLog [main] Starting...
-2020-06-16 17:54:02,239 INFO o.s.c.l.CompositeLog [main] BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
-2020-06-16 17:54:02,240 INFO o.s.c.l.CompositeLog [main] Started.
-2020-06-16 17:54:02,251 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
-2020-06-16 17:54:02,263 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
-2020-06-16 17:54:02,266 INFO o.s.b.StartupInfoLogger [main] Started SecurityApplication in 5.39 seconds (JVM running for 6.634)
-2020-06-16 17:54:02,268 INFO i.m.a.AppLauncher [main] Starting with 8 cores
-2020-06-16 17:54:02,295 INFO i.m.a.c.I.EWrapperImpl [main] >>> IB CONNECTED
-2020-06-16 17:54:02,363 INFO o.h.h.i.QueryTranslatorFactoryInitiator [Thread-6] HHH000397: Using ASTQueryTranslatorFactory
-2020-06-16 17:54:02,705 INFO i.m.a.AppLauncher [Thread-6] 1 contracts live found
-2020-06-16 17:54:02,705 INFO i.m.a.AppLauncher [Thread-6] 8385 contracts daily found
-2020-06-16 17:54:02,712 INFO i.m.a.AppLauncher [Thread-6] Setting up last id tick: 191819532
-2020-06-16 17:54:02,712 INFO i.m.a.AppLauncher [Thread-6] Setting up last id candle: 115150036
-2020-06-16 17:54:02,712 WARN i.m.a.AppLauncher [Thread-6] >>> Read only lock! <<<
-2020-06-16 17:54:03,603 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2020-06-16 17:54:03,604 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
-2020-06-16 17:54:03,611 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 7 ms
-2020-06-16 17:54:03,766 INFO i.m.a.c.c.a.ActiveUserEvent [http-nio-8080-exec-1] UserActivityEvent{type='login', username='matel', eventSessionId='2b0123a2-f7cf-514e-1122-568c7e918b6a', timestamp=2020-06-16T17:54:03.758817600+02:00[Europe/Paris]}
-2020-06-16 17:54:06,901 INFO i.m.a.AppLauncher [Thread-6] Loading historical candles...
-2020-06-16 17:54:09,476 WARN i.m.a.c.I.EWrapperImpl [Thread-6] >>> ERROR >>> -1 2158 Sec-def data farm connection is OK:secdefhk
-2020-06-16 17:54:09,480 INFO i.m.a.c.I.EWrapperImpl [Thread-6] End Download: U2629343
-2020-06-16 17:54:09,481 WARN i.m.a.c.I.EWrapperImpl [Thread-6] >>> ERROR >>> 17001 321 Error validating request:-'cq' : cause - Invalid account code
-2020-06-16 17:54:13,562 INFO i.m.a.d.SaverController [Thread-8] Saving now 0 ticks for contract 5
-2020-06-16 17:54:13,567 INFO i.m.a.AppLauncher [Thread-8] Loading completed for contract 5
-2020-06-16 17:54:13,570 INFO i.m.a.AppLauncher [Thread-8] Remaining contracts 0/1
-2020-06-16 17:54:13,570 INFO i.m.a.AppLauncher [Thread-8] All completed
-2020-06-16 17:54:13,618 INFO i.m.a.c.I.DataService [ES.USD.5] Requesting market data for contract 5
-2020-06-16 17:54:19,907 INFO i.m.a.c.c.a.ActiveUserEvent [http-nio-8080-exec-2] UserActivityEvent{type='logout', username='matel', eventSessionId='2b0123a2-f7cf-514e-1122-568c7e918b6a', timestamp=2020-06-16T17:54:19.907032700+02:00[Europe/Paris]}
-2020-06-16 17:54:21,281 INFO i.m.a.c.HttpController [http-nio-8080-exec-6] Sending (1) contracts live
-2020-06-16 17:54:21,597 INFO i.m.a.c.c.a.ActiveUserEvent [http-nio-8080-exec-7] UserActivityEvent{type='login', username='matel', eventSessionId='5ad0d6b1-3153-4c36-2772-5423fd9bf6dd', timestamp=2020-06-16T17:54:21.597363400+02:00[Europe/Paris]}
-2020-06-16 17:55:23,763 INFO i.m.a.c.c.a.ActiveUserEvent [http-nio-8080-exec-10] UserActivityEvent{type='logout', username='matel', eventSessionId='5ad0d6b1-3153-4c36-2772-5423fd9bf6dd', timestamp=2020-06-16T17:55:23.763471300+02:00[Europe/Paris]}
-2020-06-16 17:55:25,122 INFO i.m.a.c.HttpController [http-nio-8080-exec-7] Sending (1) contracts live
-2020-06-16 17:55:25,422 INFO i.m.a.c.c.a.ActiveUserEvent [http-nio-8080-exec-9] UserActivityEvent{type='login', username='matel', eventSessionId='b1723590-c98c-8596-1fac-d791a184fc04', timestamp=2020-06-16T17:55:25.422518600+02:00[Europe/Paris]}
+2020-06-22 06:07:00,240 INFO i.m.a.c.c.a.ActiveUserEvent [http-nio-8080-exec-2] UserActivityEvent{type='logout', username='matel', eventSessionId='b6347bfc-f6b4-4626-ac02-99773f586833', timestamp=2020-06-22T06:07:00.240535+02:00[Europe/Paris]}
+2020-06-22 06:07:01,396 INFO i.m.a.c.c.a.ActiveUserEvent [http-nio-8080-exec-6] UserActivityEvent{type='login', username='matel', eventSessionId='b59ac22e-1057-5927-0c74-9796c1725141', timestamp=2020-06-22T06:07:01.396905300+02:00[Europe/Paris]}
+2020-06-22 06:07:01,540 WARN i.m.a.c.I.EWrapperImpl [http-nio-8080-exec-1] >>> ERROR >>> -1 504 Not connected
+2020-06-22 06:07:01,541 WARN i.m.a.c.I.EWrapperImpl [http-nio-8080-exec-10] >>> ERROR >>> -1 504 Not connected
+2020-06-22 06:07:06,401 INFO i.m.a.c.HttpController [http-nio-8080-exec-9] Sending (23) contracts live
+2020-06-22 06:07:30,851 INFO i.m.a.c.HttpController [http-nio-8080-exec-6] Sending (26) contracts live
+2020-06-22 06:07:34,332 INFO i.m.a.c.HttpController [http-nio-8080-exec-8] Sending (23) contracts live
+2020-06-22 06:07:35,592 INFO i.m.a.c.HttpController [http-nio-8080-exec-6] Sending (26) contracts live
